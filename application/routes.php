@@ -33,24 +33,14 @@
 */
 
 Route::get('/', array('before' => 'auth', 'do' => function() 
-{
-    /*
-    DB::table('users')->insert(array(
-        'username' => 'dipankarbd',
-        'password' => Hash::make('dkbiswas'),
-        'firstname' => 'Dipankar',
-        'lastname' => 'Biswas',
-        'email' => 'dipankar_cse@yahoo.com'
-    ));
-    */
-
-	return View::make('home.index');
+{ 
+    return Redirect::to('apps');
 })); 
 
-Route::get('apps', function()
-{
-    return View::make('apps.index');
-});
+Route::get('apps',array('before' => 'auth', 'do' => function() 
+{   
+    return View::make('apps.index')->with('apps', App::all());
+}));
  
 Route::get('login', function() {
     return View::make('auth.login');
