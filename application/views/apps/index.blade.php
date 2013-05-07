@@ -6,6 +6,7 @@
 	<title>Apps</title>
 	<meta name="viewport" content="width=device-width">  
     {{ HTML::style('bootstrap/css/bootstrap.css') }}
+    {{ HTML::style('bootstrap/css/bootstrap-responsive.css') }}
 </head>
 <body>
     <div class="navbar">
@@ -20,7 +21,7 @@
             </ul>
         </div>
     </div>
-	<div class="container"> 
+	<div class="container-fluid"> 
         <ul class="thumbnails">
             @foreach ($apps as $app)
             <li class="span4"> 
@@ -39,6 +40,6 @@
 
     <!-- Scripts -->
     {{ HTML::script('js/jquery-1.9.1.min.js') }}
-    {{ HTML::script('bootstrap/js/bootstrap.js') }}
+    {{ HTML::script('bootstrap/js/bootstrap.js') }} 
 </body>
 </html>
