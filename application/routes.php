@@ -42,6 +42,11 @@ Route::get('apps',array('before' => 'auth', 'do' => function()
     return View::make('apps.index')->with('apps', App::all());
 }));
  
+Route::get('sadmin',array('before' => 'auth', 'do' => function() 
+{   
+    return View::make('superadmin.index');
+}));
+
 Route::get('login', function() {
     return View::make('auth.login');
 });
