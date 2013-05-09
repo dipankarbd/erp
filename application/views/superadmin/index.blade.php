@@ -7,6 +7,8 @@
 	<meta name="viewport" content="width=device-width">  
     {{ HTML::style('bootstrap/css/bootstrap.css') }}
     {{ HTML::style('bootstrap/css/bootstrap-responsive.css') }} 
+
+    {{ HTML::style('sadmin/main.css') }} 
 </head>
 <body>
    
@@ -43,7 +45,10 @@
     <script id="centerview-template" type="text/html">
         <div style="background-color:yellow;">Center View</div>
     </script>
-    
+    <script id="useritemview-template" type="text/html"> 
+        <h1><%= firstname %> <%= lastname %></h1>
+        <h2><%= email %></h2>  
+    </script>
     <!-- -->
 
 
@@ -56,8 +61,7 @@
     {{ HTML::script('js/backbone.marionette/backbone.js') }} 
 
     {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }} 
-     
-    {{ HTML::script('sadmin/templates.html',array('type'=>'text/html')) }} 
+      
     {{ HTML::script('sadmin/main.js') }} 
      
 </body>
