@@ -27,7 +27,7 @@
 	<div class="container-fluid" id="container"> 
          
     </div>  
-
+     
      <!-- Templates -->
     <script id="main-layout" type="text/html">
         <div class="row-fluid" id="top-region"></div>
@@ -57,8 +57,13 @@
         </div>
     </script>
   
-    <!-- -->
+    <script id="user-tab-header-item-template" type="text/html">  
+        <a><%= text %></a>
+    </script>
 
+    <!-- -->
+    
+</ul>
 
     <!-- Scripts -->
     {{ HTML::script('js/jquery-1.9.1.min.js') }}
