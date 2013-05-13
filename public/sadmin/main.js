@@ -1,12 +1,19 @@
-User = Backbone.Model.extend();
+SuperAdminApp = new Backbone.Marionette.Application();
+SuperAdminApp.addRegions({
+  container: "#container"
+});
+
+
+User = Backbone.Model.extend({
+    defaults:{
+        isSelected: false
+    }
+});
 Users = Backbone.Collection.extend({
     model: User
 });
 
-container = new Backbone.Marionette.Region({
-  el: "#container"
-});
-
+ 
 MainLayout = Backbone.Marionette.Layout.extend({
   template: "#main-layout",
 
@@ -19,7 +26,7 @@ MainLayout = Backbone.Marionette.Layout.extend({
 
 // Show the "layout" in the "container" region
 layout = new MainLayout();
-container.show(layout);
+SuperAdminApp.container.show(layout);
 
 TopView = Backbone.Marionette.ItemView.extend({
   template: "#topview-template"
@@ -31,15 +38,46 @@ CenterView = Backbone.Marionette.ItemView.extend({
   template: "#centerview-template"
 });
 
-UserView = Backbone.Marionette.ItemView.extend({ 
+
+NoUsersView = Backbone.Marionette.ItemView.extend({
+  template: "#no-users-template",
+  tagName: 'li'
+});
+
+UserView = Backbone.Marionette.ItemView.extend({
     template: "#useritemview-template",
     tagName: 'li',
-    className:'user'
+    modelEvents : {
+        'change': 'render'
+    },
+    events: {
+        'click': 'showUserDetails'
+    },
+    showUserDetails: function () {
+        this.model.set({'isSelected': true});
+        SuperAdminApp.vent.trigger("user:selected",this.model);
+    }
 });
 UsersView = Backbone.Marionette.CollectionView.extend({
-  itemView: UserView,
-  tagName: 'ul',
-  className:'userlist'
+    itemView: UserView,
+    emptyView: NoUsersView,
+    tagName: 'ul',
+    className: 'userlist', 
+    initialize: function () {
+        var self = this;
+        SuperAdminApp.vent.on("user:selected", function (user) { self.toggleSelection(user); });
+    },
+    toggleSelection: function (user) {
+        if(user.get('isSelected')) {  
+            var otherSelectedUser = this.collection.find(function(model) {
+                return user !== model && model.get('isSelected');
+            });
+
+            if(otherSelectedUser != null) { 
+                otherSelectedUser.set({'isSelected': false});
+            }
+        }
+    }
 });
 // and show the views in the layout
 layout.top.show(new TopView());

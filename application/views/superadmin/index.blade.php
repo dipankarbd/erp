@@ -46,9 +46,17 @@
         <div style="background-color:yellow;">Center View</div>
     </script>
     <script id="useritemview-template" type="text/html"> 
-        <h1><%= firstname %> <%= lastname %></h1>
-        <h2><%= email %></h2>  
+        <div class="user<%= (isSelected == true)?' selected':'' %>">
+            <h1><%= firstname %> <%= lastname %></h1>
+            <h2><%= email %></h2>  
+        </div> 
     </script>
+    <script id="no-users-template" type="text/html"> 
+        <div class="user">
+            <p class="text-warning">No user available.Please add a user</p>
+        </div>
+    </script>
+  
     <!-- -->
 
 
