@@ -32,12 +32,18 @@
     <script id="main-layout" type="text/html">
         <div class="row-fluid" id="top-region"></div>
         <div class="row-fluid">
-            <div class="span2" id="left-region"></div>
-            <div class="span10" id="center-region"></div>
+            <div class="span3 well well-small" id="left-region"></div>
+            <div class="span9" id="center-region"></div>
         </div>
     </script>
+
+    <script id="details-layout" type="text/html">
+        <div class="row" id="tabheader-region"></div>
+        <div class="row well" id="tabpane-region"></div> 
+    </script>
+
     <script id="topview-template" type="text/html">
-        <div style="background-color:red;">Top View</div>
+         <p>this is filter view...</p>
     </script>
     <script id="leftview-template" type="text/html">
         <div style="background-color:green;">left View</div>
@@ -46,7 +52,7 @@
         <div style="background-color:yellow;">Center View</div>
     </script>
     <script id="useritemview-template" type="text/html"> 
-        <div class="user<%= (isSelected == true)?' selected':'' %>">
+        <div class="user<%= (selected == true)?' selected':'' %>">
             <h1><%= firstname %> <%= lastname %></h1>
             <h2><%= email %></h2>  
         </div> 
@@ -58,9 +64,40 @@
     </script>
   
     <script id="user-tab-header-item-template" type="text/html">  
-        <a href="#<%= index %>"><%= text %></a>
+         <a href="#<%= index %>"><%= text %></a> 
     </script>
-
+    
+    <script id="user-details-view-template" type="text/html">   
+        <div class="span1">  <img src="{{URL::to_asset('sadmin/images/people.png') }}" alt=""> </div>
+		<div class="span3">
+	        <p class="label label-info"><%= username %></p> 
+          	<p><strong><%= firstname %> <%= lastname %></strong></p>
+            <p><i class="icon-envelope"></i><%= email %></p> 
+		</div> 
+        <div class="span1 pull-right"><button id="edituser" class="btn btn-small" type="button">Edit</button></div>
+        <div class="clearfix"></div> 
+        <hr/>
+        <button id="deleteuser" class="btn btn-danger" type="button">Delete</button> 
+    </script>
+    <script id="user-details-editview-template" type="text/html">   
+        <form>
+            <fieldset>
+                <legend>Editing User Details</legend>
+                <label>First Name</label>
+                <input type="text" value="<%= firstname %>" required/>
+                <label>Last Name</label>
+                <input type="text" value="<%= lastname %>" required/>
+                <label>Email</label>
+                <input type="text" value="<%= email %>" required/>
+                <label>User Id</label> 
+                <span class="input uneditable-input"><%= username %></span> 
+            </fieldset>
+            <div class="form-actions">
+                <button id="saveuserdetails" type="submit" class="btn btn-primary">Save changes</button>
+                <button id="cancelsavinguserdetails" type="button" class="btn">Cancel</button>
+            </div> 
+        </form>  
+    </script>
     <!-- -->
     
 </ul>

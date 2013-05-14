@@ -7,17 +7,12 @@
 {
   list-style-type: none;
   margin: 0;
-  padding: 0; 
-  border-top: 1px solid #f0f0f0;
+  padding: 0;  
 }
 
-.userlist li
-{
-    border-bottom: 1px solid #f0f0f0;
-    border-left: 1px solid #f0f0f0;
-    border-right: 1px solid #f0f0f0; 
+.userlist li {
+    border-bottom: 1px solid #fff;
 }
- 
 .user
 {
     padding: 5px; 
@@ -44,5 +39,5 @@
 
 .selected
 {
-    background-color: #f9f8f8;
+    background-color: #fff;
 }

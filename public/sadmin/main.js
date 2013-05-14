@@ -6,7 +6,7 @@ SuperAdminApp.addRegions({
 
 User = Backbone.Model.extend({
     defaults:{
-        isSelected: false
+        selected: false
     }
 });
 Users = Backbone.Collection.extend({
@@ -24,12 +24,25 @@ MainLayout = Backbone.Marionette.Layout.extend({
   }
 });
 
+DetailsLayout = Backbone.Marionette.Layout.extend({
+  template: "#details-layout",
+
+  regions: {
+    tabheader: "#tabheader-region",
+    tabpane: "#tabpane-region" 
+  }
+});
+
+
 // Show the "layout" in the "container" region
 layout = new MainLayout();
 SuperAdminApp.container.show(layout);
 
+detailsLayout = new DetailsLayout();
+
 TopView = Backbone.Marionette.ItemView.extend({
-  template: "#topview-template"
+  template: "#topview-template",
+  className: "well"
 });
 LeftView = Backbone.Marionette.ItemView.extend({
   template: "#leftview-template"
@@ -47,15 +60,16 @@ NoUsersView = Backbone.Marionette.ItemView.extend({
 UserView = Backbone.Marionette.ItemView.extend({
     template: "#useritemview-template",
     tagName: 'li',
-    modelEvents : {
+    modelEvents: {
         'change': 'render'
     },
     events: {
         'click': 'showUserDetails'
     },
     showUserDetails: function () {
-        this.model.set({'isSelected': true});
-        SuperAdminApp.vent.trigger("user:selected",this.model);
+        this.model.set({ 'selected': true });
+        SuperAdminApp.selectedUser = this.model; 
+        SuperAdminApp.vent.trigger("user:selected", this.model);
     }
 });
 UsersView = Backbone.Marionette.CollectionView.extend({
@@ -68,13 +82,13 @@ UsersView = Backbone.Marionette.CollectionView.extend({
         SuperAdminApp.vent.on("user:selected", function (user) { self.toggleSelection(user); });
     },
     toggleSelection: function (user) {
-        if(user.get('isSelected')) {  
+        if(user.get('selected')) {  
             var otherSelectedUser = this.collection.find(function(model) {
-                return user !== model && model.get('isSelected');
+                return user !== model && model.get('selected');
             });
 
             if(otherSelectedUser != null) { 
-                otherSelectedUser.set({'isSelected': false});
+                otherSelectedUser.set({'selected': false});
             }
         }
     }
@@ -84,12 +98,16 @@ UsersView = Backbone.Marionette.CollectionView.extend({
 
 UserTabHeaderItem = Backbone.Model.extend({
     defaults:{
-        isActive: false
+        active: false
     }
 });
 
 UserTabHeaderItems = Backbone.Collection.extend({
-    model: UserTabHeaderItem
+    model: UserTabHeaderItem,
+    resetSelection: function () {
+        this.at(0).set('active',true);
+        this.at(1).set('active',false);
+    }
 });
 
 UserTabHeaderItemView = Backbone.Marionette.ItemView.extend({
@@ -102,7 +120,7 @@ UserTabHeaderItemView = Backbone.Marionette.ItemView.extend({
         'click': 'tabSelected'
     },
     onRender: function () { 
-        if (this.model.get('isActive')) {
+        if (this.model.get('active')) {
             this.$el.addClass('active');
         }
         else{
@@ -110,7 +128,7 @@ UserTabHeaderItemView = Backbone.Marionette.ItemView.extend({
         }
     },
     tabSelected: function () {
-        this.model.set({ 'isActive': true });
+        this.model.set({ 'active': true });
         SuperAdminApp.vent.trigger("usertab:selected",this.model);
     }
 });
@@ -122,24 +140,49 @@ UserTabHeaderView = Backbone.Marionette.CollectionView.extend({
         "change" : "toggleSelection" 
     }, 
     toggleSelection: function (selectedModel) { 
-        if (selectedModel.get('isActive')) {
+        if (selectedModel.get('active')) {
             var otherSelectedModel = this.collection.find(function (model) {
-                return selectedModel !== model && model.get('isActive');
+                return selectedModel !== model && model.get('active');
             });
 
             if (otherSelectedModel != null) {
-                otherSelectedModel.set({ 'isActive': false });
+                otherSelectedModel.set({ 'active': false });
             }
         }
     }
 });
-
+UserDetailsItemView = Backbone.Marionette.ItemView.extend({
+    template: "#user-details-view-template",
+    events: {
+        'click #edituser': 'editUser',
+        'click #deleteuser': 'deleteUser'
+    },
+    editUser: function () {
+        SuperAdminApp.vent.trigger("user:edit", this.model);
+    },
+    deleteUser: function () {
+        SuperAdminApp.vent.trigger("user:delete", this.model);
+    }
+});
+UserDetailsItemEditView = Backbone.Marionette.ItemView.extend({
+    template: "#user-details-editview-template" ,
+    events: {
+        'click #saveuserdetails': 'saveUser',
+        'click #cancelsavinguserdetails': 'cancelUser'
+    },
+    saveUser: function () {
+        SuperAdminApp.vent.trigger("user:save", this.model);
+    },
+    cancelUser: function () {
+        SuperAdminApp.vent.trigger("user:cancel", this.model);
+    }
+});
  
 
 // and show the views in the layout
 layout.top.show(new TopView());
 layout.left.show(new LeftView());
-layout.center.show(new CenterView());
+layout.center.show(detailsLayout);
 
 
 $(document).ready(function () {
@@ -170,9 +213,29 @@ $(document).ready(function () {
     });
     layout.left.show(usersView);
 
-    var tabItems = new UserTabHeaderItems([new UserTabHeaderItem({text:'User Details', index: 0, isActive: true}) ,new UserTabHeaderItem({text:'Apps', index: 1})]);
+
+    var tabItems = new UserTabHeaderItems([new UserTabHeaderItem({ text: 'User Details', index: 0, active: true }), new UserTabHeaderItem({ text: 'Apps', index: 1 })]);
     var usertabHeaderView = new UserTabHeaderView({
         collection: tabItems
     });
-    layout.center.show(usertabHeaderView);
+    detailsLayout.tabheader.show(usertabHeaderView);
+
+
+    SuperAdminApp.vent.on("user:selected", function (user) {
+        //reset user details
+        tabItems.resetSelection();
+        detailsLayout.tabpane.show(new UserDetailsItemView({ model: user }));
+    });
+    SuperAdminApp.vent.on("user:edit", function (user) {
+        detailsLayout.tabpane.show(new UserDetailsItemEditView({ model: user }));
+    });
+    SuperAdminApp.vent.on("user:delete", function (user) {
+        detailsLayout.tabpane.close();
+    });
+    SuperAdminApp.vent.on("user:save", function (user) {
+        detailsLayout.tabpane.show(new UserDetailsItemView({ model: user }));
+    });
+    SuperAdminApp.vent.on("user:cancel", function (user) {
+        detailsLayout.tabpane.show(new UserDetailsItemView({ model: user }));
+    });
 });
