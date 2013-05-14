@@ -58,7 +58,7 @@
     </script>
   
     <script id="user-tab-header-item-template" type="text/html">  
-        <a><%= text %></a>
+        <a href="#<%= index %>"><%= text %></a>
     </script>
 
     <!-- -->
