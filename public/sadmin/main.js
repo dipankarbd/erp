@@ -4,12 +4,12 @@ SuperAdminApp.addRegions({
 });
 
 
-User = Backbone.Model.extend({
-    defaults:{
+User = Backbone.Model.extend({ 
+    defaults: {
         selected: false
-    }
+    } 
 });
-Users = Backbone.Collection.extend({
+Users = Backbone.Collection.extend({ 
     model: User
 });
 
@@ -192,14 +192,29 @@ UserDetailsItemEditView = Backbone.Marionette.ItemView.extend({
         SuperAdminApp.vent.trigger("user:cancel", this.model);
     }
 });
- UserDetailsItemCreateView = Backbone.Marionette.ItemView.extend({
-    template: "#user-details-newview-template" ,
+UserDetailsItemCreateView = Backbone.Marionette.ItemView.extend({
+    template: "#user-details-newview-template",
+    ui: {
+        firstname: '#firstname',
+        lastname: '#lastname',
+        email: '#email',
+        userid: '#userid',
+        password: '#password',
+        confirmpassword: '#confirmpassword'
+    },
     events: {
         'click #savenewuserdetails': 'saveUser',
         'click #cancelsavingnewuserdetails': 'cancelUser'
     },
-    saveUser: function () {
-        SuperAdminApp.vent.trigger("user:created", this.model);
+    saveUser: function () { 
+        SuperAdminApp.users.create({
+            'firstname': this.ui.firstname,
+            'lastname':this.ui.lastname,
+            'email':this.ui.email,
+            'username':this.ui.userid,
+            'password':this.ui.password
+        });
+        //SuperAdminApp.vent.trigger("user:created", this.model);
     },
     cancelUser: function () {
         SuperAdminApp.vent.trigger("user:cancel", this.model);
@@ -224,7 +239,7 @@ showUserDetailsView = function () {
 
 $(document).ready(function () {
 
-    var users = new Users([
+    SuperAdminApp.users = new Users([
         new User({ username: 'dipankarbd', firstname: 'Dipankar', lastname: 'Biswas', email: 'dipankar_cse@yahoo.com' }),
         new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
          new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
@@ -246,7 +261,7 @@ $(document).ready(function () {
     ]);
 
     var usersView = new UsersView({
-        collection: users
+        collection: SuperAdminApp.users
     });
     layout.left.show(usersView);
 
@@ -289,5 +304,7 @@ $(document).ready(function () {
     SuperAdminApp.vent.on("user:createnew", function () { 
         detailsLayout.tabpane.show(new UserDetailsItemCreateView());
     });
+
+
 
 });

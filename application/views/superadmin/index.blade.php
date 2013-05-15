@@ -134,7 +134,7 @@
             </fieldset>
             <hr/>
             <div>
-                <button id="savenewuserdetails" type="submit" class="btn btn-primary">Save changes</button>
+                <button id="savenewuserdetails" type="button" class="btn btn-primary">Save changes</button>
                 <button id="cancelsavingnewuserdetails" type="button" class="btn">Cancel</button>
             </div> 
         </form>  
@@ -151,8 +151,8 @@
     {{ HTML::script('js/backbone.marionette/underscore.js') }} 
     {{ HTML::script('js/backbone.marionette/backbone.js') }} 
 
-    {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }} 
-      
+    {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}  
+
     {{ HTML::script('sadmin/main.js') }} 
      
 </body>
