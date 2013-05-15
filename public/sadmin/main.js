@@ -32,6 +32,14 @@ DetailsLayout = Backbone.Marionette.Layout.extend({
     tabpane: "#tabpane-region" 
   }
 });
+AppsLayout = Backbone.Marionette.Layout.extend({
+  template: "#apps-layout",
+
+  regions: {
+    applist: "#apps-list",
+    details: "#apps-details" 
+  }
+});
 
 
 // Show the "layout" in the "container" region
@@ -39,10 +47,11 @@ layout = new MainLayout();
 SuperAdminApp.container.show(layout);
 
 detailsLayout = new DetailsLayout();
+appsLayout = new AppsLayout();
 
 TopView = Backbone.Marionette.ItemView.extend({
   template: "#topview-template",
-  className: "well"
+  className: "well well-small"
 });
 LeftView = Backbone.Marionette.ItemView.extend({
   template: "#leftview-template"
@@ -177,6 +186,19 @@ UserDetailsItemEditView = Backbone.Marionette.ItemView.extend({
         SuperAdminApp.vent.trigger("user:cancel", this.model);
     }
 });
+ UserDetailsItemCreateView = Backbone.Marionette.ItemView.extend({
+    template: "#user-details-newview-template" ,
+    events: {
+        'click #savenewuserdetails': 'saveUser',
+        'click #cancelsavingnewuserdetails': 'cancelUser'
+    },
+    saveUser: function () {
+        SuperAdminApp.vent.trigger("user:create", this.model);
+    },
+    cancelUser: function () {
+        SuperAdminApp.vent.trigger("user:cancel", this.model);
+    }
+});
  
 
 // and show the views in the layout
@@ -184,6 +206,10 @@ layout.top.show(new TopView());
 layout.left.show(new LeftView());
 layout.center.show(detailsLayout);
 
+
+showUserDetailsView = function(){
+     detailsLayout.tabpane.show(new UserDetailsItemView({ model: SuperAdminApp.selectedUser }));
+}
 
 $(document).ready(function () {
 
@@ -221,10 +247,21 @@ $(document).ready(function () {
     detailsLayout.tabheader.show(usertabHeaderView);
 
 
+
+    SuperAdminApp.vent.on("usertab:selected", function (model) {
+        if (model.get('index') === 0) {
+            showUserDetailsView();
+        }
+        else if (model.get('index') === 1) {
+            detailsLayout.tabpane.show(appsLayout);
+        }
+    });
+   
+  
     SuperAdminApp.vent.on("user:selected", function (user) {
         //reset user details
         tabItems.resetSelection();
-        detailsLayout.tabpane.show(new UserDetailsItemView({ model: user }));
+        showUserDetailsView();
     });
     SuperAdminApp.vent.on("user:edit", function (user) {
         detailsLayout.tabpane.show(new UserDetailsItemEditView({ model: user }));
@@ -233,9 +270,9 @@ $(document).ready(function () {
         detailsLayout.tabpane.close();
     });
     SuperAdminApp.vent.on("user:save", function (user) {
-        detailsLayout.tabpane.show(new UserDetailsItemView({ model: user }));
+        showUserDetailsView();
     });
-    SuperAdminApp.vent.on("user:cancel", function (user) {
-        detailsLayout.tabpane.show(new UserDetailsItemView({ model: user }));
+    SuperAdminApp.vent.on("user:cancel", function (user) { 
+        showUserDetailsView();
     });
 });

@@ -41,10 +41,22 @@
         <div class="row" id="tabheader-region"></div>
         <div class="row well" id="tabpane-region"></div> 
     </script>
+    <script id="apps-layout" type="text/html"> 
+        <div class="span2"  id="apps-list">TODO: APPS GRID</div>
+        <div id="apps-details">TODO: DETAILS</div> 
+    </script>
 
     <script id="topview-template" type="text/html">
-         <p>this is filter view...</p>
+        <div class="clearfix ">
+            <div class="span8">
+                <p>
+                    TODO: Filter<br/> TODO: Filter<br/> TODO: Filter
+                </p> 
+            </div> 
+            <button id="createuser" type="button" class="btn btn-success pull-right">New User</button> 
+        </div> 
     </script>
+
     <script id="leftview-template" type="text/html">
         <div style="background-color:green;">left View</div>
     </script>
@@ -57,6 +69,9 @@
             <h2><%= email %></h2>  
         </div> 
     </script>
+
+  
+
     <script id="no-users-template" type="text/html"> 
         <div class="user">
             <p class="text-warning">No user available.Please add a user</p>
@@ -66,7 +81,8 @@
     <script id="user-tab-header-item-template" type="text/html">  
          <a href="#<%= index %>"><%= text %></a> 
     </script>
-    
+   
+
     <script id="user-details-view-template" type="text/html">   
         <div class="span1">  <img src="{{URL::to_asset('sadmin/images/people.png') }}" alt=""> </div>
 		<div class="span3">
@@ -92,9 +108,34 @@
                 <label>User Id</label> 
                 <span class="input uneditable-input"><%= username %></span> 
             </fieldset>
-            <div class="form-actions">
+            <hr/>
+            <div>
                 <button id="saveuserdetails" type="submit" class="btn btn-primary">Save changes</button>
                 <button id="cancelsavinguserdetails" type="button" class="btn">Cancel</button>
+            </div> 
+        </form>  
+    </script>
+    <script id="user-details-newview-template" type="text/html">   
+        <form>
+            <fieldset>
+                <legend>New User Details</legend>
+                <label>First Name</label>
+                <input type="text" required/>
+                <label>Last Name</label>
+                <input type="text" required/>
+                <label>Email</label>
+                <input type="text" required/>
+                <label>User Id</label>  
+                <input type="text" required/>
+                <label>Password</label>  
+                <input type="text" required/>
+                <label>Confirm Password</label>  
+                <input type="text" required/>
+            </fieldset>
+            <hr/>
+            <div>
+                <button id="savenewuserdetails" type="submit" class="btn btn-primary">Save changes</button>
+                <button id="cancelsavingnewuserdetails" type="button" class="btn">Cancel</button>
             </div> 
         </form>  
     </script>
