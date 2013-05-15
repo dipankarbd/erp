@@ -50,8 +50,14 @@ detailsLayout = new DetailsLayout();
 appsLayout = new AppsLayout();
 
 TopView = Backbone.Marionette.ItemView.extend({
-  template: "#topview-template",
-  className: "well well-small"
+    template: "#topview-template",
+    className: "well well-small",
+    events: {
+        'click #createuser': 'createNewUser'
+    },
+    createNewUser: function () { 
+         SuperAdminApp.vent.trigger("user:createnew");
+    }
 });
 LeftView = Backbone.Marionette.ItemView.extend({
   template: "#leftview-template"
@@ -193,7 +199,7 @@ UserDetailsItemEditView = Backbone.Marionette.ItemView.extend({
         'click #cancelsavingnewuserdetails': 'cancelUser'
     },
     saveUser: function () {
-        SuperAdminApp.vent.trigger("user:create", this.model);
+        SuperAdminApp.vent.trigger("user:created", this.model);
     },
     cancelUser: function () {
         SuperAdminApp.vent.trigger("user:cancel", this.model);
@@ -207,8 +213,13 @@ layout.left.show(new LeftView());
 layout.center.show(detailsLayout);
 
 
-showUserDetailsView = function(){
-     detailsLayout.tabpane.show(new UserDetailsItemView({ model: SuperAdminApp.selectedUser }));
+showUserDetailsView = function () {
+    if (SuperAdminApp.selectedUser) {
+        detailsLayout.tabpane.show(new UserDetailsItemView({ model: SuperAdminApp.selectedUser }));
+    }
+    else {
+        detailsLayout.tabpane.close();
+    }
 }
 
 $(document).ready(function () {
@@ -256,8 +267,8 @@ $(document).ready(function () {
             detailsLayout.tabpane.show(appsLayout);
         }
     });
-   
-  
+
+
     SuperAdminApp.vent.on("user:selected", function (user) {
         //reset user details
         tabItems.resetSelection();
@@ -272,7 +283,11 @@ $(document).ready(function () {
     SuperAdminApp.vent.on("user:save", function (user) {
         showUserDetailsView();
     });
-    SuperAdminApp.vent.on("user:cancel", function (user) { 
+    SuperAdminApp.vent.on("user:cancel", function (user) {
         showUserDetailsView();
     });
+    SuperAdminApp.vent.on("user:createnew", function () { 
+        detailsLayout.tabpane.show(new UserDetailsItemCreateView());
+    });
+
 });
