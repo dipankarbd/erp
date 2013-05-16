@@ -20,6 +20,7 @@ MainLayout = Backbone.Marionette.Layout.extend({
   template: "#main-layout",
 
   regions: {
+    alert: "#messagebar-region",
     top: "#top-region",
     left: "#left-region",
     center: "#center-region"
@@ -228,9 +229,17 @@ UserDetailsItemCreateView = Backbone.Marionette.ItemView.extend({
         SuperAdminApp.vent.trigger("user:cancel", this.model);
     }
 });
- 
 
-// and show the views in the layout
+MessageBarModel = Backbone.Model.extend({  
+});
+
+TopMessageBarView = Backbone.Marionette.ItemView.extend({
+    model:MessageBarModel,
+    template: "#topmessagebar-template",
+    className: "alert alert-block alert-error"
+});
+
+// and show the views in the layout 
 layout.top.show(new TopView());
 layout.left.show(new LeftView());
 layout.center.show(detailsLayout);
@@ -312,12 +321,12 @@ $(document).ajaxError(function (event, jqxhr, settings, exception) {
         var response = $.parseJSON(jqxhr.responseText);
         if (response instanceof Array) {
             for (var i = 0; i < response.length; i++) {
-                msg += response[i] + '<br/>';
+                msg += '<p>' + response[i] + '</p>';
             }
         } else {
             msg = response;
         }
-        bootbox.alert('<h3>' + jqxhr.statusText + '</h3>' + msg);
-        $("#topmessagebar").show();
+        var model = new MessageBarModel({ title: jqxhr.statusText, message: msg }); 
+        layout.alert.show(new TopMessageBarView({model: model}));
     }
 });

@@ -24,23 +24,14 @@
             </ul>
         </div>
     </div>
-    <div  class="container-fluid" id="topmessagebar">
-      <div class="row-fluid">
-          <div class="alert alert-block alert-error">
-              <button type="button" class="close" data-dismiss="alert">&times;</button> 
-              <h4 class="alert-heading">Oh snap! You got an error!</h4>
-              <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
-               <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
-               <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
-          </div> 
-      </div>
-    </div>
+     
 	<div class="container-fluid" id="container"> 
          
     </div>  
      
      <!-- Templates -->
     <script id="main-layout" type="text/html">
+        <div class="row-fluid" id="messagebar-region"></div> 
         <div class="row-fluid" id="top-region"></div>
         <div class="row-fluid">
             <div class="span3 well well-small" id="left-region"></div>
@@ -48,6 +39,11 @@
         </div>
     </script>
 
+    <script id="topmessagebar-template" type="text/html"> 
+              <button type="button" class="close" data-dismiss="alert">&times;</button> 
+              <h4 class="alert-heading"><%= title %></h4>
+              <%= message %> 
+    </script>
     <script id="details-layout" type="text/html">
         <div class="row" id="tabheader-region"></div>
         <div class="row well" id="tabpane-region"></div> 
