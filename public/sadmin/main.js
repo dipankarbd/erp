@@ -5,11 +5,13 @@ SuperAdminApp.addRegions({
 
 
 User = Backbone.Model.extend({ 
+    urlRoot:'users',
     defaults: {
         selected: false
     } 
 });
 Users = Backbone.Collection.extend({ 
+    url:'users',
     model: User
 });
 
@@ -208,13 +210,19 @@ UserDetailsItemCreateView = Backbone.Marionette.ItemView.extend({
     },
     saveUser: function () { 
         SuperAdminApp.users.create({
-            'firstname': this.ui.firstname,
-            'lastname':this.ui.lastname,
-            'email':this.ui.email,
-            'username':this.ui.userid,
-            'password':this.ui.password
+            firstname: this.ui.firstname.val(),
+            lastname: this.ui.lastname.val(),
+            email: this.ui.email.val(),
+            username: this.ui.userid.val(),
+            password: this.ui.password.val(),
+            password_confirmation: this.ui.confirmpassword.val()
+        },{
+            wait:true,
+            success : function(resp){
+                SuperAdminApp.vent.trigger("user:created", this.model);
+            } 
         });
-        //SuperAdminApp.vent.trigger("user:created", this.model);
+       
     },
     cancelUser: function () {
         SuperAdminApp.vent.trigger("user:cancel", this.model);
@@ -238,27 +246,14 @@ showUserDetailsView = function () {
 }
 
 $(document).ready(function () {
+     $("#topmessagebar").hide();
+    $.ajaxPrefilter(function (options) {
+        options.url = "http://localhost:41756/public/index.php/api/" + encodeURIComponent(options.url);
+    });
 
-    SuperAdminApp.users = new Users([
-        new User({ username: 'dipankarbd', firstname: 'Dipankar', lastname: 'Biswas', email: 'dipankar_cse@yahoo.com' }),
-        new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-         new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-          new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-           new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-                   new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-         new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-          new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-           new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-                   new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-         new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-          new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-           new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-                   new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-         new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-          new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-           new User({ username: 'user1', firstname: 'User', lastname: '1', email: 'usr1@yahoo.com' }),
-        new User({ username: 'user2', firstname: 'User', lastname: '2', email: 'usr2@yahoo.com' })
-    ]);
+    SuperAdminApp.users = new Users();
+
+    SuperAdminApp.users.fetch();
 
     var usersView = new UsersView({
         collection: SuperAdminApp.users
@@ -301,10 +296,28 @@ $(document).ready(function () {
     SuperAdminApp.vent.on("user:cancel", function (user) {
         showUserDetailsView();
     });
-    SuperAdminApp.vent.on("user:createnew", function () { 
+    SuperAdminApp.vent.on("user:createnew", function () {
         detailsLayout.tabpane.show(new UserDetailsItemCreateView());
+    });
+     SuperAdminApp.vent.on("user:created", function () {
+         showUserDetailsView();
     });
 
 
+});
 
+$(document).ajaxError(function (event, jqxhr, settings, exception) {
+    if (jqxhr.status === 500) {
+        var msg = '';
+        var response = $.parseJSON(jqxhr.responseText);
+        if (response instanceof Array) {
+            for (var i = 0; i < response.length; i++) {
+                msg += response[i] + '<br/>';
+            }
+        } else {
+            msg = response;
+        }
+        bootbox.alert('<h3>' + jqxhr.statusText + '</h3>' + msg);
+        $("#topmessagebar").show();
+    }
 });

@@ -24,6 +24,17 @@
             </ul>
         </div>
     </div>
+    <div  class="container-fluid" id="topmessagebar">
+      <div class="row-fluid">
+          <div class="alert alert-block alert-error">
+              <button type="button" class="close" data-dismiss="alert">&times;</button> 
+              <h4 class="alert-heading">Oh snap! You got an error!</h4>
+              <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
+               <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
+               <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
+          </div> 
+      </div>
+    </div>
 	<div class="container-fluid" id="container"> 
          
     </div>  
@@ -120,17 +131,17 @@
             <fieldset>
                 <legend>New User Details</legend>
                 <label>First Name</label>
-                <input type="text" required/>
+                <input id="firstname" type="text" required/>
                 <label>Last Name</label>
-                <input type="text" required/>
+                <input id="lastname" type="text" required/>
                 <label>Email</label>
-                <input type="text" required/>
+                <input id="email" type="text" required/>
                 <label>User Id</label>  
-                <input type="text" required/>
+                <input id="userid" type="text" required/>
                 <label>Password</label>  
-                <input type="text" required/>
+                <input id="password" type="text" required/>
                 <label>Confirm Password</label>  
-                <input type="text" required/>
+                <input id="confirmpassword" type="text" required/>
             </fieldset>
             <hr/>
             <div>
@@ -148,6 +159,7 @@
 
     {{ HTML::script('bootstrap/js/bootstrap.js') }} 
 
+    <script type="text/javascript" src="https://raw.github.com/makeusabrew/bootbox/v3.2.0/bootbox.js"></script>
     {{ HTML::script('js/backbone.marionette/underscore.js') }} 
     {{ HTML::script('js/backbone.marionette/backbone.js') }} 
 

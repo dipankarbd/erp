@@ -105,6 +105,44 @@ Route::put('api/common/countries',function(){
     return Response::eloquent($country); 
 });
 
+Route::get('api/users',function(){
+    return Response::eloquent(User::get(array('id', 'username','firstname','lastname','email')));
+});
+Route::post('api/users',function(){    
+    $input = Input::json();
+  
+    $rules = array(
+        'firstname'  => 'required|min:3|max:32|alpha',
+        'lastname'  => 'required|min:3|max:32|alpha' ,
+        'email' => 'required|min:3|max:64|email',
+        'username' => 'required|min:3|max:32|alpha_num',
+        'password'  =>'required|min:4|max:32|alpha_num|confirmed',
+        'password_confirmation'=>'required|alpha_num|between:4,32'
+    );
+    $v = Validator::make($input, $rules);
+    if( $v->fails() ){ 
+        return Response::json($v->errors->all(),500);
+    }
+
+    $user =  User::where('username','=',$input->username)->first();
+    if($user){
+        return Response::json('Username already exists',500);
+    }
+    else{
+         $user = User::create(array(
+            'username' => $input->username,
+            'password' => Hash::make($input->password),
+            'firstname' => $input->firstname,
+            'lastname' => $input->lastname,
+            'email' => $input->email,
+        ));  
+
+        $user->password = "";
+        return Response::eloquent($user);
+    } 
+});
+
+
 Route::get('api/buyers',function(){
     $data = array();
 
