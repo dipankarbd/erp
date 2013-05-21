@@ -32,7 +32,7 @@ SAdmin.module('Tab.Views', function (Views, App, Backbone, Marionette, $, _) {
     // Tab View
     // -------------------
     Views.TabView = Backbone.Marionette.CollectionView.extend({
-        itemView: UserTabHeaderItemView,
+        itemView: Views.ItemView,
         tagName: 'ul',
         className: 'nav nav-tabs', 
 

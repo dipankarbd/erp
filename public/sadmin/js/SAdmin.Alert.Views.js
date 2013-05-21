@@ -3,7 +3,7 @@ SAdmin.module('Alert.Views', function (Views, App, Backbone, Marionette, $, _) {
     // Error
     // -------------------
     Views.ErrorView = Backbone.Marionette.ItemView.extend({
-        model:MessageBarModel,
+        model:App.Alert.Models.Alert,
         template: "#alert-template",
         className: "alert alert-block alert-error"
     });
@@ -11,7 +11,7 @@ SAdmin.module('Alert.Views', function (Views, App, Backbone, Marionette, $, _) {
     // Success
     // -------------------
     Views.SuccessView = Backbone.Marionette.ItemView.extend({
-        model:MessageBarModel,
+        model:App.Alert.Models.Alert,
         template: "#alert-template",
         className: "alert alert-block alert-success"
     });
@@ -19,7 +19,7 @@ SAdmin.module('Alert.Views', function (Views, App, Backbone, Marionette, $, _) {
     // Information
     // -------------------
     Views.InfoView = Backbone.Marionette.ItemView.extend({
-        model:MessageBarModel,
+        model:App.Alert.Models.Alert,
         template: "#alert-template",
         className: "alert alert-block alert-info"
     });

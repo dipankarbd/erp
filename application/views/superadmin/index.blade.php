@@ -8,7 +8,7 @@
     {{ HTML::style('bootstrap/css/bootstrap.css') }}
     {{ HTML::style('bootstrap/css/bootstrap-responsive.css') }} 
 
-    {{ HTML::style('sadmin/main.css') }} 
+    {{ HTML::style('sadmin/css/style.css') }} 
 </head>
 <body>
    
@@ -168,7 +168,29 @@
 
     {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}  
 
-    {{ HTML::script('sadmin/main.js') }} 
+  
+    <!-- application -->
+    {{ HTML::script('sadmin/js/SAdmin.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Alert.Models.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Tab.Models.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.User.Models.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Layout.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Tab.Views.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Alert.Views.js') }}  
+    {{ HTML::script('sadmin/js/SAdmin.Filter.Views.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.User.Views.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Main.js') }} 
+ 
+    <script>
+        $(function(){ 
+            $.ajaxPrefilter(function (options) {
+                options.url = "http://localhost:41756/public/index.php/api/" + encodeURIComponent(options.url);
+            });
+
+            SAdmin.start();
+        });
+    </script>
+
      
 </body>
 </html>
