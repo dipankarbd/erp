@@ -47,7 +47,13 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         App.vent.on("user:cancel", function (user) {
             self.showUserDetailsView();
         });
-
+        App.vent.on("alert:showerror", function (model) {
+            self.showErrorAlert(model);
+        });
+        App.vent.on("alert:showsuccess", function (model) {
+            self.showSuccessAlert(model);
+        });
+        
     };
 
 
@@ -90,6 +96,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         },
 
         showUserDetailsView: function () {
+            this.clearAlert();
             if (this.selectedUser) {
                 this.detailslayout.tabpane.show(new App.User.Views.DetailsView({ model: this.selectedUser }));
             }
@@ -99,15 +106,33 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         },
 
         showCreateNewUserView: function () {
+            this.clearAlert();
             this.detailslayout.tabpane.show(new App.User.Views.CreateView({ collection: this.userlist }));
         },
 
-        showUserEditView: function (user) { 
+        showUserEditView: function (user) {
+            this.clearAlert();
             this.detailslayout.tabpane.show(new App.User.Views.EditView({ model: user }));
         },
 
-        clearTabPane: function(){
+        clearTabPane: function () {
+            this.clearAlert();
             this.detailslayout.tabpane.close();
+        },
+         
+        clearAlert: function () {
+            this.mainlayout.alert.close();
+        },
+
+        showSuccessAlert: function (alertModel) {
+            this.mainlayout.alert.show(new App.Alert.Views.SuccessView({ model: alertModel }));
+        },
+
+        showInfoAlert: function (alertModel) {
+            this.mainlayout.alert.show(new App.Alert.Views.InfoView({ model: alertModel }));
+        },
+        showErrorAlert: function (alertModel) {
+            this.mainlayout.alert.show(new App.Alert.Views.ErrorView({ model: alertModel }));
         }
 
     });

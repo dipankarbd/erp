@@ -22,7 +22,7 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
         },
 
         showUserDetails: function () {
-            this.model.set({ 'selected': true }); 
+            this.model.set({ 'selected': true });
             App.vent.trigger("user:selected", this.model);
         }
     });
@@ -120,8 +120,24 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
                 password_confirmation: this.ui.confirmpassword.val()
             }, {
                 wait: true,
-                success: function (resp) {
+                success: function (model, response) {
                     App.vent.trigger("user:created", this.model);
+                    var alertModel = new App.Alert.Models.Alert({body:'User Created Successfully!'});
+                    App.vent.trigger("alert:showsuccess", alertModel);
+                },
+                error: function (model, err) {
+                    var response = $.parseJSON(err.responseText);
+                    var msg = '';
+
+                    if (response instanceof Array) {
+                        for (var i = 0; i < response.length; i++) {
+                            msg += '<p>' + response[i] + '</p>';
+                        }
+                    } else {
+                        msg = response;
+                    }
+                    var alertModel = new App.Alert.Models.Alert({heading:'Error in creating new user!', body:msg});
+                    App.vent.trigger("alert:showerror", alertModel);
                 }
             });
 
@@ -130,5 +146,5 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
         cancelUser: function () {
             App.vent.trigger("user:cancel", this.model);
         }
-    }); 
+    });
 });

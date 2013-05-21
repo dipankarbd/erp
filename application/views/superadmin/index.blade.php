@@ -142,9 +142,9 @@
                 <label>User Id</label>  
                 <input id="userid" type="text" required/>
                 <label>Password</label>  
-                <input id="password" type="text" required/>
+                <input id="password" type="password" required/>
                 <label>Confirm Password</label>  
-                <input id="confirmpassword" type="text" required/>
+                <input id="confirmpassword" type="password" required/>
             </fieldset>
             <hr/>
             <div>
