@@ -112,7 +112,7 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
         },
 
         saveUser: function () { 
-            App.users.create({ // need improvement
+            App.Main.userlist.create({
                 firstname: this.ui.firstname.val(),
                 lastname: this.ui.lastname.val(),
                 email: this.ui.email.val(),

@@ -1,7 +1,7 @@
 var SAdmin = new Backbone.Marionette.Application();
 
 SAdmin.addRegions({
-    header: '#container'
+    container: '#container'
 });
 
 SAdmin.on('initialize:after', function() {
