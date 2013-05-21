@@ -12,6 +12,42 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         this.mainlayout = new App.Layout.Main();
         this.detailslayout = new App.Layout.Details();
         this.appslayout = new App.Layout.Apps();
+
+        // Application Event Handlers
+        // --------------------------
+        var self = this;
+        App.vent.on("user:selected", function (model) {
+            self.selectedUser = model;
+            self.showTabHeaderView();
+            self.showUserDetailsView();
+        });
+        App.vent.on("usertab:selected", function (model) {
+            if (model.get('index') === 0) {
+                self.showUserDetailsView();
+            }
+            else if (model.get('index') === 1) {
+                self.showAppsLayout();
+            }
+        });
+        App.vent.on("user:createnew", function () {
+            self.showCreateNewUserView();
+        });
+        App.vent.on("user:created", function () {
+            self.showUserDetailsView();
+        });
+        App.vent.on("user:edit", function (user) {
+            self.showUserEditView(user);
+        });
+        App.vent.on("user:delete", function (user) {
+            self.clearTabPane();
+        });
+        App.vent.on("user:save", function (user) {
+            self.showUserDetailsView();
+        });
+        App.vent.on("user:cancel", function (user) {
+            self.showUserDetailsView();
+        });
+
     };
 
 
@@ -33,6 +69,10 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             this.mainlayout.center.show(this.detailslayout);
         },
 
+        showAppsLayout: function () {
+            this.detailslayout.tabpane.show(this.appslayout);
+        },
+
         showFilterView: function () {
             this.mainlayout.top.show(new App.Filter.Views.FilterView());
         },
@@ -43,8 +83,35 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
         showTabHeaderView: function () {
             this.detailslayout.tabheader.show(new App.Tab.Views.TabView({ collection: this.tabheaderlist }));
+        },
+
+        restTabSelection: function () {
+            this.tabheaderlist.resetSelection();
+        },
+
+        showUserDetailsView: function () {
+            if (this.selectedUser) {
+                this.detailslayout.tabpane.show(new App.User.Views.DetailsView({ model: this.selectedUser }));
+            }
+            else {
+                this.detailslayout.tabpane.close();
+            }
+        },
+
+        showCreateNewUserView: function () {
+            this.detailslayout.tabpane.show(new App.User.Views.CreateView({ collection: this.userlist }));
+        },
+
+        showUserEditView: function (user) { 
+            this.detailslayout.tabpane.show(new App.User.Views.EditView({ model: user }));
+        },
+
+        clearTabPane: function(){
+            this.detailslayout.tabpane.close();
         }
+
     });
+
 
     // Main Initializer
     // -------------------- 

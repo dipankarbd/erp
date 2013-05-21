@@ -1,5 +1,5 @@
 SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
-    	
+
     // Users No user view
     // -------------------
     Views.EmptyView = Backbone.Marionette.ItemView.extend({
@@ -22,8 +22,7 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
         },
 
         showUserDetails: function () {
-            this.model.set({ 'selected': true });
-            App.selectedUser = this.model; // need more improvement
+            this.model.set({ 'selected': true }); 
             App.vent.trigger("user:selected", this.model);
         }
     });
@@ -34,7 +33,7 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
         itemView: Views.ItemView,
         emptyView: Views.EmptyView,
         tagName: 'ul',
-        className: 'userlist', 
+        className: 'userlist',
 
         initialize: function () {
             var self = this;
@@ -42,13 +41,13 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
         },
 
         toggleSelection: function (user) {
-            if(user.get('selected')) {  
-                var otherSelectedUser = this.collection.find(function(model) {
+            if (user.get('selected')) {
+                var otherSelectedUser = this.collection.find(function (model) {
                     return user !== model && model.get('selected');
                 });
 
-                if(otherSelectedUser != null) { 
-                    otherSelectedUser.set({'selected': false});
+                if (otherSelectedUser != null) {
+                    otherSelectedUser.set({ 'selected': false });
                 }
             }
         }
@@ -76,7 +75,7 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
     // Edit View
     // --------------------------
     Views.EditView = Backbone.Marionette.ItemView.extend({
-        template: "#user-details-editview-template" ,
+        template: "#user-details-editview-template",
 
         events: {
             'click #saveuserdetails': 'saveUser',
@@ -111,26 +110,25 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
             'click #cancelsavingnewuserdetails': 'cancelUser'
         },
 
-        saveUser: function () { 
-            App.Main.userlist.create({
+        saveUser: function () {
+            this.collection.create({
                 firstname: this.ui.firstname.val(),
                 lastname: this.ui.lastname.val(),
                 email: this.ui.email.val(),
                 username: this.ui.userid.val(),
                 password: this.ui.password.val(),
                 password_confirmation: this.ui.confirmpassword.val()
-            },{
-                wait:true,
-                success : function(resp){
+            }, {
+                wait: true,
+                success: function (resp) {
                     App.vent.trigger("user:created", this.model);
-                } 
+                }
             });
-       
+
         },
 
         cancelUser: function () {
             App.vent.trigger("user:cancel", this.model);
         }
-    });
-
+    }); 
 });
