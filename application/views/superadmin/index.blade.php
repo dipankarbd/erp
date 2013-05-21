@@ -44,6 +44,13 @@
               <h4 class="alert-heading"><%= title %></h4>
               <%= message %> 
     </script>
+
+    <script id="alert-template" type="text/html"> 
+        <button type="button" class="close" data-dismiss="alert">&times;</button>       
+        <h4 class="alert-heading"><%= heading %></h4>
+        <%= body %> 
+    </script>
+
     <script id="details-layout" type="text/html">
         <div class="row" id="tabheader-region"></div>
         <div class="row well" id="tabpane-region"></div> 
