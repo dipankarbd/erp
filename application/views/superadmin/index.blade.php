@@ -29,7 +29,8 @@
          
     </div>  
      
-     <!-- Templates -->
+
+    <!-- Layout Templates -->
     <script id="main-layout" type="text/html">
         <div class="row-fluid" id="messagebar-region"></div> 
         <div class="row-fluid" id="top-region"></div>
@@ -38,19 +39,6 @@
             <div class="span9" id="center-region"></div>
         </div>
     </script>
-
-    <script id="topmessagebar-template" type="text/html"> 
-              <button type="button" class="close" data-dismiss="alert">&times;</button> 
-              <h4 class="alert-heading"><%= title %></h4>
-              <%= message %> 
-    </script>
-
-    <script id="alert-template" type="text/html"> 
-        <button type="button" class="close" data-dismiss="alert">&times;</button>       
-        <h4 class="alert-heading"><%= heading %></h4>
-        <%= body %> 
-    </script>
-
     <script id="details-layout" type="text/html">
         <div class="row" id="tabheader-region"></div>
         <div class="row well" id="tabpane-region"></div> 
@@ -60,6 +48,7 @@
         <div id="apps-details">TODO: DETAILS</div> 
     </script>
 
+    <!-- Filter Views Templates -->
     <script id="topview-template" type="text/html">
         <div class="clearfix ">
             <div class="span8">
@@ -71,32 +60,30 @@
         </div> 
     </script>
 
-    <script id="leftview-template" type="text/html">
-        <div style="background-color:green;">left View</div>
+    <!-- Tab View Templates -->
+    <script id="user-tab-header-item-template" type="text/html">  
+         <a href="#<%= index %>"><%= text %></a> 
     </script>
-    <script id="centerview-template" type="text/html">
-        <div style="background-color:yellow;">Center View</div>
+
+    <!-- Alert Templates -->
+    <script id="alert-template" type="text/html"> 
+        <button type="button" class="close" data-dismiss="alert">&times;</button>       
+        <h4 class="alert-heading"><%= heading %></h4>
+        <%= body %> 
     </script>
+
+    <!-- User View Templates -->
+    <script id="no-users-template" type="text/html"> 
+        <div class="user">
+            <p class="text-warning">No user available.Please add a user</p>
+        </div>
+    </script> 
     <script id="useritemview-template" type="text/html"> 
         <div class="user<%= (selected == true)?' selected':'' %>">
             <h1><%= firstname %> <%= lastname %></h1>
             <h2><%= email %></h2>  
         </div> 
     </script>
-
-  
-
-    <script id="no-users-template" type="text/html"> 
-        <div class="user">
-            <p class="text-warning">No user available.Please add a user</p>
-        </div>
-    </script>
-  
-    <script id="user-tab-header-item-template" type="text/html">  
-         <a href="#<%= index %>"><%= text %></a> 
-    </script>
-   
-
     <script id="user-details-view-template" type="text/html">   
         <div class="span1">  <img src="{{URL::to_asset('sadmin/images/people.png') }}" alt=""> </div>
 		<div class="span3">
@@ -152,11 +139,9 @@
                 <button id="cancelsavingnewuserdetails" type="button" class="btn">Cancel</button>
             </div> 
         </form>  
-    </script>
-    <!-- -->
+    </script> 
     
-</ul>
-
+    
     <!-- Scripts -->
     {{ HTML::script('js/jquery-1.9.1.min.js') }}
 
