@@ -23,7 +23,8 @@ SAdmin.module('Tab.Views', function (Views, App, Backbone, Marionette, $, _) {
             }
         },
 
-        tabSelected: function () {
+        tabSelected: function (e) {
+            e.preventDefault();
             this.model.set({ 'active': true });
             App.vent.trigger("usertab:selected",this.model);
         }
