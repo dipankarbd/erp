@@ -101,17 +101,17 @@
             <fieldset>
                 <legend>Editing User Details</legend>
                 <label>First Name</label>
-                <input type="text" value="<%= firstname %>" required/>
+                <input id="firstname" type="text" value="<%= firstname %>" required/>
                 <label>Last Name</label>
-                <input type="text" value="<%= lastname %>" required/>
+                <input  id="lastname" type="text" value="<%= lastname %>" required/>
                 <label>Email</label>
-                <input type="text" value="<%= email %>" required/>
+                <input id="email" type="text" value="<%= email %>" required/>
                 <label>User Id</label> 
                 <span class="input uneditable-input"><%= username %></span> 
             </fieldset>
             <hr/>
             <div>
-                <button id="saveuserdetails" type="submit" class="btn btn-primary">Save changes</button>
+                <button id="saveuserdetails" type="button" class="btn btn-primary">Save changes</button>
                 <button id="cancelsavinguserdetails" type="button" class="btn">Cancel</button>
             </div> 
         </form>  
@@ -169,7 +169,7 @@
     <script>
         $(function(){ 
             $.ajaxPrefilter(function (options) {
-                options.url = "http://localhost:41756/public/index.php/api/" + encodeURIComponent(options.url);
+                options.url = "http://localhost:41756/public/index.php/api/" +  options.url;
             });
 
             SAdmin.start();

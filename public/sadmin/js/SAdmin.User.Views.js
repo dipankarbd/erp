@@ -68,7 +68,22 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
         },
 
         deleteUser: function () {
-            App.vent.trigger("user:delete", this.model);
+            var self = this;
+            bootbox.confirm("Are you sure, you want to delete this user?", function (result) {
+                if (result === true) {
+                    self.model.destroy({ wait: true,
+                        success: function (model, response) {
+                            App.vent.trigger("user:deleted");
+                            var alertModel = new App.Alert.Models.Alert({ body: 'User Deleted Successfully!' });
+                            App.vent.trigger("alert:showsuccess", alertModel);
+                        },
+                        error: function (model, err) {
+                            var alertModel = new App.Alert.Models.Alert({ heading: 'Error in deleting user!', body: err.responseText });
+                            App.vent.trigger("alert:showerror", alertModel);
+                        } 
+                    });
+                }
+            });
         }
     });
 
@@ -77,13 +92,44 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
     Views.EditView = Backbone.Marionette.ItemView.extend({
         template: "#user-details-editview-template",
 
+        ui: {
+            firstname: '#firstname',
+            lastname: '#lastname',
+            email: '#email'
+        },
+
         events: {
             'click #saveuserdetails': 'saveUser',
             'click #cancelsavinguserdetails': 'cancelUser'
         },
 
         saveUser: function () {
-            App.vent.trigger("user:save", this.model);
+            this.model.save({
+                firstname: this.ui.firstname.val(),
+                lastname: this.ui.lastname.val(),
+                email: this.ui.email.val()
+            }, {
+                wait: true,
+                success: function (model, response) {
+                    App.vent.trigger("user:saved", this.model);
+                    var alertModel = new App.Alert.Models.Alert({ body: 'User Saved Successfully!' });
+                    App.vent.trigger("alert:showsuccess", alertModel);
+                },
+                error: function (model, err) {
+                    var response = $.parseJSON(err.responseText);
+                    var msg = '';
+
+                    if (response instanceof Array) {
+                        for (var i = 0; i < response.length; i++) {
+                            msg += '<p>' + response[i] + '</p>';
+                        }
+                    } else {
+                        msg = response;
+                    }
+                    var alertModel = new App.Alert.Models.Alert({ heading: 'Error in saving user!', body: msg });
+                    App.vent.trigger("alert:showerror", alertModel);
+                }
+            });
         },
 
         cancelUser: function () {
@@ -122,7 +168,7 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
                 wait: true,
                 success: function (model, response) {
                     App.vent.trigger("user:created", this.model);
-                    var alertModel = new App.Alert.Models.Alert({body:'User Created Successfully!'});
+                    var alertModel = new App.Alert.Models.Alert({ body: 'User Created Successfully!' });
                     App.vent.trigger("alert:showsuccess", alertModel);
                 },
                 error: function (model, err) {
@@ -136,7 +182,7 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
                     } else {
                         msg = response;
                     }
-                    var alertModel = new App.Alert.Models.Alert({heading:'Error in creating new user!', body:msg});
+                    var alertModel = new App.Alert.Models.Alert({ heading: 'Error in creating new user!', body: msg });
                     App.vent.trigger("alert:showerror", alertModel);
                 }
             });

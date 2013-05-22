@@ -141,7 +141,50 @@ Route::post('api/users',function(){
         return Response::eloquent($user);
     } 
 });
+Route::put('api/users/(:any)', function($id)
+{
+    $input = Input::json();
+  
+    $rules = array(
+        'firstname'  => 'required|min:3|max:32|alpha',
+        'lastname'  => 'required|min:3|max:32|alpha' ,
+        'email' => 'required|min:3|max:64|email'
+    );
+    $v = Validator::make($input, $rules);
+    if( $v->fails() ){ 
+        return Response::json($v->errors->all(),500);
+    }
 
+    $user =  User::where('id','=',$id)->first();
+    if($user){
+        $user->firstname = $input->firstname;
+        $user->lastname = $input->lastname;
+        $user->email = $input->email;
+        $user->save();
+        $user->password = '';
+        return Response::eloquent($user); 
+    }
+    else{
+        return Response::json('User not exists',500);  
+    } 
+});
+Route::delete('api/users/(:any)', function($id)
+{ 
+    $user =  User::where('id','=',$id)->first();
+    if($user){
+         $res = $user->delete();
+         if($res){
+              return Response::json($res ,204); 
+         }
+         else
+         {
+              return Response::json('Error occured',500);  
+         }   
+    }
+    else{
+        return Response::json('User not exists',500);  
+    } 
+});
 
 Route::get('api/buyers',function(){
     $data = array();

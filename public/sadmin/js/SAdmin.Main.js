@@ -38,10 +38,10 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         App.vent.on("user:edit", function (user) {
             self.showUserEditView(user);
         });
-        App.vent.on("user:delete", function (user) {
+        App.vent.on("user:deleted", function (user) {
             self.clearTabPane();
         });
-        App.vent.on("user:save", function (user) {
+        App.vent.on("user:saved", function (user) {
             self.showUserDetailsView();
         });
         App.vent.on("user:cancel", function (user) {
