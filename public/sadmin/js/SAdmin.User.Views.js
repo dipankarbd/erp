@@ -15,15 +15,6 @@ SAdmin.module('User.Views', function (Views, App, Backbone, Marionette, $, _) {
 
         modelEvents: {
             'change': 'render'
-        },
-
-        events: {
-            'click': 'showUserDetails'
-        },
-
-        showUserDetails: function () {
-            this.model.set({ 'selected': true });
-            App.vent.trigger("user:selected", this.model);
         }
     });
 

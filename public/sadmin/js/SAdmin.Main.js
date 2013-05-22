@@ -3,6 +3,9 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     // Main Router
     // ---------------
     Main.Router = Marionette.AppRouter.extend({
+        appRoutes: {
+            "users/:id": "showUser"
+        }
     });
 
     // Main Controller (Mediator)
@@ -17,7 +20,6 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         // --------------------------
         var self = this;
         App.vent.on("user:selected", function (model) {
-            self.selectedUser = model;
             self.showTabHeaderView();
             self.showUserDetailsView();
         });
@@ -53,13 +55,13 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         App.vent.on("alert:showsuccess", function (model) {
             self.showSuccessAlert(model);
         });
-        
+
     };
 
 
     _.extend(Main.Controller.prototype, {
         start: function () {
-            this.userlist.fetch();
+            this.userlist.fetch({async:false});
             this.showMainLayout();
             this.showDetailsLayout();
             this.showFilterView();
@@ -119,7 +121,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             this.clearAlert();
             this.detailslayout.tabpane.close();
         },
-         
+
         clearAlert: function () {
             this.mainlayout.alert.close();
         },
@@ -133,8 +135,17 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         },
         showErrorAlert: function (alertModel) {
             this.mainlayout.alert.show(new App.Alert.Views.ErrorView({ model: alertModel }));
+        },
+        showUser: function (username) {
+            console.log(this.userlist);
+            this.selectedUser = this.userlist.find(function (model) {
+                return username === model.get('username');
+            }); 
+            if (this.selectedUser != null) {
+                this.selectedUser.set({ 'selected': true });
+                App.vent.trigger("user:selected", this.selectedUser);
+            }
         }
-
     });
 
 

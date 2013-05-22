@@ -62,7 +62,7 @@
 
     <!-- Tab View Templates -->
     <script id="user-tab-header-item-template" type="text/html">  
-         <a href="#<%= index %>"><%= text %></a> 
+         <a href="#"><%= text %></a> 
     </script>
 
     <!-- Alert Templates -->
@@ -79,10 +79,12 @@
         </div>
     </script> 
     <script id="useritemview-template" type="text/html"> 
-        <div class="user<%= (selected == true)?' selected':'' %>">
-            <h1><%= firstname %> <%= lastname %></h1>
-            <h2><%= email %></h2>  
-        </div> 
+        <a href="#users/<%= username %>">
+            <div class="user<%= (selected == true)?' selected':'' %>">
+                <h1><%= firstname %> <%= lastname %></h1>
+                <h2><%= email %></h2>  
+            </div>
+        </a> 
     </script>
     <script id="user-details-view-template" type="text/html">   
         <div class="span1">  <img src="{{URL::to_asset('sadmin/images/people.png') }}" alt=""> </div>
