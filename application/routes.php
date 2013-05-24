@@ -105,8 +105,12 @@ Route::put('api/common/countries',function(){
     return Response::eloquent($country); 
 });
 
+// Users
 Route::get('api/users',function(){
     return Response::eloquent(User::get(array('id', 'username','firstname','lastname','email')));
+});
+Route::get('api/users/(:num)',function($id){ 
+    return Response::eloquent(User::where('id','=',$id)->first(array('id', 'username','firstname','lastname','email')));
 });
 Route::post('api/users',function(){    
     $input = Input::json();
@@ -141,7 +145,7 @@ Route::post('api/users',function(){
         return Response::eloquent($user);
     } 
 });
-Route::put('api/users/(:any)', function($id)
+Route::put('api/users/(:num)', function($id)
 {
     $input = Input::json();
   
@@ -168,7 +172,7 @@ Route::put('api/users/(:any)', function($id)
         return Response::json('User not exists',500);  
     } 
 });
-Route::delete('api/users/(:any)', function($id)
+Route::delete('api/users/(:num)', function($id)
 { 
     $user =  User::where('id','=',$id)->first();
     if($user){
@@ -186,6 +190,59 @@ Route::delete('api/users/(:any)', function($id)
     } 
 });
 
+// User Apps
+Route::get('api/users/(:num)/apps',function($userid){ 
+    $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+             ->join('approles', 'approles.id', '=', 'userapps.roleid')
+             ->where('userapps.userid', '=', $userid)
+             ->get(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
+    return Response::eloquent($userapps); 
+});
+Route::get('api/users/(:num)/apps/(:num)',function($userid,$id){ 
+    $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+             ->join('approles', 'approles.id', '=', 'userapps.roleid')
+             ->where('userapps.userid', '=', $userid)
+             ->where('userapps.id', '=', $id)
+             ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
+    if($userapps)
+        return Response::eloquent($userapps); 
+    else return Response::json('Apps not found',404);
+});
+Route::post('api/users/(:num)/apps',function($userid){ 
+    $input = Input::json();
+    return $input ;
+    $rules = array(
+        'userid'  => 'required|min:1|max:500|num',
+        'appid'  => 'required|min:1|max:500|num' ,
+        'roleid' => 'required|min:1|max:500|num' 
+    );
+    $v = Validator::make($input, $rules);
+    if( $v->fails() ){ 
+        return Response::json($v->errors->all(),500);
+    }
+
+    $userapp =  User::where('userid','=',$input->userid)->where('appid','=',$input->appid)->where('roleid','=',$input->roleid)->first();
+    if($userapp){
+        return Response::json('app with selected role already exists',500);
+    }
+    else{
+         $userapp = UserApp::create(array(
+            'userid' => $input->userid,
+            'appid' => Hash::make($input->appid),
+            'roleid' => $input->roleid
+        ));  
+         
+        return Response::eloquent($userapp);
+    }  
+});
+Route::put('api/users/(:num)/apps/(:num)',function($userid,$id){ 
+     
+    return 'notimplemented:'.$userid.' '.$id;
+});
+Route::delete('api/users/(:num)/apps/(:num)',function($userid,$id){  
+    return 'notimplemented:'.$userid.' '.$id;
+});
+// buyers
 Route::get('api/buyers',function(){
     $data = array();
 
@@ -289,6 +346,18 @@ Route::put('api/buyers',function(){
         ); 
     
     return  json_encode($data);  
+});
+
+
+//apps
+Route::get('api/apps',function(){ 
+     return Response::eloquent(App::where('id','<>',1)->get());
+});
+Route::get('api/apps/(:num)',function($id){ 
+     return Response::eloquent(App::where('id','=',$id)->first());
+});
+Route::get('api/apps/(:num)/roles',function($appid){ 
+     return Response::eloquent(AppRole::where('appid','=',$appid)->get());
 });
 /*
 |--------------------------------------------------------------------------
