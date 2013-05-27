@@ -11,6 +11,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     // Main Controller (Mediator)
     Main.Controller = function () {
         this.userlist = new App.User.Models.UserList();
+        this.apps = new App.Apps.Models.AppList();
         this.tabheaderlist = new App.Tab.Models.HeaderItems([new App.Tab.Models.HeaderItem({ text: 'User Details', index: 0, active: true }), new App.Tab.Models.HeaderItem({ text: 'Apps', index: 1 })]);
         this.mainlayout = new App.Layout.Main();
         this.detailslayout = new App.Layout.Details();
@@ -20,15 +21,21 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         // --------------------------
         var self = this;
         App.vent.on("user:selected", function (model) {
-            self.showTabHeaderView();
-            self.showUserDetailsView();
+            //self.restTabSelection();
+            //self.showTabHeaderView();
+            if (self.tabheaderlist.at(0).get('active')) {
+                self.showUserDetailsView();
+            }
+            else {
+                self.showUserAppsView();
+            }
         });
         App.vent.on("usertab:selected", function (model) {
             if (model.get('index') === 0) {
                 self.showUserDetailsView();
             }
             else if (model.get('index') === 1) {
-                self.showAppsLayout();
+                self.showUserAppsView();
             }
         });
         App.vent.on("user:createnew", function () {
@@ -56,12 +63,20 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             self.showSuccessAlert(model);
         });
 
+        App.vent.on("userdetailsappsdropdown:selected", function (model) {
+            self.roles.setAppId(model.value);
+            self.roles.fetch({ async: false });
+            self.rolesView = new App.Apps.Views.RolesDropdownView({ collection: self.roles });
+            self.appslayout.roles.show(self.rolesView);
+        });
+
     };
 
 
     _.extend(Main.Controller.prototype, {
         start: function () {
-            this.userlist.fetch({async:false});
+            this.userlist.fetch({ async: false });
+            this.apps.fetch({ async: false });
             this.showMainLayout();
             this.showDetailsLayout();
             this.showFilterView();
@@ -75,10 +90,6 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
         showDetailsLayout: function () {
             this.mainlayout.center.show(this.detailslayout);
-        },
-
-        showAppsLayout: function () {
-            this.detailslayout.tabpane.show(this.appslayout);
         },
 
         showFilterView: function () {
@@ -140,11 +151,22 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             console.log(this.userlist);
             this.selectedUser = this.userlist.find(function (model) {
                 return username === model.get('username');
-            }); 
+            });
             if (this.selectedUser != null) {
                 this.selectedUser.set({ 'selected': true });
                 App.vent.trigger("user:selected", this.selectedUser);
             }
+        },
+        showUserAppsView: function () {
+            this.detailslayout.tabpane.show(this.appslayout);
+            this.appsView = new App.Apps.Views.AppsDropdownView({ collection: this.apps });
+            this.appslayout.apps.show(this.appsView);
+
+            this.roles = new App.Apps.Models.Roles([], { appid: this.appsView.getSelectedItem().value });
+            this.roles.fetch({ async: false });
+
+            this.rolesView = new App.Apps.Views.RolesDropdownView({ collection: this.roles });
+            this.appslayout.roles.show(this.rolesView);
         }
     });
 

@@ -44,8 +44,26 @@
         <div class="row well" id="tabpane-region"></div> 
     </script>
     <script id="apps-layout" type="text/html"> 
-        <div class="span2"  id="apps-list">TODO: APPS GRID</div>
-        <div id="apps-details">TODO: DETAILS</div> 
+        <button id="addnewapporrole" type="button" class="btn btn-success pull-right">Add New App/Role</button>  
+        <div class="span3"  id="apps-list">TODO: APPS GRID</div>
+        <div class="span6"> 
+            <div class="row">
+                <div class="span1">
+                    <span>App:</span> 
+                </div>
+                <div class="apps">
+                </div>
+            </div>
+             <div class="row">
+                <div class="span1">
+                    <span>Role:</span> 
+                </div>
+                <div class="roles">
+                </div>
+            </div>
+        </div>
+        </div> 
+
     </script>
 
     <!-- Filter Views Templates -->
@@ -143,6 +161,22 @@
         </form>  
     </script> 
     
+    <!-- Apps Template-->
+    <script id="userdetails-appsdropdownitem-template" type="text/html">
+        <select id="userdetails-appsdropdown"> 
+            <% _.each(items, function(item){ %>
+                <option value="<%= item.id %>"><%= item.appname %>
+            <% }) %> 
+        </select> 
+    </script>
+    <script id="userdetails-rolesdropdownitem-template" type="text/html">
+        <select id="userdetails-rolesdropdown"> 
+            <% _.each(items, function(item){ %>
+                <option value="<%= item.id %>"><%= item.rolename %>
+            <% }) %> 
+        </select> 
+    </script>
+
     
     <!-- Scripts -->
     {{ HTML::script('js/jquery-1.9.1.min.js') }}
@@ -161,11 +195,13 @@
     {{ HTML::script('sadmin/js/SAdmin.Alert.Models.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.Tab.Models.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.User.Models.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Apps.Models.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.Layout.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.Tab.Views.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.Alert.Views.js') }}  
     {{ HTML::script('sadmin/js/SAdmin.Filter.Views.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.User.Views.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.Apps.Views.js') }}
     {{ HTML::script('sadmin/js/SAdmin.Main.js') }} 
  
     <script>

@@ -31,7 +31,8 @@ SAdmin.module('Layout', function (Layout, App, Backbone, Marionette, $, _) {
 
         regions: {
             applist: "#apps-list",
-            details: "#apps-details" 
+            apps: ".apps" ,
+            roles: ".roles"
         }
     });
 
