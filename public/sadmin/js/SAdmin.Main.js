@@ -11,7 +11,6 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     // Main Controller (Mediator)
     Main.Controller = function () {
         this.userlist = new App.User.Models.UserList();
-        this.apps = new App.Apps.Models.AppList();
         this.tabheaderlist = new App.Tab.Models.HeaderItems([new App.Tab.Models.HeaderItem({ text: 'User Details', index: 0, active: true }), new App.Tab.Models.HeaderItem({ text: 'Apps', index: 1 })]);
         this.mainlayout = new App.Layout.Main();
         this.detailslayout = new App.Layout.Details();
@@ -61,22 +60,13 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         });
         App.vent.on("alert:showsuccess", function (model) {
             self.showSuccessAlert(model);
-        });
-
-        App.vent.on("userdetailsappsdropdown:selected", function (model) {
-            self.roles.setAppId(model.value);
-            self.roles.fetch({ async: false });
-            self.rolesView = new App.Apps.Views.RolesDropdownView({ collection: self.roles });
-            self.appslayout.roles.show(self.rolesView);
-        });
-
+        }); 
     };
 
 
     _.extend(Main.Controller.prototype, {
         start: function () {
-            this.userlist.fetch({ async: false });
-            this.apps.fetch({ async: false });
+            this.userlist.fetch({ async: false }); 
             this.showMainLayout();
             this.showDetailsLayout();
             this.showFilterView();
@@ -148,7 +138,6 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             this.mainlayout.alert.show(new App.Alert.Views.ErrorView({ model: alertModel }));
         },
         showUser: function (username) {
-            console.log(this.userlist);
             this.selectedUser = this.userlist.find(function (model) {
                 return username === model.get('username');
             });
@@ -158,15 +147,22 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             }
         },
         showUserAppsView: function () {
-            this.detailslayout.tabpane.show(this.appslayout);
-            this.appsView = new App.Apps.Views.AppsDropdownView({ collection: this.apps });
-            this.appslayout.apps.show(this.appsView);
+            this.clearAlert();
+            if (this.selectedUser) {
+                this.userApps = new App.Apps.Models.UserApps([],{userid: this.selectedUser.get('id')});
+                this.userApps.fetch({ async: false });
 
-            this.roles = new App.Apps.Models.Roles([], { appid: this.appsView.getSelectedItem().value });
-            this.roles.fetch({ async: false });
+                this.detailslayout.tabpane.show(this.appslayout);
 
-            this.rolesView = new App.Apps.Views.RolesDropdownView({ collection: this.roles });
-            this.appslayout.roles.show(this.rolesView);
+                this.userAppDetailsView = new App.Apps.Views.UserAppDetails();
+                this.userApps = new App.Apps.Views.UserApps({ collection: this.userApps });
+
+                this.appslayout.applist.show(this.userApps);
+                this.appslayout.appdetails.show(this.userAppDetailsView);
+            }
+            else {
+                this.detailslayout.tabpane.close();
+            }
         }
     });
 

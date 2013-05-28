@@ -1,63 +1,66 @@
 SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
 
-    // App Dropdown View
+    // User Apps  item
     // -------------------
-    Views.AppsDropdownView = Backbone.Marionette.ItemView.extend({
-        template: "#userdetails-appsdropdownitem-template",
+    Views.UserApp = Backbone.Marionette.CompositeView.extend({
+        template: "#userappitem-template",
+        tagName: "tr",
+
+        modelEvents: {
+            'change': 'render'
+        },
 
         onRender: function () {
-            // get rid of that pesky wrapping-div
-            // assumes 1 child element.
-            this.$el = this.$el.children();
-            this.setElement(this.$el);
+            if (this.model.get('selected')) {
+                $(this.el).addClass('info');
+            }
+            else {
+                $(this.el).removeClass('info');
+            }
         },
-
         events: {
-            'change': 'selectedItemChange'
+            'click': 'selectUserApp'
         },
 
-        selectedItemChange: function () {
-            var selectedText = $.trim($(this.$el).find(":selected").text());
-            var selectedValue = $.trim($(this.$el).find(":selected").val());
-            App.vent.trigger("userdetailsappsdropdown:selected", { text: selectedText, value: selectedValue });
+        selectUserApp: function () {
+            this.model.set({ 'selected': true });
+            App.vent.trigger("userapp:selected", this.model);
+        }
+
+    });
+
+    // User Apps 
+    // -------------------
+    Views.UserApps = Backbone.Marionette.CompositeView.extend({
+        template: "#userapplist-template",
+        tagName: "table",
+        className: "table table-striped table-bordered",
+        itemView: Views.UserApp,
+
+        initialize: function () {
+            this.listenTo(App.vent, "userapp:selected", this.toggleSelection, this);
         },
 
-        getSelectedItem: function () {
-            var selectedText = $.trim($(this.$el).find(":selected").text());
-            var selectedValue = $.trim($(this.$el).find(":selected").val());
-            return { text: selectedText, value: selectedValue };
+        toggleSelection: function (userapp) { 
+            if (userapp.get('selected')) {
+                var otherSelectedUserApp = this.collection.find(function (model) {
+                    return userapp !== model && model.get('selected');
+                });
+
+                if (otherSelectedUserApp != null) {
+                    otherSelectedUserApp.set({ 'selected': false });
+                }
+            }
         },
 
-        selectItem: function (val) {
-            $(this.$el).val(val);
+        appendHtml: function (collectionView, itemView) {
+            collectionView.$("tbody").append(itemView.el);
         }
     });
 
-    // Roles Dropdown View
+    // User App Details
     // -------------------
-    Views.RolesDropdownView = Backbone.Marionette.ItemView.extend({
-        template: "#userdetails-rolesdropdownitem-template", 
-        onRender: function () { 
-            // get rid of that pesky wrapping-div
-            // assumes 1 child element.
-            this.$el = this.$el.children();
-            this.setElement(this.$el);
-        },
-
-        events: {
-            'change': 'selectedItemChange'
-        },
-
-        selectedItemChange: function () {
-            var selectedText = $.trim($(this.$el).find(":selected").text());
-            var selectedValue = $.trim($(this.$el).find(":selected").val());
-            App.vent.trigger("userdetailsrolesdropdown:selected", { text: selectedText, value: selectedValue });
-        },
-
-        getSelectedItem: function () {
-            var selectedText = $.trim($(this.$el).find(":selected").text());
-            var selectedValue = $.trim($(this.$el).find(":selected").val());
-            return { text: selectedText, value: selectedValue };
-        } 
+    Views.UserAppDetails = Backbone.Marionette.ItemView.extend({
+        template: "#userappdetails-template"
     });
 });

@@ -43,27 +43,9 @@
         <div class="row" id="tabheader-region"></div>
         <div class="row well" id="tabpane-region"></div> 
     </script>
-    <script id="apps-layout" type="text/html"> 
-        <button id="addnewapporrole" type="button" class="btn btn-success pull-right">Add New App/Role</button>  
-        <div class="span3"  id="apps-list">TODO: APPS GRID</div>
-        <div class="span6"> 
-            <div class="row">
-                <div class="span1">
-                    <span>App:</span> 
-                </div>
-                <div class="apps">
-                </div>
-            </div>
-             <div class="row">
-                <div class="span1">
-                    <span>Role:</span> 
-                </div>
-                <div class="roles">
-                </div>
-            </div>
-        </div>
-        </div> 
-
+    <script id="apps-layout" type="text/html">  
+        <div class="span3"  id="apps-list"></div>
+        <div class="span6"  id="app-details"></div>  
     </script>
 
     <!-- Filter Views Templates -->
@@ -162,21 +144,26 @@
     </script> 
     
     <!-- Apps Template-->
-    <script id="userdetails-appsdropdownitem-template" type="text/html">
-        <select id="userdetails-appsdropdown"> 
-            <% _.each(items, function(item){ %>
-                <option value="<%= item.id %>"><%= item.appname %>
-            <% }) %> 
-        </select> 
-    </script>
-    <script id="userdetails-rolesdropdownitem-template" type="text/html">
-        <select id="userdetails-rolesdropdown"> 
-            <% _.each(items, function(item){ %>
-                <option value="<%= item.id %>"><%= item.rolename %>
-            <% }) %> 
-        </select> 
+    <script id="userappitem-template" type="text/html">
+        
+            <td><%= appname %></td>
+            <td><%= rolename %></td>
+   
     </script>
 
+    <script id="userapplist-template" type="text/html">
+        <thead>
+            <tr>
+              <th>App Name</th>
+              <th>User Role</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </script>
+    <script id="userappdetails-template" type="text/html">
+        App Details
+    </script> 
     
     <!-- Scripts -->
     {{ HTML::script('js/jquery-1.9.1.min.js') }}
