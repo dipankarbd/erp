@@ -43,9 +43,10 @@
         <div class="row" id="tabheader-region"></div>
         <div class="row well" id="tabpane-region"></div> 
     </script>
-    <script id="apps-layout" type="text/html">  
+    <script id="apps-layout" type="text/html">   
         <div class="span3"  id="apps-list"></div>
         <div class="span6"  id="app-details"></div>  
+        <div class="span2 pull-right" id="create-new-userapp"></div>
     </script>
 
     <!-- Filter Views Templates -->
@@ -144,11 +145,9 @@
     </script> 
     
     <!-- Apps Template-->
-    <script id="userappitem-template" type="text/html">
-        
-            <td><%= appname %></td>
-            <td><%= rolename %></td>
-   
+    <script id="userappitem-template" type="text/html"> 
+        <td><%= appname %></td>
+        <td><%= rolename %></td> 
     </script>
 
     <script id="userapplist-template" type="text/html">
@@ -164,6 +163,9 @@
     <script id="userappdetails-template" type="text/html">
         App Details
     </script> 
+    <script id="userapp-create-button-template" type="text/html">
+        <button id="createuserapp" type="button" class="btn btn-small btn-success pull-right">Add New App/Role</button> 
+    </script>
     
     <!-- Scripts -->
     {{ HTML::script('js/jquery-1.9.1.min.js') }}

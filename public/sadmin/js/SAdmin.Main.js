@@ -60,13 +60,17 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         });
         App.vent.on("alert:showsuccess", function (model) {
             self.showSuccessAlert(model);
-        }); 
+        });
+
+        App.vent.on("userapp:selected", function (userapp) {
+            self.showUserAppDetails(userapp);
+        });
     };
 
 
     _.extend(Main.Controller.prototype, {
         start: function () {
-            this.userlist.fetch({ async: false }); 
+            this.userlist.fetch({ async: false });
             this.showMainLayout();
             this.showDetailsLayout();
             this.showFilterView();
@@ -149,20 +153,21 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         showUserAppsView: function () {
             this.clearAlert();
             if (this.selectedUser) {
-                this.userApps = new App.Apps.Models.UserApps([],{userid: this.selectedUser.get('id')});
+                this.userApps = new App.Apps.Models.UserApps([], { userid: this.selectedUser.get('id') });
                 this.userApps.fetch({ async: false });
-
                 this.detailslayout.tabpane.show(this.appslayout);
-
-                this.userAppDetailsView = new App.Apps.Views.UserAppDetails();
-                this.userApps = new App.Apps.Views.UserApps({ collection: this.userApps });
-
-                this.appslayout.applist.show(this.userApps);
-                this.appslayout.appdetails.show(this.userAppDetailsView);
+                this.userAppsView = new App.Apps.Views.UserApps({ collection: this.userApps });
+                this.userAppCreateButtonView = new App.Apps.Views.UserAppCreateButton();
+                this.appslayout.applist.show(this.userAppsView);
+                this.appslayout.newuserapp.show(this.userAppCreateButtonView);
             }
             else {
                 this.detailslayout.tabpane.close();
             }
+        },
+        showUserAppDetails: function (userapp) {
+            this.userAppDetailsView = new App.Apps.Views.UserAppDetails();
+            this.appslayout.appdetails.show(this.userAppDetailsView);
         }
     });
 
