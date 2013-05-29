@@ -172,13 +172,13 @@
             </tbody>
         </script>
         <script id="userappdetails-template" type="text/html">  
-            <div style="padding:10px; border:1px solid #E3E3E3;height:400px;">
+            <div style="padding:10px; border:1px solid #E3E3E3;height:400px;"> 
                   <div class="clearfix">
                     <div class="span1">
                         <span>App:</span>
                     </div>
                     <div class="span2">
-                        <select id="userdetails-appsdropdown">
+                        <select id="userdetailsappsdropdown">
                             <% for(var i=0;i<apps.length;i++){ 
                                 if( apps.at(i).get('id') === appid){%>
                                 <option value="<%= apps.at(i).get('id') %>" selected="selected"><%= apps.at(i).get('appname') %></option>
@@ -195,7 +195,7 @@
                         <span>Role:</span>
                     </div>
                     <div class="span2">
-                         <select id="userdetails-rolesdropdown">
+                         <select id="userdetailsrolesdropdown">
                             <% for(var i=0;i<roles.length;i++){ 
                                 if( roles[i].id === roleid){%>
                                 <option value="<%= roles[i].id  %>" selected="selected"><%= roles[i].rolename  %></option>
