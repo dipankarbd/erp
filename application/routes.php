@@ -231,12 +231,59 @@
             return Response::eloquent($userapps);
         }  
     });
-    Route::put('api/users/(:num)/apps/(:num)',function($userid,$id){ 
+    Route::put('api/users/(:num)/apps/(:num)',function($userid,$id){  
+        $input = Input::json();
+        
+        $rules = array(
+            'userid'  => 'required|min:1|max:500|numeric',
+            'appid'  => 'required|min:1|max:500|numeric' ,
+            'roleid' => 'required|min:1|max:500|numeric' 
+        );
+        $v = Validator::make($input, $rules);
+        if( $v->fails() ){ 
+            return Response::json($v->errors->all(),500);
+        }
     
-        return 'notimplemented:'.$userid.' '.$id;
+        $userapp =  UserApp::where('id','=',$id)->first();
+
+        if($userapp){  
+            $duplicateuserapp =  UserApp::where('userid','=',$input->userid)->where('appid','=',$input->appid)->where('roleid','=',$input->roleid)->where('id','!=',$id)->first();
+            if($duplicateuserapp){
+                 return Response::json('app with selected role already exists',500);
+            }
+            else{
+                $userapp->appid = $input->appid;
+                $userapp->roleid = $input->roleid;
+                $userapp->save();
+          
+                $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                     ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                     ->where('userapps.userid', '=', $userid)
+                     ->where('userapps.id', '=', $userapp->id)
+                     ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
+
+                return Response::eloquent($userapps);
+            } 
+        }
+        else{
+             return Response::json('User App not exists',500);  
+        }
     });
     Route::delete('api/users/(:num)/apps/(:num)',function($userid,$id){  
-        return 'notimplemented:'.$userid.' '.$id;
+        $userapp =  UserApp::where('id','=',$id)->first();
+        if($userapp){
+             $res = $userapp->delete();
+             if($res){
+                  return Response::json($res ,204); 
+             }
+             else
+             {
+                  return Response::json('Error occured',500);  
+             }   
+        }
+        else{
+            return Response::json('User App not exists',500);  
+        } 
     });
     // buyers
     Route::get('api/buyers',function(){

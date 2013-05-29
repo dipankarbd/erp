@@ -251,7 +251,6 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
                     wait: true,
                     success: function (model, response) {
                         self.appslayout.appdetails.close();
-                        App.vent.trigger("userapp:created", this.model);
                         var alertModel = new App.Alert.Models.Alert({ body: 'User App Created Successfully!' });
                         App.vent.trigger("alert:showsuccess", alertModel);
                     },
@@ -271,10 +270,59 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
                     }
                 });
             }
+            else {
+                //update existing...
+                var modelToUpdate = this.userApps.find(function (m) {
+                    return model.get('id') === m.get('id');
+                });
+
+                modelToUpdate.save({
+                    id: model.get('id'),
+                    userid: this.selectedUser.get('id'),
+                    appid: model.get('appid'),
+                    roleid: model.get('roleid')
+                }, {
+                    wait: true,
+                    success: function (model, response) {
+                        var alertModel = new App.Alert.Models.Alert({ body: 'User App Saved Successfully!' });
+                        App.vent.trigger("alert:showsuccess", alertModel);
+                    },
+                    error: function (model, err) {
+                        var response = $.parseJSON(err.responseText);
+                        var msg = '';
+
+                        if (response instanceof Array) {
+                            for (var i = 0; i < response.length; i++) {
+                                msg += '<p>' + response[i] + '</p>';
+                            }
+                        } else {
+                            msg = response;
+                        }
+                        var alertModel = new App.Alert.Models.Alert({ heading: 'Error in saving user app!', body: msg });
+                        App.vent.trigger("alert:showerror", alertModel);
+                    }
+                });
+
+            }
         },
 
         deleteUserApp: function (model) {
+            var self = this;
+            var modelToUpdate = this.userApps.find(function (m) {
+                return model.get('id') === m.get('id');
+            });
 
+            modelToUpdate.destroy({ wait: true,
+                success: function (model, response) {
+                    var alertModel = new App.Alert.Models.Alert({ body: 'User App Deleted Successfully!' });
+                    self.appslayout.appdetails.close();
+                    App.vent.trigger("alert:showsuccess", alertModel);
+                },
+                error: function (model, err) {
+                    var alertModel = new App.Alert.Models.Alert({ heading: 'Error in deleting user app!', body: err.responseText });
+                    App.vent.trigger("alert:showerror", alertModel);
+                }
+            });
         }
     });
 
