@@ -61,7 +61,8 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
     // User App Details
     // -------------------
     Views.UserAppDetails = Backbone.Marionette.ItemView.extend({
-        template: "#userappdetails-template"
+        template: "#userappdetails-template",
+        className: "row"
     });
 
      // User App Create Button
