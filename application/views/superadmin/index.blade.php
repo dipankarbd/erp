@@ -171,15 +171,22 @@
             <tbody>
             </tbody>
         </script>
-        <script id="userappdetails-template" type="text/html">
-            <%=  roles.length %>
+        <script id="userappdetails-template" type="text/html">  
             <div style="padding:10px; border:1px solid #E3E3E3;height:400px;">
                   <div class="clearfix">
                     <div class="span1">
                         <span>App:</span>
                     </div>
                     <div class="span2">
-                        <select></select>
+                        <select id="userdetails-appsdropdown">
+                            <% for(var i=0;i<apps.length;i++){ 
+                                if( apps.at(i).get('id') === appid){%>
+                                <option value="<%= apps.at(i).get('id') %>" selected="selected"><%= apps.at(i).get('appname') %></option>
+                                <% } else {  %>
+                                <option value="<%= apps.at(i).get('id') %>"><%= apps.at(i).get('appname') %></option> 
+                                <% }  
+                             } %>
+                        </select> 
                     </div>
             
                  </div>
@@ -188,7 +195,15 @@
                         <span>Role:</span>
                     </div>
                     <div class="span2">
-                        <select></select>
+                         <select id="userdetails-rolesdropdown">
+                            <% for(var i=0;i<roles.length;i++){ 
+                                if( roles[i].id === roleid){%>
+                                <option value="<%= roles[i].id  %>" selected="selected"><%= roles[i].rolename  %></option>
+                                <% } else {  %>
+                                <option value="<%= roles[i].id  %>"><%= roles[i].rolename  %></option> 
+                                <% }  
+                             } %>
+                        </select> 
                     </div>
                  </div>
                 <div class="clearfix">
