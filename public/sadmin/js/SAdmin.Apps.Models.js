@@ -21,7 +21,7 @@ SAdmin.module('Apps.Models', function (Models, App, Backbone, Marionette, $, _) 
     });
 
     //app 
-    Models.App = Backbone.Model.extend({ 
+    Models.App = Backbone.Model.extend({  
     });
 
     //apps
@@ -32,4 +32,7 @@ SAdmin.module('Apps.Models', function (Models, App, Backbone, Marionette, $, _) 
         }
     });
 
+    //user app details model
+    Models.UserAppDetails = Backbone.Model.extend({   
+    });
 });

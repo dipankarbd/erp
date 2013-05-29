@@ -172,7 +172,7 @@
             </tbody>
         </script>
         <script id="userappdetails-template" type="text/html">
-            
+            <%=  roles.length %>
             <div style="padding:10px; border:1px solid #E3E3E3;height:400px;">
                   <div class="clearfix">
                     <div class="span1">

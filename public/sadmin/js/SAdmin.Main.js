@@ -71,7 +71,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
     _.extend(Main.Controller.prototype, {
         start: function () {
-             App.StaticData.apps.fetch({ async: false });
+            App.StaticData.apps.fetch({ async: false });
             this.userlist.fetch({ async: false });
             this.showMainLayout();
             this.showDetailsLayout();
@@ -168,7 +168,19 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             }
         },
         showUserAppDetails: function (userapp) {
-            this.userAppDetailsView = new App.Apps.Views.UserAppDetails();
+            this.userAppDetailsModel = new App.Apps.Models.UserAppDetails({
+                id: userapp.get('id'),
+                appid: userapp.get('appid'),
+                roleid: userapp.get('roleid'),
+                apps: App.StaticData.apps
+            });
+
+            var selectedApp = App.StaticData.apps.find(function (model) {
+                return userapp.get('appid') === model.get('id');
+            }); 
+            this.userAppDetailsModel.set({ roles: selectedApp.get('roles') });
+
+            this.userAppDetailsView = new App.Apps.Views.UserAppDetails({ model: this.userAppDetailsModel });
             this.appslayout.appdetails.show(this.userAppDetailsView);
         }
     });
