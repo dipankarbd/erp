@@ -199,29 +199,36 @@
     });
     Route::post('api/users/(:num)/apps',function($userid){ 
         $input = Input::json();
-        return $input ;
+        
         $rules = array(
-            'userid'  => 'required|min:1|max:500|num',
-            'appid'  => 'required|min:1|max:500|num' ,
-            'roleid' => 'required|min:1|max:500|num' 
+            'userid'  => 'required|min:1|max:500|numeric',
+            'appid'  => 'required|min:1|max:500|numeric' ,
+            'roleid' => 'required|min:1|max:500|numeric' 
         );
         $v = Validator::make($input, $rules);
         if( $v->fails() ){ 
             return Response::json($v->errors->all(),500);
         }
     
-        $userapp =  User::where('userid','=',$input->userid)->where('appid','=',$input->appid)->where('roleid','=',$input->roleid)->first();
+        $userapp =  UserApp::where('userid','=',$input->userid)->where('appid','=',$input->appid)->where('roleid','=',$input->roleid)->first();
+
         if($userapp){
             return Response::json('app with selected role already exists',500);
         }
         else{
-             $userapp = UserApp::create(array(
+             $newuserapp = UserApp::create(array(
                 'userid' => $input->userid,
-                'appid' => Hash::make($input->appid),
+                'appid' =>  $input->appid,
                 'roleid' => $input->roleid
             ));  
     
-            return Response::eloquent($userapp);
+            $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $userid)
+                 ->where('userapps.id', '=', $newuserapp->id)
+                 ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
+
+            return Response::eloquent($userapps);
         }  
     });
     Route::put('api/users/(:num)/apps/(:num)',function($userid,$id){ 

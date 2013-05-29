@@ -81,7 +81,8 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
         events: {
             'change #userdetailsappsdropdown': 'appsSelectionChanged',
             'click #cancelsavinguserapp': 'cancelSavingUserApp',
-            'click #saveuserapp': 'saveUserApp'
+            'click #saveuserapp': 'saveUserApp',
+            'click #deleteuserapp': 'deleteUserApp'
         },
 
         appsSelectionChanged: function () {
@@ -105,13 +106,18 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
 
         saveUserApp: function () {
             var selectedAppId = parseInt(this.ui.apps.val());
-            var selectedRoleId = parseInt(this.ui.apps.val());
-            if (this.model.get('id') === 0) {
-                console.log('new..');
-            }
-            else{
-                console.log('old..');
-            }
+            var selectedRoleId = parseInt(this.ui.roles.val()); 
+            this.model.set({ appid: selectedAppId, roleid: selectedRoleId });
+            App.vent.trigger("userapp:save", this.model);
+        },
+
+        deleteUserApp: function () {
+            var self = this;
+            bootbox.confirm("Are you sure, you want to delete this app?", function (result) {
+                if (result === true) {
+                    App.vent.trigger("userapp:delete", self.model);
+                } 
+            });
         }
     });
 

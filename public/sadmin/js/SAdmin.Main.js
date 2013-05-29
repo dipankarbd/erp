@@ -80,6 +80,15 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         App.vent.on("userapp:create", function () {
             self.showUserAppDetailsForCreate();
         });
+
+        App.vent.on("userapp:save", function (model) {
+            self.saveUserApp(model);
+        });
+
+        App.vent.on("userapp:delete", function (model) {
+            self.deleteUserApp(model);
+        });
+
     };
 
 
@@ -182,6 +191,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             }
         },
         showUserAppDetails: function (userapp) {
+            this.clearAlert();
             this.userAppDetailsModel = new App.Apps.Models.UserAppDetails({
                 id: userapp.get('id'),
                 appid: userapp.get('appid'),
@@ -191,13 +201,14 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
             var selectedApp = App.StaticData.apps.find(function (model) {
                 return userapp.get('appid') === model.get('id');
-            }); 
+            });
             this.userAppDetailsModel.set({ roles: selectedApp.get('roles') });
 
             this.userAppDetailsView = new App.Apps.Views.UserAppDetails({ model: this.userAppDetailsModel });
             this.appslayout.appdetails.show(this.userAppDetailsView);
         },
         showUserAppDetailsForCreate: function () {
+            this.clearAlert();
             this.userAppDetailsModel = new App.Apps.Models.UserAppDetails({
                 id: 0,
                 appid: 0,
@@ -208,10 +219,10 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
             var selectedAppId = 0;
 
-            if( App.StaticData.apps.length>0){
+            if (App.StaticData.apps.length > 0) {
                 selectedAppId = App.StaticData.apps.at(0).get('id');
             }
-             
+
             var selectedApp = App.StaticData.apps.find(function (model) {
                 return selectedAppId === model.get('id');
             });
@@ -221,11 +232,49 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             var roleId = 0;
             if (roles.length > 0) roleid = roles[0].id;
 
-            
+
             this.userAppDetailsModel.set({ roles: selectedApp.get('roles') });
 
             this.userAppDetailsView = new App.Apps.Views.UserAppDetails({ model: this.userAppDetailsModel });
             this.appslayout.appdetails.show(this.userAppDetailsView);
+        },
+
+        saveUserApp: function (model) {
+            var self = this;
+            if (model.get('id') === 0) {
+                //create new
+                this.userApps.create({
+                    userid: this.selectedUser.get('id'),
+                    appid: model.get('appid'),
+                    roleid: model.get('roleid')
+                }, {
+                    wait: true,
+                    success: function (model, response) {
+                        self.appslayout.appdetails.close();
+                        App.vent.trigger("userapp:created", this.model);
+                        var alertModel = new App.Alert.Models.Alert({ body: 'User App Created Successfully!' });
+                        App.vent.trigger("alert:showsuccess", alertModel);
+                    },
+                    error: function (model, err) {
+                        var response = $.parseJSON(err.responseText);
+                        var msg = '';
+
+                        if (response instanceof Array) {
+                            for (var i = 0; i < response.length; i++) {
+                                msg += '<p>' + response[i] + '</p>';
+                            }
+                        } else {
+                            msg = response;
+                        }
+                        var alertModel = new App.Alert.Models.Alert({ heading: 'Error in creating new user app!', body: msg });
+                        App.vent.trigger("alert:showerror", alertModel);
+                    }
+                });
+            }
+        },
+
+        deleteUserApp: function (model) {
+
         }
     });
 
