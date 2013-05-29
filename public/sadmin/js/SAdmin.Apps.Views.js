@@ -68,20 +68,21 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
             'change': 'render'
         },
 
-      
+
         ui: {
             apps: '#userdetailsappsdropdown',
             roles: '#userdetailsrolesdropdown'
         },
 
         onRender: function () {
-            console.log('rendering user app details view ...'); 
+            console.log('rendering user app details view ...');
         },
 
         events: {
-            'change #userdetailsappsdropdown': 'appsSelectionChanged'
+            'change #userdetailsappsdropdown': 'appsSelectionChanged',
+            'click #cancelsavinguserapp': 'cancelSavingUserApp'
         },
-  
+
         appsSelectionChanged: function () {
             var selectedAppId = parseInt(this.ui.apps.val());
 
@@ -94,7 +95,11 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
             var roleId = 0;
             if (roles.length > 0) roleid = roles[0].id;
 
-            this.model.set({ appid: selectedAppId,roleid: roleId, roles : roles});
+            this.model.set({ appid: selectedAppId, roleid: roleId, roles: roles });
+        },
+
+        cancelSavingUserApp: function () {
+            this.close();
         }
     });
 
@@ -103,12 +108,12 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
     Views.UserAppCreateButton = Backbone.Marionette.ItemView.extend({
         template: "#userapp-create-button-template",
 
-        events:{
-            'click #createuserapp' :'createUserApp'
+        events: {
+            'click #createuserapp': 'createUserApp'
         },
 
-        createUserApp: function(){
-             App.vent.trigger("userapp:create", this.model);
+        createUserApp: function () {
+            App.vent.trigger("userapp:create", this.model);
         }
     });
 });
