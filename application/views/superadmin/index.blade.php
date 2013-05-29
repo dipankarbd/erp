@@ -214,10 +214,12 @@
                         <button id="cancelsavinguserapp" type="button" class="btn">Cancel</button>
                     </div> 
                 </div> 
+                <% if(id !== 0){%>
                 <div  class="clearfix" style="margin-top:200px;">
                     <hr/>
                     <button id="deleteuserapp" class="btn btn-danger" type="button">Delete</button> 
                 </div>
+                <% }%>
             
             </div> 
             
