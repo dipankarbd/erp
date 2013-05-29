@@ -51,10 +51,20 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             self.clearTabPane();
         });
         App.vent.on("user:saved", function (user) {
-            self.showUserDetailsView();
+            if (self.tabheaderlist.at(0).get('active')) {
+                self.showUserDetailsView();
+            }
+            else {
+                self.showUserAppsView();
+            }
         });
         App.vent.on("user:cancel", function (user) {
-            self.showUserDetailsView();
+            if (self.tabheaderlist.at(0).get('active')) {
+                self.showUserDetailsView();
+            }
+            else {
+                self.showUserAppsView();
+            }
         });
         App.vent.on("alert:showerror", function (model) {
             self.showErrorAlert(model);
@@ -65,6 +75,10 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
         App.vent.on("userapp:selected", function (userapp) {
             self.showUserAppDetails(userapp);
+        });
+
+        App.vent.on("userapp:create", function () {
+            self.showUserAppDetailsForCreate();
         });
     };
 
@@ -178,6 +192,36 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             var selectedApp = App.StaticData.apps.find(function (model) {
                 return userapp.get('appid') === model.get('id');
             }); 
+            this.userAppDetailsModel.set({ roles: selectedApp.get('roles') });
+
+            this.userAppDetailsView = new App.Apps.Views.UserAppDetails({ model: this.userAppDetailsModel });
+            this.appslayout.appdetails.show(this.userAppDetailsView);
+        },
+        showUserAppDetailsForCreate: function () {
+            this.userAppDetailsModel = new App.Apps.Models.UserAppDetails({
+                id: 0,
+                appid: 0,
+                roleid: 0,
+                apps: App.StaticData.apps,
+                userid: this.selectedUser.get('id')
+            });
+
+            var selectedAppId = 0;
+
+            if( App.StaticData.apps.length>0){
+                selectedAppId = App.StaticData.apps.at(0).get('id');
+            }
+             
+            var selectedApp = App.StaticData.apps.find(function (model) {
+                return selectedAppId === model.get('id');
+            });
+
+            var roles = selectedApp.get('roles');
+
+            var roleId = 0;
+            if (roles.length > 0) roleid = roles[0].id;
+
+            
             this.userAppDetailsModel.set({ roles: selectedApp.get('roles') });
 
             this.userAppDetailsView = new App.Apps.Views.UserAppDetails({ model: this.userAppDetailsModel });

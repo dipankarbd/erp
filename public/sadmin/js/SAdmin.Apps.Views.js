@@ -68,6 +68,7 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
             'change': 'render'
         },
 
+      
         ui: {
             apps: '#userdetailsappsdropdown',
             roles: '#userdetailsrolesdropdown'
@@ -80,7 +81,7 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
         events: {
             'change #userdetailsappsdropdown': 'appsSelectionChanged'
         },
-
+  
         appsSelectionChanged: function () {
             var selectedAppId = parseInt(this.ui.apps.val());
 
@@ -100,6 +101,14 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
     // User App Create Button
     // -------------------
     Views.UserAppCreateButton = Backbone.Marionette.ItemView.extend({
-        template: "#userapp-create-button-template"
+        template: "#userapp-create-button-template",
+
+        events:{
+            'click #createuserapp' :'createUserApp'
+        },
+
+        createUserApp: function(){
+             App.vent.trigger("userapp:create", this.model);
+        }
     });
 });
