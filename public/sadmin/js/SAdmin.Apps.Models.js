@@ -19,4 +19,17 @@ SAdmin.module('Apps.Models', function (Models, App, Backbone, Marionette, $, _) 
             return 'users/'+this.userid+'/apps';
         }
     });
+
+    //app 
+    Models.App = Backbone.Model.extend({ 
+    });
+
+    //apps
+    Models.Apps = Backbone.Collection.extend({ 
+        model: Models.App, 
+        url: function () {
+            return 'apps';
+        }
+    });
+
 });

@@ -10,6 +10,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
     // Main Controller (Mediator)
     Main.Controller = function () {
+        App.StaticData.apps = new App.Apps.Models.Apps();
         this.userlist = new App.User.Models.UserList();
         this.tabheaderlist = new App.Tab.Models.HeaderItems([new App.Tab.Models.HeaderItem({ text: 'User Details', index: 0, active: true }), new App.Tab.Models.HeaderItem({ text: 'Apps', index: 1 })]);
         this.mainlayout = new App.Layout.Main();
@@ -70,6 +71,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
     _.extend(Main.Controller.prototype, {
         start: function () {
+             App.StaticData.apps.fetch({ async: false });
             this.userlist.fetch({ async: false });
             this.showMainLayout();
             this.showDetailsLayout();

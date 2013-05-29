@@ -181,6 +181,7 @@
   
     <!-- application -->
     {{ HTML::script('sadmin/js/SAdmin.js') }} 
+    {{ HTML::script('sadmin/js/SAdmin.StaticData.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.Alert.Models.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.Tab.Models.js') }} 
     {{ HTML::script('sadmin/js/SAdmin.User.Models.js') }} 
