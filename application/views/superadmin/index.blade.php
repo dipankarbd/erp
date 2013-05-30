@@ -2,12 +2,15 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Super Administration</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
         <meta name="viewport" content="width=device-width">
-   {{ HTML::style('bootstrap/css/bootstrap.css') }}
-   {{ HTML::style('bootstrap/css/bootstrap-responsive.css') }}
-    {{ HTML::style('sadmin/css/style.css') }}
+
+        <title>Super Administration</title>
+
+        {{ HTML::style('bootstrap/css/bootstrap.css') }}
+        {{ HTML::style('bootstrap/css/bootstrap-responsive.css') }}
+        {{ HTML::style('sadmin/css/style.css') }}
+
     </head>
     <body>
 
@@ -229,35 +232,34 @@
         </script>
 
         <!-- Scripts -->
-   {{ HTML::script('js/jquery-1.9.1.min.js') }}
-    {{ HTML::script('bootstrap/js/bootstrap.js') }}
-        <script type="text/javascript" src="https://raw.github.com/makeusabrew/bootbox/v3.2.0/bootbox.js"></script>
-   {{ HTML::script('js/backbone.marionette/underscore.js') }}
-   {{ HTML::script('js/backbone.marionette/backbone.js') }}
-    {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}
+        {{ HTML::script('js/jquery-1.9.1.min.js') }}
+        {{ HTML::script('bootstrap/js/bootstrap.js') }} 
+        {{ HTML::script('js/bootbox/bootbox.min.js') }}
+        {{ HTML::script('js/backbone.marionette/underscore.js') }}
+        {{ HTML::script('js/backbone.marionette/backbone.js') }}
+        {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}
+        
         <!-- application -->
-    {{ HTML::script('sadmin/js/SAdmin.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.StaticData.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Alert.Models.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Tab.Models.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.User.Models.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Apps.Models.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Layout.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Tab.Views.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Alert.Views.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Filter.Views.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.User.Views.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Apps.Views.js') }}
-    {{ HTML::script('sadmin/js/SAdmin.Main.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.StaticData.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Alert.Models.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Tab.Models.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.User.Models.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Apps.Models.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Layout.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Tab.Views.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Alert.Views.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Filter.Views.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.User.Views.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Apps.Views.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Main.js') }}
         <script>
             $(function(){ 
                 $.ajaxPrefilter(function (options) {
                     options.url = "http://localhost:41756/public/index.php/api/" +  options.url;
-                });
-            
+                }); 
                 SAdmin.start();
             });
-        </script>
-
+        </script> 
     </body>
 </html>
