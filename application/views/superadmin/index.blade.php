@@ -59,36 +59,41 @@
                 <div class="span2">
                     <form class="form-inline"> 
                         <span>First Name:</span> 
-                        <input type="text" class="input-small"> 
+                        <input id="filterfirstname" type="text" class="input-small"> 
                     </form>
                  </div>
                 <div class="span2">
                     <form class="form-inline"> 
                         <span  style="margin-right:35px;">Email:</span> 
-                        <input type="text"  class="input-small"> 
+                        <input id="filteremail"  type="text"  class="input-small"> 
                     </form>
                  </div>
                 <div class="span3">
                     <form class="form-inline"> 
-                        <span>Apps:</span> 
-                        <select></select>
+                        <span>Apps:</span>  
+                        <select id="filterapps">
+                            <option value="0"></option>
+                            <% for(var i=0;i<apps.length;i++){ %>
+                                <option value="<%= apps.at(i).get('id') %>"><%= apps.at(i).get('appname') %></option>  
+                             <% } %>
+                        </select> 
                     </form>
                  </div>
                 <div class="span1">
-                     <button id="applyfilteruser" type="button" class="btn btn-small btn-primary pull-right">Apply Filter</button> 
+                     <button id="applyfilter" type="button" class="btn btn-small btn-primary pull-right">Apply Filter</button> 
                  </div>
             </div> 
             <div class="row-fluid ">
                 <div class="span2">
                     <form class="form-inline"> 
                         <span>Last Name:</span> 
-                        <input type="text" class="input-small"> 
+                        <input id="filterlastname" type="text" class="input-small"> 
                     </form>
                  </div>
                 <div class="span2">
                     <form class="form-inline"> 
                         <span >User Name:</span> 
-                        <input type="text" class="input-small"> 
+                        <input  id="filterusername" t type="text" class="input-small"> 
                     </form>
                  </div>
                 <div class="span3">
@@ -287,6 +292,7 @@
         {{ HTML::script('sadmin/js/SAdmin.Tab.Models.js') }}
         {{ HTML::script('sadmin/js/SAdmin.User.Models.js') }}
         {{ HTML::script('sadmin/js/SAdmin.Apps.Models.js') }}
+        {{ HTML::script('sadmin/js/SAdmin.Filter.Models.js') }}
         {{ HTML::script('sadmin/js/SAdmin.Layout.js') }}
         {{ HTML::script('sadmin/js/SAdmin.Tab.Views.js') }}
         {{ HTML::script('sadmin/js/SAdmin.Alert.Views.js') }}

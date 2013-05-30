@@ -112,7 +112,8 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         },
 
         showFilterView: function () {
-            this.mainlayout.top.show(new App.Filter.Views.FilterView());
+            this.filterModel = new App.Filter.Models.Filter({apps:App.StaticData.apps});
+            this.mainlayout.top.show(new App.Filter.Views.FilterView({model:this.filterModel}));
         },
 
         showUserlistView: function () {
