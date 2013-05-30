@@ -51,23 +51,63 @@
             <div class="span6"  id="app-details"></div>  
             <div class="span2 pull-right" id="create-new-userapp"></div>
         </script>
+
         <!-- Filter Views Templates -->
         <script id="topview-template" type="text/html">
-            <div class="clearfix ">
-                <div class="span8">
-                    <p>
-                        TODO: Filter<br/> TODO: Filter<br/> TODO: Filter
-                    </p> 
-                </div> 
-                <button id="createuser" type="button" class="btn btn-success pull-right">New User</button> 
+            <button id="createuser" type="button" class="btn btn-success pull-right">New User</button> 
+            <div class="row-fluid ">
+                <div class="span2">
+                    <form class="form-inline"> 
+                        <span>First Name:</span> 
+                        <input type="text" class="input-small"> 
+                    </form>
+                 </div>
+                <div class="span2">
+                    <form class="form-inline"> 
+                        <span  style="margin-right:35px;">Email:</span> 
+                        <input type="text"  class="input-small"> 
+                    </form>
+                 </div>
+                <div class="span3">
+                    <form class="form-inline"> 
+                        <span>Apps:</span> 
+                        <select></select>
+                    </form>
+                 </div>
+                <div class="span1">
+                     <button id="applyfilteruser" type="button" class="btn btn-small btn-primary pull-right">Apply Filter</button> 
+                 </div>
             </div> 
+            <div class="row-fluid ">
+                <div class="span2">
+                    <form class="form-inline"> 
+                        <span>Last Name:</span> 
+                        <input type="text" class="input-small"> 
+                    </form>
+                 </div>
+                <div class="span2">
+                    <form class="form-inline"> 
+                        <span >User Name:</span> 
+                        <input type="text" class="input-small"> 
+                    </form>
+                 </div>
+                <div class="span3">
+                     
+                 </div>
+                <div class="span1">
+                     <button id="clearfilter" type="button" class="btn btn-small pull-right">Clear Filter</button> 
+                 </div>
+            </div> 
+           
         </script>
+
         <!-- Tab View Templates -->
         <script id="user-tab-header-item-template" type="text/html">
 
             
             <a href="#"><%= text %></a> 
         </script>
+
         <!-- Alert Templates -->
         <script id="alert-template" type="text/html">
 
@@ -76,6 +116,7 @@
             <h4 class="alert-heading"><%= heading %></h4>
             <%= body %> 
         </script>
+
         <!-- User View Templates -->
         <script id="no-users-template" type="text/html">
 
