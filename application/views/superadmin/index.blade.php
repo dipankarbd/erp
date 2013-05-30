@@ -80,7 +80,7 @@
                     </form>
                  </div>
                 <div class="span1">
-                     <button id="applyfilter" type="button" class="btn btn-small btn-primary pull-right">Apply Filter</button> 
+                     <a href="#" id="applyfilter" type="button" class="btn btn-small btn-primary pull-right">Apply Filter</a>
                  </div>
             </div> 
             <div class="row-fluid ">
@@ -100,7 +100,7 @@
                      
                  </div>
                 <div class="span1">
-                     <button id="clearfilter" type="button" class="btn btn-small pull-right">Clear Filter</button> 
+                    <a href="#" id="clearfilter" type="button" class="btn btn-small pull-right">Clear Filter</a> 
                  </div>
             </div> 
            

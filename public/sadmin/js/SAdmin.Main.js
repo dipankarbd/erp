@@ -89,6 +89,14 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             self.deleteUserApp(model);
         });
 
+        App.vent.on("filter:apply", function (model) {
+            self.applyFilter(model);
+        });
+
+        App.vent.on("filter:clear", function () {
+            self.clearFilter();
+        });
+
     };
 
 
@@ -112,12 +120,13 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         },
 
         showFilterView: function () {
-            this.filterModel = new App.Filter.Models.Filter({apps:App.StaticData.apps});
-            this.mainlayout.top.show(new App.Filter.Views.FilterView({model:this.filterModel}));
+            this.filterModel = new App.Filter.Models.Filter({ apps: App.StaticData.apps });
+            this.mainlayout.top.show(new App.Filter.Views.FilterView({ model: this.filterModel }));
         },
 
         showUserlistView: function () {
-            this.mainlayout.left.show(new App.User.Views.ListView({ collection: this.userlist }));
+            this.userlistview = new App.User.Views.ListView({ collection: this.userlist });
+            this.mainlayout.left.show(this.userlistview);
         },
 
         showTabHeaderView: function () {
@@ -324,6 +333,33 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
                     App.vent.trigger("alert:showerror", alertModel);
                 }
             });
+        },
+
+        applyFilter: function (filtermodel) { 
+            if( this.selectedUser){
+                this.selectedUser.set({ selected: false });
+            }
+            this.selectedUser = null;
+            this.clearTabPane();
+            this.userlistview = null;
+            this.mainlayout.left.close();
+
+            this.filtereduserlist = this.userlist.getFilteredCollection(filtermodel);
+            this.userlistview = new App.User.Views.ListView({ collection: this.filtereduserlist });
+            this.mainlayout.left.show(this.userlistview);
+        },
+
+        clearFilter: function () { 
+            if( this.selectedUser){
+                this.selectedUser.set({ selected: false });
+            }
+            this.selectedUser = null;
+            this.clearTabPane();
+            this.userlistview = null;
+            this.mainlayout.left.close();
+
+            this.userlistview = new App.User.Views.ListView({ collection: this.userlist });
+            this.mainlayout.left.show(this.userlistview);
         }
     });
 
