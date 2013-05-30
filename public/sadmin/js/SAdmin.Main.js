@@ -335,8 +335,8 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             });
         },
 
-        applyFilter: function (filtermodel) { 
-            if( this.selectedUser){
+        applyFilter: function (filtermodel) {
+            if (this.selectedUser) {
                 this.selectedUser.set({ selected: false });
             }
             this.selectedUser = null;
@@ -345,18 +345,38 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
             this.mainlayout.left.close();
 
             this.filtereduserlist = this.userlist.getFilteredCollection(filtermodel);
+
+            if (filtermodel.get('app') !== '0') {
+                this.appusers = new App.Filter.Models.AppUsers([], { appid: filtermodel.get('app') });
+                this.appusers.fetch({ async: false });
+
+                var self = this;
+                var furtherFilteredData = this.filtereduserlist.filter(function (data) {
+
+                    var appuser = self.appusers.find(function (au) { 
+                        return data.get('id') === au.get('userid');
+                    });
+                     
+                    if (appuser) return true;
+                    else return false;
+                });
+                this.filtereduserlist = new App.User.Models.UserList(furtherFilteredData);
+            }
+
             this.userlistview = new App.User.Views.ListView({ collection: this.filtereduserlist });
             this.mainlayout.left.show(this.userlistview);
         },
 
-        clearFilter: function () { 
-            if( this.selectedUser){
+        clearFilter: function () {
+            if (this.selectedUser) {
                 this.selectedUser.set({ selected: false });
             }
             this.selectedUser = null;
             this.clearTabPane();
             this.userlistview = null;
             this.mainlayout.left.close();
+
+            this.userlist.fetch();
 
             this.userlistview = new App.User.Views.ListView({ collection: this.userlist });
             this.mainlayout.left.show(this.userlistview);

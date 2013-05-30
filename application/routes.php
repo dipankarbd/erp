@@ -434,6 +434,12 @@
     Route::get('api/apps/(:num)/roles',function($appid){ 
          return Response::eloquent(AppRole::where('appid','=',$appid)->get());
     });
+
+    //app users
+    Route::get('api/appusers/(:num)',function($appid){
+        $appusers = UserApp::where('appid', '=', $appid)->distinct()->get(array('userid'));
+        return Response::eloquent($appusers); 
+    });
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers
