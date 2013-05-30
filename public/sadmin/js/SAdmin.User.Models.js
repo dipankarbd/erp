@@ -18,10 +18,10 @@ SAdmin.module('User.Models', function (Models, App, Backbone, Marionette, $, _) 
 
         getFilteredCollection: function (filtermodel) {
             var filterdData = this.filter(function (data) { 
-                return (data.get('firstname').startsWith(filtermodel.get('firstname'))) &&
-                       (data.get('lastname').startsWith(filtermodel.get('lastname'))) &&
-                       (data.get('email').startsWith(filtermodel.get('email'))) &&
-                       (data.get('username').startsWith(filtermodel.get('username')));
+                return (data.get('firstname').toLowerCase().startsWith(filtermodel.get('firstname').toLowerCase())) &&
+                       (data.get('lastname').toLowerCase().startsWith(filtermodel.get('lastname').toLowerCase())) &&
+                       (data.get('email').toLowerCase().startsWith(filtermodel.get('email').toLowerCase())) &&
+                       (data.get('username').toLowerCase().startsWith(filtermodel.get('username').toLowerCase()));
             });
             return new Models.UserList(filterdData);
         }
