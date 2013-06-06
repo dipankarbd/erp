@@ -16,6 +16,20 @@
         <div class="navbar" id="navbar"></div>
         <div class="container-fluid" id="container"></div>
         
+        <!-- Navbar Templates -->
+        <script id="navbar-template" type="text/html">
+            <a class="brand" href="#"><%= brand %></a>
+            <ul class="nav">
+                <% for(var i=0;i<navitems.length;i++){ %> 
+                    <li <%= (navselected===navitems[i])?'class="active"' :'' %> ><a href="#<%= navitems[i].toLowerCase() %>"><%= navitems[i] %></a></li>
+                <% } %> 
+            </ul>
+            <ul class="nav pull-right">
+                <li><a><span class="text-info"><%= firstname %> <%= lastname %></span></a></li>
+                <li><a href="{{ URL::to('logout') }}">Logout</a></li>
+            </ul>
+        </script>
+        
         <!-- Scripts -->
         {{ HTML::script('js/jquery-1.9.1.min.js') }}
         {{ HTML::script('bootstrap/js/bootstrap.js') }} 
@@ -27,6 +41,7 @@
         <!-- application -->
         {{ HTML::script('production/js/PMonitor.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Models.js') }}
+        {{ HTML::script('production/js/PMonitor.Navbar.Views.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Navbar.js') }}
         {{ HTML::script('production/js/PMonitor.Main.js') }}
 

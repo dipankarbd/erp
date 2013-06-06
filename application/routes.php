@@ -482,6 +482,7 @@
                 'lastname' =>  $user->lastname,
                 'userid'=>   $user->id,
                 'username'=>   $user->username,
+                'brand' => 'production'
           );
 
           if( $isAdmin ){

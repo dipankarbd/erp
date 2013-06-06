@@ -7,10 +7,14 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         start: function () {
             this.navBarModel = new App.Navbar.Models.NavbarDataModel();
-            this.navBarModel.fetch();
+            this.navBarModel.fetch({ async: false });
+
+            this.navbarView = new App.Navbar.Views.NavbarView({ model: this.navBarModel });
+            App.navbar.show(this.navbarView);
         },
 
         onClose: function () {
+            App.navbar.close();
         }
     });
 
