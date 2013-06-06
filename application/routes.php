@@ -43,6 +43,13 @@
     {   
         return View::make('superadmin.index');
     }));
+
+    Route::get('prodmonitor',array('before' => 'auth', 'do' => function() 
+    {   
+        return View::make('prodmonitor.index');
+    }));
+
+    
     Route::get('login', function() {
         return View::make('auth.login');
     });
