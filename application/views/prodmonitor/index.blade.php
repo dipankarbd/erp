@@ -12,7 +12,10 @@
         {{ HTML::style('production/css/style.css') }}
 
     </head>
-    <body> 
+    <body>  
+        <div class="navbar" id="navbar"></div>
+        <div class="container-fluid" id="container"></div>
+        
         <!-- Scripts -->
         {{ HTML::script('js/jquery-1.9.1.min.js') }}
         {{ HTML::script('bootstrap/js/bootstrap.js') }} 
@@ -21,13 +24,17 @@
         {{ HTML::script('js/backbone.marionette/backbone.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}
         
-      
-        <script>
+        <!-- application -->
+        {{ HTML::script('production/js/PMonitor.js') }}
+        {{ HTML::script('production/js/PMonitor.Controllers.Navbar.js') }}
+        {{ HTML::script('production/js/PMonitor.Main.js') }}
+
+        <script type="text/javascript">
             $(function(){ 
                 $.ajaxPrefilter(function (options) {
                     options.url = "http://localhost:41756/public/index.php/api/" +  options.url;
                 }); 
-                SAdmin.start();
+                PMonitor.start();
             });
         </script> 
     </body>
