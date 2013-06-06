@@ -447,6 +447,61 @@
         $appusers = UserApp::where('appid', '=', $appid)->distinct()->get(array('userid'));
         return Response::eloquent($appusers); 
     });
+    
+    
+    
+    //prodmonitor nav
+    Route::get('api/prodmonitor/nav',function(){
+       $user = Auth::user();
+       if($user){
+           $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+          
+          $isAdmin = false;
+          $isUser = false;
+          $isBuyer = false; 
+
+          foreach ($roles as $role)
+          {
+              if($role->rolename === 'Admin'){
+                $isAdmin = true;
+              }
+              else if ($role->rolename === 'User'){
+                $isUser = true;
+              }
+              else if($role->rolename === 'Buyer'){
+                $isBuyer = true;
+              }
+          }
+
+          $data = array(
+                'firstname' =>  $user->firstname,
+                'lastname' =>  $user->lastname,
+                'userid'=>   $user->id,
+                'username'=>   $user->username,
+          );
+
+          if( $isAdmin ){
+              $data['navselected'] = 'Dashboard';
+              $data['navitems'] = array('Dashboard','Orders','Users');
+          }
+          else if ( $isUser ){
+              $data['navselected'] = 'Dashboard';
+              $data['navitems'] = array('Dashboard','Orders');
+          }
+          else if ( $isBuyer ){
+              $data['navselected'] = 'Orders';
+              $data['navitems'] = array('Orders');
+          }
+          return Response::json( $data  ,200);   
+       } 
+       
+       return Response::json( 'user is not authenticated'  ,401);   
+    });
+    
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers

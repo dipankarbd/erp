@@ -1,15 +1,17 @@
 PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette, $, _) {
 
     //navbar controller
-    Controllers.NavbarController = Marionette.Controller.extend({ 
-        initialize: function (options) { 
+    Controllers.NavbarController = Marionette.Controller.extend({
+        initialize: function (options) {
         },
 
-        start: function(){ 
+        start: function () {
+            this.navBarModel = new App.Navbar.Models.NavbarDataModel();
+            this.navBarModel.fetch();
         },
 
-        onClose: function () {  
+        onClose: function () {
         }
-    }); 
-     
+    });
+
 }); 

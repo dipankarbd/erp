@@ -26,6 +26,7 @@
         
         <!-- application -->
         {{ HTML::script('production/js/PMonitor.js') }}
+        {{ HTML::script('production/js/PMonitor.Navbar.Models.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Navbar.js') }}
         {{ HTML::script('production/js/PMonitor.Main.js') }}
 
