@@ -11,6 +11,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     // Main Controller (Mediator)
     Main.Controller = function () {
         App.StaticData.apps = new App.Apps.Models.Apps();
+        App.StaticData.clients = new App.Apps.Models.Clients();
         this.userlist = new App.User.Models.UserList();
         this.tabheaderlist = new App.Tab.Models.HeaderItems([new App.Tab.Models.HeaderItem({ text: 'User Details', index: 0, active: true }), new App.Tab.Models.HeaderItem({ text: 'Apps', index: 1 })]);
         this.mainlayout = new App.Layout.Main();
@@ -103,6 +104,7 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     _.extend(Main.Controller.prototype, {
         start: function () {
             App.StaticData.apps.fetch({ async: false });
+            App.StaticData.clients.fetch({ async: false });
             this.userlist.fetch({ async: false });
             this.showMainLayout();
             this.showDetailsLayout();
@@ -206,7 +208,9 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
                 id: userapp.get('id'),
                 appid: userapp.get('appid'),
                 roleid: userapp.get('roleid'),
-                apps: App.StaticData.apps
+                clientid: userapp.get('clientid'),
+                apps: App.StaticData.apps,
+                clients: App.StaticData.clients
             });
 
             var selectedApp = App.StaticData.apps.find(function (model) {
@@ -223,7 +227,9 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
                 id: 0,
                 appid: 0,
                 roleid: 0,
+                clientid: 0,
                 apps: App.StaticData.apps,
+                clients: App.StaticData.clients,
                 userid: this.selectedUser.get('id')
             });
 
@@ -256,7 +262,8 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
                 this.userApps.create({
                     userid: this.selectedUser.get('id'),
                     appid: model.get('appid'),
-                    roleid: model.get('roleid')
+                    roleid: model.get('roleid'),
+                    clientid: model.get('clientid')
                 }, {
                     wait: true,
                     success: function (model, response) {
@@ -290,7 +297,8 @@ SAdmin.module('Main', function (Main, App, Backbone, Marionette, $, _) {
                     id: model.get('id'),
                     userid: this.selectedUser.get('id'),
                     appid: model.get('appid'),
-                    roleid: model.get('roleid')
+                    roleid: model.get('roleid'),
+                    clientid: model.get('clientid')
                 }, {
                     wait: true,
                     success: function (model, response) {

@@ -71,7 +71,8 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
 
         ui: {
             apps: '#userdetailsappsdropdown',
-            roles: '#userdetailsrolesdropdown'
+            roles: '#userdetailsrolesdropdown',
+            clients: '#userdetailsclientsdropdown'
         },
 
         onRender: function () {
@@ -107,7 +108,8 @@ SAdmin.module('Apps.Views', function (Views, App, Backbone, Marionette, $, _) {
         saveUserApp: function () {
             var selectedAppId = parseInt(this.ui.apps.val());
             var selectedRoleId = parseInt(this.ui.roles.val()); 
-            this.model.set({ appid: selectedAppId, roleid: selectedRoleId });
+            var selectedClientId = parseInt(this.ui.clients.val()); 
+            this.model.set({ appid: selectedAppId, roleid: selectedRoleId, clientid: selectedClientId});
             App.vent.trigger("userapp:save", this.model);
         },
 

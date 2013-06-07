@@ -32,7 +32,13 @@
     */
     Route::get('/', array('before' => 'auth', 'do' => function() 
     { 
-        return Redirect::to('apps');
+        $user = Auth::user();
+        if($user->superadmin){
+            return Redirect::to('sadmin');
+        }
+        else{
+            return Redirect::to('apps');
+        } 
     })); 
     Route::get('apps',array('before' => 'auth', 'do' => function() 
     {   
@@ -41,14 +47,20 @@
     
     Route::get('sadmin',array('before' => 'auth', 'do' => function() 
     {   
-        return View::make('superadmin.index');
+        $user = Auth::user();
+        if($user->superadmin){
+            return View::make('superadmin.index');
+        }
+        else{
+            return Response::json('Unauthorised Access', 401); 
+        }
     }));
-
+    
     Route::get('prodmonitor',array('before' => 'auth', 'do' => function() 
     {   
         return View::make('prodmonitor.index');
     }));
-
+    
     
     Route::get('login', function() {
         return View::make('auth.login');
@@ -190,35 +202,38 @@
     Route::get('api/users/(:num)/apps',function($userid){ 
         $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
                  ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->join('clients', 'clients.id', '=', 'userapps.clientid')
                  ->where('userapps.userid', '=', $userid)
-                 ->get(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
+                 ->get(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','userapps.clientid','apps.appname','approles.rolename','clients.clientname'));
         return Response::eloquent($userapps); 
     });
     Route::get('api/users/(:num)/apps/(:num)',function($userid,$id){ 
         $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
                  ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->join('clients', 'clients.id', '=', 'userapps.clientid')
                  ->where('userapps.userid', '=', $userid)
                  ->where('userapps.id', '=', $id)
-                 ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
+                 ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','userapps.clientid','apps.appname','approles.rolename','clients.clientname'));
         if($userapps)
             return Response::eloquent($userapps); 
         else return Response::json('Apps not found',404);
     });
     Route::post('api/users/(:num)/apps',function($userid){ 
         $input = Input::json();
-        
+    
         $rules = array(
             'userid'  => 'required|min:1|max:500|numeric',
             'appid'  => 'required|min:1|max:500|numeric' ,
-            'roleid' => 'required|min:1|max:500|numeric' 
+            'roleid' => 'required|min:1|max:500|numeric' ,
+            'clientid' => 'required|min:1|max:500|numeric' 
         );
         $v = Validator::make($input, $rules);
         if( $v->fails() ){ 
             return Response::json($v->errors->all(),500);
         }
     
-        $userapp =  UserApp::where('userid','=',$input->userid)->where('appid','=',$input->appid)->where('roleid','=',$input->roleid)->first();
-
+        $userapp =  UserApp::where('userid','=',$input->userid)->where('appid','=',$input->appid)->where('roleid','=',$input->roleid)->where('clientid','=',$input->clientid)->first();
+    
         if($userapp){
             return Response::json('app with selected role already exists',500);
         }
@@ -226,25 +241,28 @@
              $newuserapp = UserApp::create(array(
                 'userid' => $input->userid,
                 'appid' =>  $input->appid,
-                'roleid' => $input->roleid
+                'roleid' => $input->roleid,
+                'clientid' => $input->clientid
             ));  
     
             $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
                  ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->join('clients', 'clients.id', '=', 'userapps.clientid')
                  ->where('userapps.userid', '=', $userid)
                  ->where('userapps.id', '=', $newuserapp->id)
-                 ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
-
+                 ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','userapps.clientid','apps.appname','approles.rolename','clients.clientname'));
+    
             return Response::eloquent($userapps);
         }  
     });
     Route::put('api/users/(:num)/apps/(:num)',function($userid,$id){  
         $input = Input::json();
-        
+    
         $rules = array(
             'userid'  => 'required|min:1|max:500|numeric',
             'appid'  => 'required|min:1|max:500|numeric' ,
-            'roleid' => 'required|min:1|max:500|numeric' 
+            'roleid' => 'required|min:1|max:500|numeric' ,
+            'clientid' => 'required|min:1|max:500|numeric' 
         );
         $v = Validator::make($input, $rules);
         if( $v->fails() ){ 
@@ -252,23 +270,29 @@
         }
     
         $userapp =  UserApp::where('id','=',$id)->first();
-
+    
         if($userapp){  
-            $duplicateuserapp =  UserApp::where('userid','=',$input->userid)->where('appid','=',$input->appid)->where('roleid','=',$input->roleid)->where('id','!=',$id)->first();
+            $duplicateuserapp =  UserApp::where('userid','=',$input->userid)
+                                    ->where('appid','=',$input->appid)
+                                    ->where('roleid','=',$input->roleid)
+                                    ->where('clientid','=',$input->clientid)
+                                    ->where('id','!=',$id)->first();
             if($duplicateuserapp){
                  return Response::json('app with selected role already exists',500);
             }
             else{
                 $userapp->appid = $input->appid;
                 $userapp->roleid = $input->roleid;
+                $userapp->clientid = $input->clientid;
                 $userapp->save();
-          
+    
                 $userapps = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
                      ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                     ->join('clients', 'clients.id', '=', 'userapps.clientid')
                      ->where('userapps.userid', '=', $userid)
                      ->where('userapps.id', '=', $userapp->id)
-                     ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','apps.appname','approles.rolename'));
-
+                     ->first(array('userapps.id','userapps.userid','userapps.appid','userapps.roleid','userapps.clientid','apps.appname','approles.rolename','clients.clientname'));
+    
                 return Response::eloquent($userapps);
             } 
         }
@@ -415,7 +439,7 @@
                 'appname'=>$app->appname,
                 'description'=> $app->description,
                 'urlseg'=> $app->urlseg,
-                'roles' =>  $role
+                'roles' =>  $role,
             );   
         }
         return  json_encode($data); 
@@ -441,14 +465,18 @@
     Route::get('api/apps/(:num)/roles',function($appid){ 
          return Response::eloquent(AppRole::where('appid','=',$appid)->get());
     });
-
+    
     //app users
     Route::get('api/appusers/(:num)',function($appid){
         $appusers = UserApp::where('appid', '=', $appid)->distinct()->get(array('userid'));
         return Response::eloquent($appusers); 
     });
     
-    
+    //clients
+    Route::get('api/clients',function(){ 
+          return Response::eloquent(Client::all()); 
+    });
+
     
     //prodmonitor nav
     Route::get('api/prodmonitor/nav',function(){
@@ -459,11 +487,11 @@
                  ->where('userapps.userid', '=', $user->id)
                  ->where('apps.appname', '=', 'Production Monitor')
                  ->get(array('userapps.roleid','approles.rolename'));
-          
+    
           $isAdmin = false;
           $isUser = false;
           $isBuyer = false; 
-
+    
           foreach ($roles as $role)
           {
               if($role->rolename === 'Admin'){
@@ -476,7 +504,7 @@
                 $isBuyer = true;
               }
           }
-
+    
           $data = array(
                 'firstname' =>  $user->firstname,
                 'lastname' =>  $user->lastname,
@@ -484,7 +512,7 @@
                 'username'=>   $user->username,
                 'brand' => 'production'
           );
-
+    
           if( $isAdmin ){
               $data['navselected'] = 'Dashboard';
               $data['navitems'] = array('Dashboard','Orders','Users');
@@ -499,7 +527,7 @@
           }
           return Response::json( $data  ,200);   
        } 
-       
+    
        return Response::json( 'user is not authenticated'  ,401);   
     });
     

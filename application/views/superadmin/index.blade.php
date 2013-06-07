@@ -47,7 +47,7 @@
         <script id="apps-layout" type="text/html">
 
             
-            <div class="span3"  id="apps-list"></div>
+            <div class="span4"  id="apps-list"></div>
             <div class="span6"  id="app-details"></div>  
             <div class="span2 pull-right" id="create-new-userapp"></div>
         </script>
@@ -204,24 +204,24 @@
         </script>
 
         <!-- Apps Template-->
-        <script id="userappitem-template" type="text/html">
-
-            
+        <script id="userappitem-template" type="text/html">  
             <td><%= appname %></td>
             <td><%= rolename %></td> 
+            <td><%= clientname %></td> 
         </script>
         <script id="userapplist-template" type="text/html">
             <thead>
                 <tr>
                   <th>App Name</th>
                   <th>User Role</th>
+                  <th>Client</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </script>
         <script id="userappdetails-template" type="text/html">  
-            <div style="padding:10px; border:1px solid #E3E3E3;height:400px;"> 
+            <div style="padding:10px; border:1px solid #E3E3E3;height:440px;"> 
                   <div class="clearfix">
                     <div class="span1">
                         <span>App:</span>
@@ -255,6 +255,22 @@
                         </select> 
                     </div>
                  </div>
+                 <div class="clearfix">
+                   <div class="span1">
+                        <span>Client:</span>
+                    </div>
+                    <div class="span2">
+                         <select id="userdetailsclientsdropdown">
+                            <% for(var i=0;i<clients.length;i++){ 
+                                if( clients.at(i).get('id') === clientid){%>
+                                <option value="<%= clients.at(i).get('id') %>" selected="selected"><%= clients.at(i).get('clientname')  %></option>
+                                <% } else {  %>
+                                <option value="<%= clients.at(i).get('id')  %>"><%= clients.at(i).get('clientname')  %></option> 
+                                <% }  
+                             } %>
+                        </select> 
+                    </div>
+                </div>
                 <div class="clearfix">
                     <div class="span1"> 
                     </div>

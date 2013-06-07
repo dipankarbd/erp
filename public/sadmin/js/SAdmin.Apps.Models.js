@@ -35,4 +35,15 @@ SAdmin.module('Apps.Models', function (Models, App, Backbone, Marionette, $, _) 
     //user app details model
     Models.UserAppDetails = Backbone.Model.extend({   
     });
+
+
+    //client
+    Models.Client = Backbone.Model.extend({   
+    });
+
+    //clients
+    Models.Clients = Backbone.Collection.extend({ 
+        model: Models.Client, 
+        url:'clients'
+    });
 });
