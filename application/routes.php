@@ -44,7 +44,7 @@
     {   
         $user = Auth::user();
         $userapps = null;
-        if( $user ){
+        if( $user && !$user->superadmin){
             $clients = Client::join('userapps','clients.id','=','userapps.clientid')
                        ->where('userapps.userid', '=',  $user->id)
                        ->distinct()
@@ -89,6 +89,9 @@
              if($userapp ){
                   Session::put('clientid', $clientId );
                   return Redirect::to($userapp->urlseg);
+             }
+             else{
+                 return Response::json('Access Denied', 401); 
              }
          }
          else{
