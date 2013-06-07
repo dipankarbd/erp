@@ -42,9 +42,60 @@
     })); 
     Route::get('apps',array('before' => 'auth', 'do' => function() 
     {   
-        return View::make('apps.index')->with('apps', App::all());
+        $user = Auth::user();
+        $userapps = null;
+        if( $user ){
+            $clients = Client::join('userapps','clients.id','=','userapps.clientid')
+                       ->where('userapps.userid', '=',  $user->id)
+                       ->distinct()
+                       ->get(array('clients.id','clients.clientname'));
+            
+            $selectedClientId = (int)Input::get('clientid');
+            if($selectedClientId>0){
+                 $userapps =  UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                                        ->where('userapps.userid', '=',  $user->id)
+                                        ->where('userapps.clientid', '=',  $selectedClientId)
+                                        ->distinct()
+                                        ->get(array('userapps.appid','apps.appname','apps.description')); 
+            }
+            else{
+                $selectedClientId = $clients[0]->id;
+                $userapps =  UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                                        ->where('userapps.userid', '=',  $user->id)
+                                        ->where('userapps.clientid', '=',   $selectedClientId)
+                                        ->distinct()
+                                        ->get(array('userapps.appid','apps.appname','apps.description')); 
+            }
+             
+            return View::make('apps.index')->with('clients', $clients)->with('apps', $userapps)->with('selectedClientId',$selectedClientId);
+        } 
+        else{
+            return Response::json('Unauthenticated User', 401); 
+        }
+        
     }));
     
+    Route::get('appredirect',array('before' => 'auth', 'do' => function() 
+    {   
+         $user = Auth::user();
+         if( $user){
+             $clientId = (int)Input::get('clientid');
+             $appId = (int)Input::get('appid');
+             $userapp =  UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                                        ->where('userapps.userid', '=',  $user->id)
+                                        ->where('userapps.clientid', '=',   $clientId)
+                                        ->where('userapps.appid', '=',   $appId) 
+                                        ->first(); 
+             if($userapp ){
+                  Session::put('clientid', $clientId );
+                  return Redirect::to($userapp->urlseg);
+             }
+         }
+         else{
+            return Response::json('Unauthenticated User', 401); 
+        }
+    })); 
+
     Route::get('sadmin',array('before' => 'auth', 'do' => function() 
     {   
         $user = Auth::user();

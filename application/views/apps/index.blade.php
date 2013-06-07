@@ -21,11 +21,26 @@
             </ul>
         </div>
     </div>
-	<div class="container-fluid"> 
-        <ul class="thumbnails">
+	<div class="container-fluid">
+         
+        <ul class="nav nav-tabs"> 
+            @foreach ($clients as $index => $client)
+                  @if( ($selectedClientId ===0 && $index===0) ||   $client->id === $selectedClientId)
+                      <li class="active">
+                        <a href="apps?clientid={{$client->id}}">{{ $client->clientname }}</a>
+                      </li> 
+                  @else
+                    <li>
+                        <a href="apps?clientid={{$client->id}}">{{ $client->clientname }}</a>
+                    </li>
+                  @endif 
+            @endforeach
+        </ul>
+         
+         <ul class="thumbnails"> 
             @foreach ($apps as $app)
             <li class="span4"> 
-                <a href="{{ URL::to($app->urlseg) }}">
+                <a href="{{ URL::to('appredirect?appid='.$app->appid . '&clientid=' . $selectedClientId) }}">
                     <div class="thumbnail"> 
                         <div class="caption">
                             <h3>{{ $app->appname }}</h3>
@@ -36,6 +51,7 @@
             </li>  
             @endforeach
         </ul>
+        
     </div>  
 
     <!-- Scripts -->
