@@ -102,17 +102,23 @@
     Route::get('sadmin',array('before' => 'auth', 'do' => function() 
     {   
         $user = Auth::user();
-        if($user->superadmin){
+        if( $user && $user->superadmin){
             return View::make('superadmin.index');
         }
         else{
-            return Response::json('Unauthorised Access', 401); 
+            return Response::json('Access Denied', 401); 
         }
     }));
     
     Route::get('prodmonitor',array('before' => 'auth', 'do' => function() 
     {   
-        return View::make('prodmonitor.index');
+         $user = Auth::user();
+         if( $user && !$user->superadmin){
+            return View::make('prodmonitor.index');
+         }
+         else{
+            return Response::json('Access Denied', 401); 
+         }
     }));
     
     
