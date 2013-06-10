@@ -15,7 +15,22 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         onClose: function () {
             App.navbar.close();
+        },
+
+        //routes methods
+        showDashboard: function () {
+            App.vent.trigger("navbar:selected", 'dashboard');
+        },
+        showOrders: function () {
+            App.vent.trigger("navbar:selected", 'orders');
+        },
+        showBuyers: function () {
+            App.vent.trigger("navbar:selected", 'buyers');
+        },
+        showUsers: function () {
+            App.vent.trigger("navbar:selected", 'users');
         }
+
     });
 
 }); 
