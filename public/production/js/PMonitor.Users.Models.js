@@ -7,14 +7,14 @@ PMonitor.module('Users.Models', function (Models, App, Backbone, Marionette, $, 
 
         defaults: {
             selected: false
-        }
+        } 
     });
 
     // UserList Model
     // ----------
     Models.UserList = Backbone.Collection.extend({
         url: 'prodmonitor/users',
-        model: Models.UserItem  
-    });
+        model: Models.UserItem
+    }); 
 
 });

@@ -17,7 +17,7 @@ PMonitor.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         new Main.NavRouter({
             controller: navController
         });
-        navController.start();
+        navController.start(); 
     });
-     
+
 });

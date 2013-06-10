@@ -44,6 +44,33 @@
             </div>
         </script>
 
+
+        <!-- Users Templates --> 
+        <script id="users-useritemview-template"  type="text/html"> 
+            <td><%= username %></td>
+            <td><%= firstname %></td>
+            <td><%= lastname %></td>
+            <td><%= email %></td>
+            <td>
+                <% for(var i=0;i<roles.length;i++){ %>  
+                    <span class="label label-info"><%= roles[i].rolename %></span> 
+                <% } %> 
+            </td> 
+        </script>
+        <script id="users-usersview-template"  type="text/html">
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </script>
+
         <!-- Scripts -->
         {{ HTML::script('js/jquery-1.9.1.min.js') }}
         {{ HTML::script('bootstrap/js/bootstrap.js') }}
@@ -56,8 +83,9 @@
         {{ HTML::script('production/js/PMonitor.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Models.js') }}
         {{ HTML::script('production/js/PMonitor.Users.Models.js') }}
+        {{ HTML::script('production/js/PMonitor.Layout.js') }}  
         {{ HTML::script('production/js/PMonitor.Navbar.Views.js') }}
-        {{ HTML::script('production/js/PMonitor.Layout.js') }}
+        {{ HTML::script('production/js/PMonitor.Users.Views.js') }} 
         {{ HTML::script('production/js/PMonitor.Controllers.Dashboard.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Orders.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Buyers.js') }}
