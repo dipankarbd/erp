@@ -13,6 +13,7 @@
     </head>
     <body>
         <div class="navbar" id="navbar"></div>
+        <div class="container-fluid" id="alert"></div>
         <div class="container-fluid" id="container"></div>
 
         <!-- Navbar Templates -->
@@ -29,6 +30,20 @@
             </ul>
         </script>
 
+        <!-- Layout Templates -->
+        <script id="container-layout" type="text/html">
+            <div class="row-fluid">
+                <div class="span6" id="leftpanel"> 
+                </div>
+                <div class="span3 pull-right">
+                    <div class="row-fluid" id="filterpanel"> 
+                    </div>
+                    <div class="row-fluid" id="commandpanel">  
+                    </div>
+                </div>
+            </div>
+        </script>
+
         <!-- Scripts -->
         {{ HTML::script('js/jquery-1.9.1.min.js') }}
         {{ HTML::script('bootstrap/js/bootstrap.js') }}
@@ -36,16 +51,20 @@
         {{ HTML::script('js/backbone.marionette/underscore.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}
+
         <!-- application -->
         {{ HTML::script('production/js/PMonitor.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Models.js') }}
+        {{ HTML::script('production/js/PMonitor.Users.Models.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Views.js') }}
+        {{ HTML::script('production/js/PMonitor.Layout.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Dashboard.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Orders.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Buyers.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Users.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Navbar.js') }}
         {{ HTML::script('production/js/PMonitor.Main.js') }}
+
         <script type="text/javascript">
             $(function(){ 
                 $.ajaxPrefilter(function (options) {

@@ -540,17 +540,18 @@
     
     //prodmonitor nav
     Route::get('api/prodmonitor/nav',function(){
-       $user = Auth::user();
-       if($user){
-           $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+        $user = Auth::user();
+        if($user){
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
                  ->join('approles', 'approles.id', '=', 'userapps.roleid')
                  ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
                  ->where('apps.appname', '=', 'Production Monitor')
                  ->get(array('userapps.roleid','approles.rolename'));
     
-          $isAdmin = false;
-          $isUser = false;
-          $isBuyer = false; 
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
     
           foreach ($roles as $role)
           {
@@ -591,6 +592,75 @@
        return Response::json( 'user is not authenticated'  ,401);   
     });
     
+    //productmonitor users
+    Route::get('api/prodmonitor/users',function(){
+        $user = Auth::user();
+        if($user){
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+
+            if($isAdmin){
+                $users = User::join('userapps', 'userapps.userid', '=', 'users.id')
+                             ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                             ->join('apps', 'apps.id', '=', 'userapps.appid')
+                             ->where('userapps.clientid', '=', Session::get('clientid'))
+                             ->where('apps.appname', '=', 'Production Monitor')
+                             ->where('users.superadmin', '=', false)
+                             ->where(function($query){
+                                  $query->where('approles.rolename', '=', 'Admin');
+                                  $query->or_where('approles.rolename', '=', 'User');
+                             }) 
+                             ->distinct()
+                             ->get(array('users.id','users.username','users.firstname','users.lastname','users.email'));
+                foreach ($users as $u)
+                {
+                    $roles = UserApp::join('approles', 'approles.id', '=', 'userapps.roleid')
+                                    ->join('apps', 'apps.id', '=', 'userapps.appid')
+                                    ->where('userapps.clientid', '=', Session::get('clientid'))
+                                    ->where('userapps.userid', '=', $u->id)
+                                    ->where('apps.appname', '=', 'Production Monitor')
+                                    ->distinct()
+                                    ->get(array('approles.id','approles.rolename'));
+                    
+                    $role = array();
+                    foreach($roles as $r){
+                        $role[] = array('roleid'=>$r->id,'rolename'=>$r->rolename);
+                    }
+                    $u->roles = $role;
+                }
+
+                return Response::eloquent( $users);
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else{
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+        
+    });
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers
