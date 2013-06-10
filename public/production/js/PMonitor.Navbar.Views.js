@@ -9,30 +9,7 @@ PMonitor.module('Navbar.Views', function (Views, App, Backbone, Marionette, $, _
         initialize: function () {
             this.listenTo(App.vent, "navbar:selected", this.updateNavSelection, this);
         },
-        events: {
-            'click a': 'navItemClicked'
-        },
-
-        navItemClicked: function (e) {
-            switch ($(e.target).attr('href')) {
-                case '#dashboard':
-                    App.vent.trigger("navbar:selected", 'dashboard');
-                    break;
-                case '#orders':
-                    App.vent.trigger("navbar:selected", 'orders');
-                    break;
-                case '#users':
-                    App.vent.trigger("navbar:selected", 'users');
-                    break;
-                 case '#buyers':
-                    App.vent.trigger("navbar:selected", 'buyers');
-                    break;
-                default:
-                    break;
-            }
-
-        },
-
+         
         updateNavSelection: function (selectedItem) {
             switch (selectedItem) {
                 case 'dashboard':

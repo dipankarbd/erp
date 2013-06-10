@@ -19,5 +19,5 @@ PMonitor.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         });
         navController.start();
     });
-
+     
 });
