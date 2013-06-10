@@ -575,7 +575,7 @@
     
           if( $isAdmin ){
               $data['navselected'] = 'Dashboard';
-              $data['navitems'] = array('Dashboard','Orders','Users');
+              $data['navitems'] = array('Dashboard','Orders','Buyers','Users');
           }
           else if ( $isUser ){
               $data['navselected'] = 'Dashboard';

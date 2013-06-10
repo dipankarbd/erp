@@ -24,6 +24,9 @@ PMonitor.module('Navbar.Views', function (Views, App, Backbone, Marionette, $, _
                 case '#users':
                     App.vent.trigger("navbar:selected", 'users');
                     break;
+                 case '#buyers':
+                    App.vent.trigger("navbar:selected", 'buyers');
+                    break;
                 default:
                     break;
             }
@@ -40,6 +43,9 @@ PMonitor.module('Navbar.Views', function (Views, App, Backbone, Marionette, $, _
                     break;
                 case 'users':
                     this.model.set({ 'navselected': 'Users' });
+                    break;
+                case 'buyers':
+                    this.model.set({ 'navselected': 'Buyers' });
                     break;
                 default:
                     break;
