@@ -21,6 +21,11 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.showCommandViewForUserNotSelected();
 
             this.listenTo(App.vent, "users:selected", this.userSelected, this);
+            this.listenTo(App.vent, "users:createnewuser", this.createNewUser, this);
+            this.listenTo(App.vent, "users:editselecteduser", this.editUser, this);
+            this.listenTo(App.vent, "users:deleteselecteduser", this.deleteUser, this);
+            this.listenTo(App.vent, "users:savenewuser", this.saveNewUser, this);
+            this.listenTo(App.vent, "users:cancelsavingnewuser", this.cancelSavingNewUser, this);
         },
 
         onClose: function () {
@@ -28,8 +33,34 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             App.container.close();
         },
 
-        userSelected: function (user) {
+        userSelected: function () {
             this.showCommandViewForUserSelected();
+        },
+
+        createNewUser: function (user) {
+            this.closeFilterView();
+            this.showCommandViewForCreateNewUser();
+            this.showCreateNewUserView();
+        },
+
+        editUser: function (user) {
+            this.closeFilterView();
+        },
+
+        deleteUser: function () {
+
+        },
+
+        saveNewUser: function () {
+            this.showUsersView();
+            this.showFilterView();
+            this.showCommandViewForUserNotSelected();
+        },
+
+        cancelSavingNewUser: function () {
+            this.showUsersView();
+            this.showFilterView();
+            this.showCommandViewForUserNotSelected();
         },
 
         showUsersView: function () {
@@ -37,7 +68,11 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.containerLayout.mainpanel.show(this.usersView);
         },
 
-        hideUsersView: function () {
+        closeUsersView: function () {
+            this.containerLayout.mainpanel.close();
+        },
+
+        closeUsersView: function () {
             this.containerLayout.mainpanel.close();
         },
 
@@ -46,22 +81,35 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.containerLayout.filterpanel.show(this.filterView);
         },
 
+        closeFilterView: function () {
+            this.containerLayout.filterpanel.close();
+        },
+
         showCommandViewForUserNotSelected: function () {
             this.commandView = new App.Users.Views.CommandViewUserNotSelected();
             this.containerLayout.commandpanel.show(this.commandView);
         },
-
-        hideCommandViewForUserNotSelected: function () {
-            this.containerLayout.commandpanel.close();
-        },
-
         showCommandViewForUserSelected: function () {
             this.commandView = new App.Users.Views.CommandViewUserSelected();
             this.containerLayout.commandpanel.show(this.commandView);
         },
 
-        hideCommandViewForUserSelected: function () {
+        showCommandViewForCreateNewUser: function () {
+            this.commandView = new App.Users.Views.CommandViewCreateNewUser();
+            this.containerLayout.commandpanel.show(this.commandView);
+        },
+
+        closeCommandView: function () {
             this.containerLayout.commandpanel.close();
+        },
+
+        showCreateNewUserView: function () {
+            this.createNewUserView = new App.Users.Views.CreateNewUserView();
+            this.containerLayout.mainpanel.show(this.createNewUserView);
+        },
+
+        closeCreateNewUserView: function () {
+            this.containerLayout.mainpanel.close();
         }
     });
 

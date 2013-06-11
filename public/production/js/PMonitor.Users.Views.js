@@ -102,4 +102,29 @@ PMonitor.module('Users.Views', function (Views, App, Backbone, Marionette, $, _)
 
     });
 
+    Views.CommandViewCreateNewUser = Backbone.Marionette.ItemView.extend({
+        template: '#users-commandview-createnewuser-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        events: {
+            'click #savenewuser': 'saveNewUser',
+            'click #cancelchanges': 'cancelChanges'
+        },
+
+        saveNewUser: function (e) {
+            App.vent.trigger("users:savenewuser");
+        },
+
+        cancelChanges: function (e) {
+            App.vent.trigger("users:cancelsavingnewuser");
+        }
+
+    });
+
+    Views.CreateNewUserView = Backbone.Marionette.ItemView.extend({
+        template: '#users-createnewuser-template',
+        className: 'roundborder padding-10px'
+    });
+
+
 });
