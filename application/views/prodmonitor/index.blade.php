@@ -44,25 +44,15 @@
             </div>
         </script>
 
+        <!-- Alert Templates -->
+        <script id="alert-template" type="text/html">  
+            <button type="button" class="close" data-dismiss="alert">&times;</button>       
+            <h4 class="alert-heading"><%= heading %></h4>
+            <%= body %> 
+        </script>
 
         <!-- Users Templates -->
-        <script id="users-useritemview-template" type="text/html">
-
-
-
-
-
-
-
-
-            
-            
-            
-            
-            
-            
-            
-            
+        <script id="users-useritemview-template" type="text/html">  
             <td><%= username %></td>
             <td><%= firstname %></td>
             <td><%= lastname %></td>
@@ -149,10 +139,13 @@
         <!-- application -->
         {{ HTML::script('production/js/PMonitor.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Models.js') }}
+        {{ HTML::script('production/js/PMonitor.Alert.Models.js') }}
         {{ HTML::script('production/js/PMonitor.Users.Models.js') }}
         {{ HTML::script('production/js/PMonitor.Layout.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Views.js') }}
+        {{ HTML::script('production/js/PMonitor.Alert.Views.js') }}
         {{ HTML::script('production/js/PMonitor.Users.Views.js') }}
+        {{ HTML::script('production/js/PMonitor.Controllers.Alert.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Dashboard.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Orders.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Buyers.js') }}

@@ -14,10 +14,12 @@ PMonitor.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     // -------------------- 
     Main.addInitializer(function () {
         var navController = new App.Controllers.NavbarController();
+        var alertController = new App.Controllers.AlertController();
         new Main.NavRouter({
             controller: navController
         });
-        navController.start(); 
+        navController.start();
+        alertController.start();
     });
 
 });

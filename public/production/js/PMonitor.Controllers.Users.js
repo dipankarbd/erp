@@ -70,23 +70,23 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
                         self.showUsersView();
                         self.showFilterView();
                         self.showCommandViewForUserNotSelected();
-                        //App.vent.trigger("user:created", this.model);
-                        //var alertModel = new App.Alert.Models.Alert({ body: 'User Created Successfully!' });
-                        //App.vent.trigger("alert:showsuccess", alertModel);
+
+                        var alertModel = new App.Alert.Models.Alert({ body: 'User Created Successfully!' });
+                        App.vent.trigger("alert:showsuccess", alertModel);
                     },
                     error: function (model, err) {
-                        /*var response = $.parseJSON(err.responseText);
+                        var response = $.parseJSON(err.responseText);
                         var msg = '';
 
                         if (response instanceof Array) {
-                        for (var i = 0; i < response.length; i++) {
-                        msg += '<p>' + response[i] + '</p>';
-                        }
+                            for (var i = 0; i < response.length; i++) {
+                                msg += '<p>' + response[i] + '</p>';
+                            }
                         } else {
-                        msg = response;
+                            msg = response;
                         }
                         var alertModel = new App.Alert.Models.Alert({ heading: 'Error in creating new user!', body: msg });
-                        App.vent.trigger("alert:showerror", alertModel);*/
+                        App.vent.trigger("alert:showerror", alertModel);
                     }
                 });
             }
@@ -98,6 +98,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.showUsersView();
             this.showFilterView();
             this.showCommandViewForUserNotSelected();
+            App.vent.trigger('alert:close');
         },
 
         showUsersView: function () {
@@ -140,13 +141,15 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.containerLayout.commandpanel.close();
         },
 
-        showCreateNewUserView: function () {
+        showCreateNewUserView: function () { 
             this.createNewUserView = new App.Users.Views.CreateNewUserView();
             this.containerLayout.mainpanel.show(this.createNewUserView);
+             App.vent.trigger('alert:close');
         },
 
         closeCreateNewUserView: function () {
             this.containerLayout.mainpanel.close();
+            App.vent.trigger('alert:close');
         }
     });
 
