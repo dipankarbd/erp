@@ -45,8 +45,16 @@
         </script>
 
 
-        <!-- Users Templates --> 
-        <script id="users-useritemview-template"  type="text/html"> 
+        <!-- Users Templates -->
+        <script id="users-useritemview-template" type="text/html">
+
+
+
+
+            
+            
+            
+            
             <td><%= username %></td>
             <td><%= firstname %></td>
             <td><%= lastname %></td>
@@ -57,7 +65,7 @@
                 <% } %> 
             </td> 
         </script>
-        <script id="users-usersview-template"  type="text/html">
+        <script id="users-usersview-template" type="text/html">
             <thead>
                 <tr>
                     <th>User Id</th>
@@ -70,6 +78,27 @@
             <tbody>
             </tbody>
         </script>
+        <script id="users-filterview-template" type="text/html">
+            TODO:: FILTERVIEW
+        </script>
+        <script id="users-commandview-usernotselected-template" type="text/html">
+            <p>
+                <a id="createnewuser" href="#" class="btn" style="display:block;width:200px;"><i class="icon-pencil"></i> <strong>Create New User</strong></a>
+            </p> 
+        </script>
+        <script id="users-commandview-userselected-template" type="text/html">
+            <p>
+                <a id="createnewuser" href="#" class="btn" style="display:block;width:200px;"><i class="icon-pencil"></i> <strong>Create New User</strong></a>
+            </p>
+            <p>
+                <a id="editselecteduser" href="#" class="btn" style="display:block;width:200px;"><i class="icon-edit"></i> <strong>Edit Selected User</strong></a>
+            </p>
+            <hr/>
+            <p>
+                <a id="deleteselecteduser" href="#" class="btn btn-danger" style="display:block;width:200px;"><i class="icon-trash"></i> <strong>Delete Selected User</strong></a>
+            </p>
+        </script>
+
 
         <!-- Scripts -->
         {{ HTML::script('js/jquery-1.9.1.min.js') }}
@@ -78,21 +107,19 @@
         {{ HTML::script('js/backbone.marionette/underscore.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}
-
         <!-- application -->
         {{ HTML::script('production/js/PMonitor.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Models.js') }}
         {{ HTML::script('production/js/PMonitor.Users.Models.js') }}
-        {{ HTML::script('production/js/PMonitor.Layout.js') }}  
+        {{ HTML::script('production/js/PMonitor.Layout.js') }}
         {{ HTML::script('production/js/PMonitor.Navbar.Views.js') }}
-        {{ HTML::script('production/js/PMonitor.Users.Views.js') }} 
+        {{ HTML::script('production/js/PMonitor.Users.Views.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Dashboard.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Orders.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Buyers.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Users.js') }}
         {{ HTML::script('production/js/PMonitor.Controllers.Navbar.js') }}
         {{ HTML::script('production/js/PMonitor.Main.js') }}
-
         <script type="text/javascript">
             $(function(){ 
                 $.ajaxPrefilter(function (options) {

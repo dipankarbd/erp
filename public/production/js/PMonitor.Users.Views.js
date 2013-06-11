@@ -54,5 +54,52 @@ PMonitor.module('Users.Views', function (Views, App, Backbone, Marionette, $, _)
         }
     });
 
+    //FilterView
+    Views.FilterView = Backbone.Marionette.ItemView.extend({
+        template: '#users-filterview-template',
+        className: 'roundborder padding-10px margin-bottom-10px'
+    });
+
+    //CommandView for userlist
+    Views.CommandViewUserNotSelected = Backbone.Marionette.ItemView.extend({
+        template: '#users-commandview-usernotselected-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        events: {
+            'click #createnewuser': 'createNewUser'
+        },
+
+        createNewUser: function (e) {
+            e.preventDefault();
+            App.vent.trigger("users:createnewuser");
+        }
+
+    });
+    Views.CommandViewUserSelected = Backbone.Marionette.ItemView.extend({
+        template: '#users-commandview-userselected-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        events: {
+            'click #createnewuser': 'createNewUser',
+            'click #editselecteduser': 'editSelectedUser',
+            'click #deleteselecteduser': 'deleteSelectedUser'
+        },
+
+        createNewUser: function (e) {
+            e.preventDefault();
+            App.vent.trigger("users:createnewuser");
+        },
+
+        editSelectedUser: function (e) {
+            e.preventDefault();
+            App.vent.trigger("users:editselecteduser");
+        },
+
+        deleteSelectedUser: function (e) {
+            e.preventDefault();
+            App.vent.trigger("users:deleteselecteduser");
+        }
+
+    });
 
 });
