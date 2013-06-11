@@ -49,7 +49,7 @@
                        ->where('userapps.userid', '=',  $user->id)
                        ->distinct()
                        ->get(array('clients.id','clients.clientname'));
-            
+    
             $selectedClientId = (int)Input::get('clientid');
             if($selectedClientId>0){
                  $userapps =  UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
@@ -66,13 +66,13 @@
                                         ->distinct()
                                         ->get(array('userapps.appid','apps.appname','apps.description')); 
             }
-             
+    
             return View::make('apps.index')->with('clients', $clients)->with('apps', $userapps)->with('selectedClientId',$selectedClientId);
         } 
         else{
             return Response::json('Unauthenticated User', 401); 
         }
-        
+    
     }));
     
     Route::get('appredirect',array('before' => 'auth', 'do' => function() 
@@ -98,7 +98,7 @@
             return Response::json('Unauthenticated User', 401); 
         }
     })); 
-
+    
     Route::get('sadmin',array('before' => 'auth', 'do' => function() 
     {   
         $user = Auth::user();
@@ -536,7 +536,7 @@
     Route::get('api/clients',function(){ 
           return Response::eloquent(Client::all()); 
     });
-
+    
     
     //prodmonitor nav
     Route::get('api/prodmonitor/nav',function(){
@@ -619,7 +619,7 @@
                     $isBuyer = true;
                 }
             }
-
+    
             if($isAdmin){
                 $users = User::join('userapps', 'userapps.userid', '=', 'users.id')
                              ->join('approles', 'approles.id', '=', 'userapps.roleid')
@@ -642,14 +642,14 @@
                                     ->where('apps.appname', '=', 'Production Monitor')
                                     ->distinct()
                                     ->get(array('approles.id','approles.rolename'));
-                    
+    
                     $role = array();
                     foreach($roles as $r){
                         $role[] = array('roleid'=>$r->id,'rolename'=>$r->rolename);
                     }
                     $u->roles = $role;
                 }
-
+    
                 return Response::eloquent( $users);
             }
             else{
@@ -659,7 +659,106 @@
         else{
             return Response::json( 'user is not authenticated'  ,401);
         }
-        
+    
+    });
+    
+    Route::post('api/prodmonitor/users',function(){
+        $user = Auth::user();
+        if($user){ 
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){
+                $input = Input::json();
+    
+                $rules = array(
+                    'firstname'  => 'required|min:3|max:32|alpha',
+                    'lastname'  => 'required|min:3|max:32|alpha' ,
+                    'email' => 'required|min:3|max:64|email',
+                    'username' => 'required|min:3|max:32|alpha_num',
+                    'usertype' => 'required|alpha_num',
+                    'password'  =>'required|min:4|max:32|alpha_num|confirmed',
+                    'password_confirmation'=>'required|alpha_num|between:4,32'
+                );
+                $v = Validator::make($input, $rules);
+                if( $v->fails() ){ 
+                    return Response::json($v->errors->all(),500);
+                }
+    
+                $user =  User::where('username','=',$input->username)->first();
+                if($user){
+                    return Response::json('Username already exists',500);
+                }
+                else{
+                    $user = User::create(array(
+                        'username' => $input->username,
+                        'password' => Hash::make($input->password),
+                        'firstname' => $input->firstname,
+                        'lastname' => $input->lastname,
+                        'email' => $input->email,
+                    ));
+    
+                    if($user){ 
+                        if($input->usertype ==='user') $roleName = 'User';
+                        else if($input->usertype ==='admin') $roleName = 'Admin';
+
+                        $role = App::join('approles', 'approles.appid', '=', 'apps.id') 
+                                    ->where('apps.appname', '=', 'Production Monitor')
+                                    ->where('approles.rolename', '=', $roleName)
+                                    ->distinct()
+                                    ->first(array('approles.id'));
+                        $app = App::where('appname', '=', 'Production Monitor') 
+                                    ->distinct()
+                                    ->first(array('id'));
+                                    
+                        if($role && $app){  
+                                $newuserapp = UserApp::create(array(
+                                    'userid' => $user->id,
+                                    'appid' =>  $app->id,
+                                    'roleid' => $role->id,
+                                    'clientid' => Session::get('clientid')
+                                ));  
+                                $user->password = "";
+                                $roles = array();
+                                $roles[] = array('roleid'=>$role->id,'rolename'=>$roleName);
+                                $user->roles = $roles;
+                                return Response::eloquent($user); 
+                        }
+                            
+                    } 
+                    else{
+                         return Response::json( "Can't create user"  ,500);
+                    }
+                } 
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else{
+            return Response::json( 'user is not authenticated'  ,401);
+        }
     });
     /*
     |--------------------------------------------------------------------------

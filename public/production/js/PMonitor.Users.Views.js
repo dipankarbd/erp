@@ -123,7 +123,29 @@ PMonitor.module('Users.Views', function (Views, App, Backbone, Marionette, $, _)
 
     Views.CreateNewUserView = Backbone.Marionette.ItemView.extend({
         template: '#users-createnewuser-template',
-        className: 'roundborder padding-10px'
+        className: 'roundborder padding-10px',
+
+        ui: {
+            firstname: '#firstname',
+            lastname: '#lastname',
+            email: '#email',
+            userid: '#userid',
+            usertype: '#usertype',
+            password: '#password',
+            confirmpassword: '#confirmpassword'
+        },
+
+        getEnteredData: function () {
+            return {
+                firstname: this.ui.firstname.val(),
+                lastname: this.ui.lastname.val(),
+                email: this.ui.email.val(),
+                userid: this.ui.userid.val(),
+                usertype: this.ui.usertype.val(),
+                password: this.ui.password.val(),
+                confirmpassword: this.ui.confirmpassword.val()
+            };
+        }
     });
 
 

@@ -52,9 +52,46 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         saveNewUser: function () {
-            this.showUsersView();
-            this.showFilterView();
-            this.showCommandViewForUserNotSelected();
+            var self = this;
+            if (this.createNewUserView) {
+                var model = this.createNewUserView.getEnteredData();
+                this.users.create({
+                    firstname: model.firstname,
+                    lastname: model.lastname,
+                    email: model.email,
+                    username: model.userid,
+                    usertype: model.usertype,
+                    password: model.password,
+                    password_confirmation: model.confirmpassword
+                }, {
+                    wait: true,
+                    success: function (model, response) {
+                        console.log('success');
+                        self.showUsersView();
+                        self.showFilterView();
+                        self.showCommandViewForUserNotSelected();
+                        //App.vent.trigger("user:created", this.model);
+                        //var alertModel = new App.Alert.Models.Alert({ body: 'User Created Successfully!' });
+                        //App.vent.trigger("alert:showsuccess", alertModel);
+                    },
+                    error: function (model, err) {
+                        /*var response = $.parseJSON(err.responseText);
+                        var msg = '';
+
+                        if (response instanceof Array) {
+                        for (var i = 0; i < response.length; i++) {
+                        msg += '<p>' + response[i] + '</p>';
+                        }
+                        } else {
+                        msg = response;
+                        }
+                        var alertModel = new App.Alert.Models.Alert({ heading: 'Error in creating new user!', body: msg });
+                        App.vent.trigger("alert:showerror", alertModel);*/
+                    }
+                });
+            }
+
+
         },
 
         cancelSavingNewUser: function () {

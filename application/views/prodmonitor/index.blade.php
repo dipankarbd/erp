@@ -128,8 +128,8 @@
                     <input id="userid" type="text" required/>
                     <label>User Type</label>  
                     <select id="usertype">
-                        <option>User</option>
-                        <option>Admin</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
                     </select>
                     <label>Password</label>  
                     <input id="password" type="password" required/>
