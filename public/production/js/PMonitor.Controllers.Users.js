@@ -26,6 +26,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.listenTo(App.vent, "users:deleteselecteduser", this.deleteUser, this);
             this.listenTo(App.vent, "users:savenewuser", this.saveNewUser, this);
             this.listenTo(App.vent, "users:cancelsavingnewuser", this.cancelSavingNewUser, this);
+            this.listenTo(App.vent, "users:deleted", this.seletedUserDeleted, this);
         },
 
         onClose: function () {
@@ -33,7 +34,8 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             App.container.close();
         },
 
-        userSelected: function () {
+        userSelected: function (user) {
+            this.selectedUser = user;
             this.showCommandViewForUserSelected();
         },
 
@@ -48,6 +50,24 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         deleteUser: function () {
+            var self = this;
+            if (this.selectedUser) {
+                bootbox.confirm("Are you sure, you want to delete this user?", function (result) {
+                    if (result === true) {
+                        self.selectedUser.destroy({ wait: true,
+                            success: function (model, response) { 
+                                App.vent.trigger("users:deleted", alertModel);
+                                var alertModel = new App.Alert.Models.Alert({ body: 'User Deleted Successfully!' });
+                                App.vent.trigger("alert:showsuccess", alertModel);
+                            },
+                            error: function (model, err) {
+                                var alertModel = new App.Alert.Models.Alert({ heading: 'Error in deleting user!', body: err.responseText });
+                                App.vent.trigger("alert:showerror", alertModel);
+                            } 
+                        });
+                    }
+                });
+            }
 
         },
 
@@ -101,7 +121,12 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             App.vent.trigger('alert:close');
         },
 
+        seletedUserDeleted:function(){
+            this.showCommandViewForUserNotSelected();
+        },
+
         showUsersView: function () {
+            this.selectedUser = null;
             this.usersView = new App.Users.Views.UsersView({ collection: this.users });
             this.containerLayout.mainpanel.show(this.usersView);
         },
@@ -141,10 +166,10 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.containerLayout.commandpanel.close();
         },
 
-        showCreateNewUserView: function () { 
+        showCreateNewUserView: function () {
             this.createNewUserView = new App.Users.Views.CreateNewUserView();
             this.containerLayout.mainpanel.show(this.createNewUserView);
-             App.vent.trigger('alert:close');
+            App.vent.trigger('alert:close');
         },
 
         closeCreateNewUserView: function () {

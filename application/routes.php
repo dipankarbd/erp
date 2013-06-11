@@ -661,7 +661,6 @@
         }
     
     });
-    
     Route::post('api/prodmonitor/users',function(){
         $user = Auth::user();
         if($user){ 
@@ -751,6 +750,57 @@
                          return Response::json( "Can't create user"  ,500);
                     }
                 } 
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else{
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
+    Route::delete('api/prodmonitor/users/(:num)',function($id){
+        $user = Auth::user();
+        if($user){ 
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){
+                  $existinguser =  User::where('id','=',$id)->first();
+                  if($existinguser){
+                    $res = $existinguser->delete();
+                    if($res){
+                        return Response::json($res ,204); 
+                    }
+                    else
+                    {
+                        return Response::json('Error occured',500);  
+                    }   
+                }
+                else{
+                    return Response::json('User not exists',500);  
+                }  
             }
             else{
                 return Response::json( 'access denied'  ,401);
