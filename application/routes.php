@@ -721,7 +721,7 @@
                     if($user){ 
                         if($input->usertype ==='user') $roleName = 'User';
                         else if($input->usertype ==='admin') $roleName = 'Admin';
-
+    
                         $role = App::join('approles', 'approles.appid', '=', 'apps.id') 
                                     ->where('apps.appname', '=', 'Production Monitor')
                                     ->where('approles.rolename', '=', $roleName)
@@ -730,7 +730,7 @@
                         $app = App::where('appname', '=', 'Production Monitor') 
                                     ->distinct()
                                     ->first(array('id'));
-                                    
+    
                         if($role && $app){  
                                 $newuserapp = UserApp::create(array(
                                     'userid' => $user->id,
@@ -744,7 +744,7 @@
                                 $user->roles = $roles;
                                 return Response::eloquent($user); 
                         }
-                            
+    
                     } 
                     else{
                          return Response::json( "Can't create user"  ,500);
@@ -789,14 +789,36 @@
             if($isAdmin){
                   $existinguser =  User::where('id','=',$id)->first();
                   if($existinguser){
-                    $res = $existinguser->delete();
-                    if($res){
-                        return Response::json($res ,204); 
+                    $appcount = count(UserApp::where('userid','=',$existinguser->id)
+                                       ->where('clientid', '=', Session::get('clientid'))
+                                       ->distinct() 
+                                       ->get(array('id','appid')));
+    
+                                       //delete roles
+                     $ids = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                             ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                             ->where('userapps.userid', '=', $existinguser->id)
+                             ->where('userapps.clientid', '=', Session::get('clientid'))
+                             ->where('apps.appname', '=', 'Production Monitor') 
+                             ->get('userapps.id');
+                $list_of_ids = array();
+                foreach($ids as $id){
+                    $list_of_ids[] = (int)$id->id;
+                } 
+               $res =  UserApp::where_in('id', $list_of_ids)->delete();
+    
+               if( $appcount == 1 ){
+                        $res = $existinguser->delete();
+                        if($res){
+                            return Response::json($res ,204); 
+                        }
+                        else
+                        {
+                            return Response::json('Error occured',500);  
+                        }   
                     }
-                    else
-                    {
-                        return Response::json('Error occured',500);  
-                    }   
+    
+                    return   Response::json('Deleted',200);  
                 }
                 else{
                     return Response::json('User not exists',500);  
