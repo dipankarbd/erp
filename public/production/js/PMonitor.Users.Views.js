@@ -121,6 +121,25 @@ PMonitor.module('Users.Views', function (Views, App, Backbone, Marionette, $, _)
 
     });
 
+    Views.CommandViewEditUser = Backbone.Marionette.ItemView.extend({
+        template: '#users-commandview-edituser-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        events: {
+            'click #saveuser': 'saveNewUser',
+            'click #cancelchanges': 'cancelChanges'
+        },
+
+        saveNewUser: function (e) {
+            App.vent.trigger("users:saveuser");
+        },
+
+        cancelChanges: function (e) {
+            App.vent.trigger("users:cancelsavinguser");
+        }
+
+    });
+
     Views.CreateNewUserView = Backbone.Marionette.ItemView.extend({
         template: '#users-createnewuser-template',
         className: 'roundborder padding-10px',
@@ -144,6 +163,35 @@ PMonitor.module('Users.Views', function (Views, App, Backbone, Marionette, $, _)
                 usertype: this.ui.usertype.val(),
                 password: this.ui.password.val(),
                 confirmpassword: this.ui.confirmpassword.val()
+            };
+        }
+    });
+
+    Views.EditUserView = Backbone.Marionette.ItemView.extend({
+        template: '#users-editwuser-template',
+        className: 'roundborder padding-10px',
+
+        ui: {
+            firstname: '#firstname',
+            lastname: '#lastname',
+            email: '#email',
+            usertype: '#usertype'
+        },
+        onRender: function () {
+            if (this.model.get('roles') && this.model.get('roles').length > 0) {
+                if (this.model.get('roles')[0].rolename === 'Admin')
+                    this.ui.usertype.val('admin');
+                else if (this.model.get('roles')[0].rolename === 'user')
+                    this.ui.usertype.val('user');
+            }
+
+        },
+        getEnteredData: function () {
+            return {
+                firstname: this.ui.firstname.val(),
+                lastname: this.ui.lastname.val(),
+                email: this.ui.email.val(),
+                usertype: this.ui.usertype.val()
             };
         }
     });

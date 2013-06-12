@@ -759,6 +759,110 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    
+    Route::put('api/prodmonitor/users/(:num)',function($id){
+        $user = Auth::user();
+        if($user){ 
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){
+                $input = Input::json();
+                $rules = array(
+                    'firstname'  => 'required|min:3|max:32|alpha',
+                    'lastname'  => 'required|min:3|max:32|alpha' ,
+                    'email' => 'required|min:3|max:64|email', 
+                    'usertype' => 'required|alpha_num' 
+                );
+    
+                $v = Validator::make($input, $rules);
+                if( $v->fails() ){ 
+                    return Response::json($v->errors->all(),500);
+                } 
+    
+                $existinguser =  User::where('id','=',$id)->first();
+                if($existinguser){ 
+                    $existinguser->firstname = $input->firstname;
+                    $existinguser->lastname = $input->lastname;
+                    $existinguser->email = $input->email;
+                    $existinguser->save();
+     
+                        if($input->usertype ==='user') $roleName = 'User';
+                        else if($input->usertype ==='admin') $roleName = 'Admin';
+    
+                        $role = App::join('approles', 'approles.appid', '=', 'apps.id') 
+                                    ->where('apps.appname', '=', 'Production Monitor')
+                                    ->where('approles.rolename', '=', $roleName)
+                                    ->distinct()
+                                    ->first(array('approles.id'));
+                        $app = App::where('appname', '=', 'Production Monitor') 
+                                    ->distinct()
+                                    ->first(array('id'));
+    
+                        if($role && $app){
+                            //delete roles
+                             $ids = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                                            ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                                            ->where('userapps.userid', '=', $existinguser->id)
+                                            ->where('userapps.clientid', '=', Session::get('clientid'))
+                                            ->where('apps.appname', '=', 'Production Monitor') 
+                                            ->get('userapps.id');
+                            $list_of_ids = array();
+                            foreach($ids as $id){
+                                $list_of_ids[] = (int)$id->id;
+                            } 
+                            $res =  UserApp::where_in('id', $list_of_ids)->delete();
+    
+                            $newuserapp = UserApp::create(array(
+                                                    'userid' => $existinguser->id,
+                                                    'appid' =>  $app->id,
+                                                    'roleid' => $role->id,
+                                                    'clientid' => Session::get('clientid')
+                                                ));  
+                            $existinguser->password = "";
+                            $roles = array();
+                            $roles[] = array('roleid'=>$role->id,'rolename'=>$roleName);
+                            $existinguser->roles = $roles; 
+                        } 
+                        return Response::eloquent($existinguser); 
+                    
+                  
+                }
+               else{
+                    return Response::json('User not exists',500);  
+               } 
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        
+        }
+        else{
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    
+    });
     Route::delete('api/prodmonitor/users/(:num)',function($id){
         $user = Auth::user();
         if($user){ 
