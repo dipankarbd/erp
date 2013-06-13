@@ -29,6 +29,8 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.listenTo(App.vent, "users:saveuser", this.saveUser, this);
             this.listenTo(App.vent, "users:cancelsavinguser", this.cancelSavingUser, this);
             this.listenTo(App.vent, "users:deleted", this.seletedUserDeleted, this);
+            this.listenTo(App.vent, "users:applyfilter", this.applyFilter, this);
+            this.listenTo(App.vent, "users:clearfilter", this.clearFilter, this);
         },
 
         onClose: function () {
@@ -133,8 +135,8 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
                 this.selectedUser.save({
                     firstname: model.firstname,
                     lastname: model.lastname,
-                    email: model.email, 
-                    usertype: model.usertype 
+                    email: model.email,
+                    usertype: model.usertype
                 }, {
                     wait: true,
                     success: function (model, response) {
@@ -175,6 +177,23 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         seletedUserDeleted: function () {
             this.showCommandViewForUserNotSelected();
+        },
+
+        applyFilter: function (filterModel) {
+            this.filteredUser = this.users.getFilteredCollection(filterModel);
+
+            this.selectedUser = null;
+            this.usersView = new App.Users.Views.UsersView({ collection: this.filteredUser });
+            this.containerLayout.mainpanel.show(this.usersView);
+            this.closeCommandView();
+            this.closeAlert();
+        },
+
+        clearFilter: function () {
+            this.filteredUser = null;
+            this.showUsersView();
+            this.closeCommandView();
+            this.closeAlert();
         },
 
         showUsersView: function () {
@@ -225,22 +244,26 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         showCreateNewUserView: function () {
             this.createNewUserView = new App.Users.Views.CreateNewUserView();
             this.containerLayout.mainpanel.show(this.createNewUserView);
-            App.vent.trigger('alert:close');
+            this.closeAlert();
         },
 
         closeCreateNewUserView: function () {
             this.containerLayout.mainpanel.close();
-            App.vent.trigger('alert:close');
+            this.closeAlert();
         },
 
         showEditUserView: function () {
             this.editUserView = new App.Users.Views.EditUserView({ model: this.selectedUser });
             this.containerLayout.mainpanel.show(this.editUserView);
-            App.vent.trigger('alert:close');
+            this.closeAlert();
         },
 
         closeEditUserView: function () {
             this.containerLayout.mainpanel.close();
+            this.closeAlert();
+        },
+
+        closeAlert: function () {
             App.vent.trigger('alert:close');
         }
     });

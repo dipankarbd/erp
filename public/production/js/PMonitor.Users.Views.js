@@ -57,7 +57,37 @@ PMonitor.module('Users.Views', function (Views, App, Backbone, Marionette, $, _)
     //FilterView
     Views.FilterView = Backbone.Marionette.ItemView.extend({
         template: '#users-filterview-template',
-        className: 'roundborder padding-10px margin-bottom-10px'
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        ui: {
+            filterFirstname: '#inputFirstname',
+            filterLastname: '#inputLastname',
+            filterEmail: '#inputEmail',
+            filterUsername: '#inputUsername' 
+        },
+
+        events: {
+            'click #clearFilter': 'clearFilter',
+            'click #applyFilter': 'applyFilter'
+        },
+
+        clearFilter: function () {
+            this.ui.filterLastname.val('');
+            this.ui.filterEmail.val('');
+            this.ui.filterUsername.val(''); 
+            this.ui.filterFirstname.val('');
+            App.vent.trigger('users:clearfilter');
+        },
+
+        applyFilter: function () {
+            var filterModel = new App.Users.Models.Filter({
+                lastname: this.ui.filterLastname.val(),
+                email: this.ui.filterEmail.val(),
+                username: this.ui.filterUsername.val(), 
+                firstname: this.ui.filterFirstname.val()
+            });
+            App.vent.trigger('users:applyfilter', filterModel);
+        }
     });
 
     //CommandView for userlist
