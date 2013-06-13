@@ -182,18 +182,24 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         applyFilter: function (filterModel) {
             this.filteredUser = this.users.getFilteredCollection(filterModel);
 
-            this.selectedUser = null;
-            this.usersView = new App.Users.Views.UsersView({ collection: this.filteredUser });
-            this.containerLayout.mainpanel.show(this.usersView);
             this.closeCommandView();
             this.closeAlert();
+            this.clearSelection();
+
+            this.selectedUser = null;
+
+            this.usersView = new App.Users.Views.UsersView({ collection: this.filteredUser });
+            this.containerLayout.mainpanel.show(this.usersView);
         },
 
         clearFilter: function () {
             this.filteredUser = null;
-            this.showUsersView();
+
             this.closeCommandView();
             this.closeAlert();
+            this.clearSelection();
+
+            this.showUsersView();
         },
 
         showUsersView: function () {
@@ -265,6 +271,12 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         closeAlert: function () {
             App.vent.trigger('alert:close');
+        },
+
+        clearSelection: function () {
+            if (this.selectedUser) {
+                this.selectedUser.set({ selected: false });
+            }
         }
     });
 
