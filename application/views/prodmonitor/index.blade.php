@@ -11,7 +11,7 @@
         {{ HTML::style('bootstrap/css/bootstrap-responsive.css') }}
         {{ HTML::style('production/css/style.css') }}
     </head>
-    <body>
+    <body> 
         <div class="navbar" id="navbar"></div>
         <div class="container-fluid" id="alert"></div>
         <div class="container-fluid" id="container"></div>
@@ -196,21 +196,8 @@
         {{ HTML::script('js/backbone.marionette/backbone.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}
         <!-- application -->
-        {{ HTML::script('production/js/PMonitor.js') }}
-        {{ HTML::script('production/js/PMonitor.Navbar.Models.js') }}
-        {{ HTML::script('production/js/PMonitor.Alert.Models.js') }}
-        {{ HTML::script('production/js/PMonitor.Users.Models.js') }}
-        {{ HTML::script('production/js/PMonitor.Layout.js') }}
-        {{ HTML::script('production/js/PMonitor.Navbar.Views.js') }}
-        {{ HTML::script('production/js/PMonitor.Alert.Views.js') }}
-        {{ HTML::script('production/js/PMonitor.Users.Views.js') }}
-        {{ HTML::script('production/js/PMonitor.Controllers.Alert.js') }}
-        {{ HTML::script('production/js/PMonitor.Controllers.Dashboard.js') }}
-        {{ HTML::script('production/js/PMonitor.Controllers.Orders.js') }}
-        {{ HTML::script('production/js/PMonitor.Controllers.Buyers.js') }}
-        {{ HTML::script('production/js/PMonitor.Controllers.Users.js') }}
-        {{ HTML::script('production/js/PMonitor.Controllers.Navbar.js') }}
-        {{ HTML::script('production/js/PMonitor.Main.js') }}
+        {{ ScriptManager::getScriptsForProductionManagerApp() }} 
+       
         <script type="text/javascript">
             $(function(){ 
                 $.ajaxPrefilter(function (options) {
