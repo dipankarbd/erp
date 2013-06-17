@@ -759,7 +759,6 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
-    
     Route::put('api/prodmonitor/users/(:num)',function($id){
         $user = Auth::user();
         if($user){ 
@@ -936,6 +935,53 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    
+    //productmonitor buyers
+    Route::get('api/prodmonitor/buyers',function(){
+        $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){
+                $buyers = Buyer::join('countries', 'countries.id', '=', 'buyers.countryid') 
+                             ->where('buyers.clientid', '=', Session::get('clientid')) 
+                             ->distinct()
+                             ->get(array('buyers.id','buyers.company','buyers.address','buyers.email','buyers.phone','buyers.website','buyers.countryid','countries.code as countrycode','countries.name as countryname'));
+                 return Response::eloquent( $buyers);
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
+    
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers

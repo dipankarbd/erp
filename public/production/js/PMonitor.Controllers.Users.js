@@ -211,11 +211,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         closeUsersView: function () {
             this.containerLayout.mainpanel.close();
         },
-
-        closeUsersView: function () {
-            this.containerLayout.mainpanel.close();
-        },
-
+         
         showFilterView: function () {
             this.filterView = new App.Users.Views.FilterView();
             this.containerLayout.filterpanel.show(this.filterView);

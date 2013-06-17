@@ -17,7 +17,9 @@
                                         'prodmonitor.templates.users-editwuser-template',
                                         'prodmonitor.templates.users-filterview-template',
                                         'prodmonitor.templates.users-useritemview-template',
-                                        'prodmonitor.templates.users-usersview-template' 
+                                        'prodmonitor.templates.users-usersview-template' ,
+                                        'prodmonitor.templates.buyers-buyeritemview-template',
+                                        'prodmonitor.templates.buyers-buyersview-template'
                                       );
     
             $templatesForUser = array();
