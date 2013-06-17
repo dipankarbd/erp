@@ -20,7 +20,9 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.showFilterView();
             this.showCommandViewForBuyerNotSelected();
 
-            this.listenTo(App.vent, "buyers:selected", this.buyerSelected, this);
+            this.listenTo(App.vent, "buyers:selected", this.buyerSelected, this); 
+            this.listenTo(App.vent, "buyers:applyfilter", this.applyFilter, this);
+            this.listenTo(App.vent, "buyers:clearfilter", this.clearFilter, this);
         },
 
         onClose: function () {
@@ -64,8 +66,40 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         closeCommandView: function () {
             this.containerLayout.commandpanel.close();
-        }
+        },
+        
+        applyFilter: function (filterModel) {
+            this.filteredBuyers = this.buyers.getFilteredCollection(filterModel);
 
+            this.closeCommandView();
+            this.closeAlert();
+            this.clearSelection();
+
+            this.selectedBuyer = null;
+
+            this.buyersView = new App.Buyers.Views.BuyersView({ collection: this.filteredBuyers });
+            this.containerLayout.mainpanel.show(this.buyersView);
+        },
+
+        clearFilter: function () {
+            this.filteredBuyer = null;
+
+            this.closeCommandView();
+            this.closeAlert();
+            this.clearSelection();
+
+            this.showBuyersView();
+        },
+
+        closeAlert: function () {
+            App.vent.trigger('alert:close');
+        },
+
+        clearSelection: function () {
+            if (this.selectedBuyer) {
+                this.selectedBuyer.set({ selected: false });
+            }
+        }
 
     });
 
