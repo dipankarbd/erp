@@ -94,4 +94,41 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
 
     });
 
+     
+    //FilterView
+    Views.FilterView = Backbone.Marionette.ItemView.extend({
+        template: '#buyers-filterview-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        ui: {
+            filterName: '#inputName',
+            filterCountry: '#inputCountry',
+            filterEmail: '#inputEmail',
+            filterPhone: '#inputPhone' 
+        },
+
+        events: {
+            'click #clearFilter': 'clearFilter',
+            'click #applyFilter': 'applyFilter'
+        },
+
+        clearFilter: function () {
+            this.ui.filterName.val('');
+            this.ui.filterCountry.val('');
+            this.ui.filterEmail.val(''); 
+            this.ui.filterPhone.val('');
+            App.vent.trigger('buyers:clearfilter');
+        },
+
+        applyFilter: function () {
+            var filterModel = new App.Users.Models.Filter({
+                name: this.ui.filterName.val(),
+                country: this.ui.filterCountry.val(),
+                email: this.ui.filterEmail.val(), 
+                phone: this.ui.filterPhone.val()
+            });
+            App.vent.trigger('buyers:applyfilter', filterModel);
+        }
+    });
+
 });

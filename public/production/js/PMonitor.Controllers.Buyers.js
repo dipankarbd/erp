@@ -17,6 +17,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.buyers.fetch();
 
             this.showBuyersView(); 
+            this.showFilterView();
             this.showCommandViewForBuyerNotSelected();
 
             this.listenTo(App.vent, "buyers:selected", this.buyerSelected, this);
@@ -40,6 +41,15 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         closeBuyersView: function () {
             this.containerLayout.mainpanel.close();
+        },
+
+        showFilterView: function () {
+            this.filterView = new App.Buyers.Views.FilterView();
+            this.containerLayout.filterpanel.show(this.filterView);
+        },
+
+        closeFilterView: function () {
+            this.containerLayout.filterpanel.close();
         },
 
         showCommandViewForBuyerNotSelected: function () {
