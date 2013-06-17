@@ -52,6 +52,46 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
         }
     });
 
-    
+     //CommandView for userlist
+    Views.CommandViewBuyerNotSelected = Backbone.Marionette.ItemView.extend({
+        template: '#buyers-commandview-buyernotselected-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        events: {
+            'click #createnewbuyer': 'createNewBuyer'
+        },
+
+        createNewBuyer: function (e) {
+            e.preventDefault();
+            App.vent.trigger("buyers:createnewbuyer");
+        }
+
+    });
+    Views.CommandViewBuyerSelected = Backbone.Marionette.ItemView.extend({
+        template: '#buyers-commandview-buyerselected-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
+
+        events: {
+            'click #createnewbuyer': 'createNewBuyer',
+            'click #editselectedbuyer': 'editSelectedBuyer',
+            'click #deleteselectedbuyer': 'deleteSelectedBuyer'
+        },
+
+        createNewBuyer: function (e) {
+            e.preventDefault();
+            App.vent.trigger("buyers:createnewbuyer");
+        },
+
+        editSelectedBuyer: function (e) {
+            e.preventDefault();
+            App.vent.trigger("buyers:editselectedbuyer");
+        },
+
+        deleteSelectedBuyer: function (e) {
+            e.preventDefault();
+            App.vent.trigger("buyers:deleteselectedbuyer");
+        }
+
+    });
 
 });

@@ -17,6 +17,9 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.buyers.fetch();
 
             this.showBuyersView(); 
+            this.showCommandViewForBuyerNotSelected();
+
+            this.listenTo(App.vent, "buyers:selected", this.buyerSelected, this);
         },
 
         onClose: function () {
@@ -24,7 +27,12 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             App.container.close();
         },
 
-         showBuyersView: function () {
+        buyerSelected: function (buyer) {
+            this.selectedBuyer = buyer;
+            this.showCommandViewForBuyerSelected();
+        },
+
+        showBuyersView: function () {
             this.selectedBuyer = null;
             this.buyersView = new App.Buyers.Views.BuyersView({ collection: this.buyers });
             this.containerLayout.mainpanel.show(this.buyersView);
@@ -32,7 +40,22 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         closeBuyersView: function () {
             this.containerLayout.mainpanel.close();
+        },
+
+        showCommandViewForBuyerNotSelected: function () {
+            this.commandView = new App.Buyers.Views.CommandViewBuyerNotSelected();
+            this.containerLayout.commandpanel.show(this.commandView);
+        },
+
+        showCommandViewForBuyerSelected: function () {
+            this.commandView = new App.Buyers.Views.CommandViewBuyerSelected();
+            this.containerLayout.commandpanel.show(this.commandView);
+        }, 
+
+        closeCommandView: function () {
+            this.containerLayout.commandpanel.close();
         }
+
 
     });
 
