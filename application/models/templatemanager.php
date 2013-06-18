@@ -22,7 +22,9 @@
                                         'prodmonitor.templates.buyers-buyersview-template',
                                         'prodmonitor.templates.buyers-commandview-buyernotselected-template',
                                         'prodmonitor.templates.buyers-commandview-buyerselected-template',
-                                        'prodmonitor.templates.buyers-filterview-template'
+                                        'prodmonitor.templates.buyers-filterview-template',
+                                        'prodmonitor.templates.buyers-createnewbuyer-template',
+                                        'prodmonitor.templates.buyers-editbuyer-template'
                                       );
     
             $templatesForUser = array();

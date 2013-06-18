@@ -1,4 +1,4 @@
-PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _) { 
+PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _) {
     //Buyer Item View
     Views.BuyerItemView = Backbone.Marionette.ItemView.extend({
         template: '#buyers-buyeritemview-template',
@@ -52,7 +52,7 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
         }
     });
 
-     //CommandView for userlist
+    //CommandView for userlist
     Views.CommandViewBuyerNotSelected = Backbone.Marionette.ItemView.extend({
         template: '#buyers-commandview-buyernotselected-template',
         className: 'roundborder padding-10px margin-bottom-10px',
@@ -94,7 +94,7 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
 
     });
 
-     
+
     //FilterView
     Views.FilterView = Backbone.Marionette.ItemView.extend({
         template: '#buyers-filterview-template',
@@ -104,7 +104,7 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
             filterName: '#inputName',
             filterCountry: '#inputCountry',
             filterEmail: '#inputEmail',
-            filterPhone: '#inputPhone' 
+            filterPhone: '#inputPhone'
         },
 
         events: {
@@ -115,7 +115,7 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
         clearFilter: function () {
             this.ui.filterName.val('');
             this.ui.filterCountry.val('');
-            this.ui.filterEmail.val(''); 
+            this.ui.filterEmail.val('');
             this.ui.filterPhone.val('');
             App.vent.trigger('buyers:clearfilter');
         },
@@ -124,10 +124,20 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
             var filterModel = new App.Users.Models.Filter({
                 name: this.ui.filterName.val(),
                 country: this.ui.filterCountry.val(),
-                email: this.ui.filterEmail.val(), 
+                email: this.ui.filterEmail.val(),
                 phone: this.ui.filterPhone.val()
             });
             App.vent.trigger('buyers:applyfilter', filterModel);
+        }
+    });
+
+    //Create New Buyer View
+    Views.CreateNewBuyerView = Backbone.Marionette.ItemView.extend({
+        template: '#buyers-createnewbuyer-template',
+        className: 'roundborder padding-10px',
+
+        onRender: function () {
+            console.log(this.model);
         }
     });
 

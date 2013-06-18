@@ -9,6 +9,7 @@
                                       'production/js/PMonitor.Navbar.Models.js',
                                       'production/js/PMonitor.Alert.Models.js',
                                       'production/js/PMonitor.Users.Models.js',
+                                      'production/js/PMonitor.Common.Models.js',
                                       'production/js/PMonitor.Buyers.Models.js',
                                       'production/js/PMonitor.Layout.js',
                                       'production/js/PMonitor.Navbar.Views.js',
