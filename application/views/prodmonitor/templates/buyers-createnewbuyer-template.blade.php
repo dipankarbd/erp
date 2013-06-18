@@ -1,5 +1,4 @@
-<script id="buyers-createnewbuyer-template" type="text/html">
-    
+<script id="buyers-createnewbuyer-template" type="text/html"> 
     <form>
         <fieldset>
             <legend>New Buyer Details</legend>
@@ -11,6 +10,8 @@
                     <option value="<%= countries.at(i).get('id') %>"><%= countries.at(i).get('name') %></option>  
                 <% } %>
             </select>
+            <label>Address</label>
+            <textarea id="address"></textarea>
             <label>Email</label>
             <input id="email" type="text" required/>
             <label>Phone</label>  
@@ -22,22 +23,22 @@
             <legend>Buyer's User Details</legend>
      
             <label>First Name</label>
-            <input id="firstname" type="text" required/>
+            <input id="user-firstname" type="text" required/>
             <label>Last Name</label>
-            <input id="lastname" type="text" required/>
+            <input id="user-lastname" type="text" required/>
             <label>Email</label>
-            <input id="email" type="text" required/>
+            <input id="user-email" type="text" required/>
             <label>User Id</label>  
-            <input id="userid" type="text" required/> 
+            <input id="user-userid" type="text" required/> 
             <label>Password</label>  
-            <input id="password" type="password" required/>
+            <input id="user-password" type="password" required/>
             <label>Confirm Password</label>  
-            <input id="confirmpassword" type="password" required/> 
+            <input id="user-confirmpassword" type="password" required/> 
         </fieldset>  
         <hr/>
         <div>
-            <button id="savenewuserdetails" type="button" class="btn btn-primary">Save changes</button>
-            <button id="cancelsavingnewuserdetails" type="button" class="btn">Cancel</button>
+            <button id="savenewbuyerdetails" type="button" class="btn btn-primary">Save changes</button>
+            <button id="cancelsavingnewbuyerdetails" type="button" class="btn">Cancel</button>
         </div>   
     </form>  
 </script>

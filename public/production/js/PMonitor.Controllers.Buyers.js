@@ -27,7 +27,9 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.listenTo(App.vent, "buyers:clearfilter", this.clearFilter, this);
             this.listenTo(App.vent, "buyers:createnewbuyer", this.createNewBuyer, this);
             this.listenTo(App.vent, "buyers:editselectedbuyer", this.editBuyer, this);
-            this.listenTo(App.vent, "buyers:deleteselectedbuyer", this.deleteBuyer, this);
+            this.listenTo(App.vent, "buyers:deleteselectedbuyer", this.deleteBuyer, this); 
+            this.listenTo(App.vent, "buyers:savenewbuyer", this.saveNewBuyer, this);
+            this.listenTo(App.vent, "buyers:cancelsavingnewbuyer", this.cancelSavingNewBuyer, this);
         },
 
         onClose: function () {

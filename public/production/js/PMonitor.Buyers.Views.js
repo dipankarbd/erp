@@ -136,9 +136,49 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
         template: '#buyers-createnewbuyer-template',
         className: 'roundborder padding-10px',
 
-        onRender: function () {
-            console.log(this.model);
+        ui: {
+            companyname: '#companyname',
+            country: '#country',
+            address: '#address',
+            email: '#email',
+            phone: '#phone',
+            website: '#website',
+
+            userfirstname: '#user-firstname',
+            userlastname: '#user-lastname',
+            useremail: '#user-email',
+            useruserid: '#user-userid',
+            userpassword: '#user-password',
+            userconfirmpassword: '#user-confirmpassword'
+        },
+
+        events: {
+            'click #savenewbuyerdetails': 'saveBuyerInfo',
+            'click #cancelsavingnewbuyerdetails': 'cancelSavingBuyerInfo'
+        },
+
+        saveBuyerInfo: function () {
+            this.model.set({
+                companyname: this.ui.companyname.val(),
+                country: this.ui.country.val(),
+                address: this.ui.address.val(),
+                email: this.ui.email.val(),
+                phone: this.ui.phone.val(),
+                website: this.ui.website.val(),
+                userfirstname: this.ui.userfirstname.val(),
+                userlastname: this.ui.userlastname.val(),
+                useremail: this.ui.useremail.val(),
+                useruserid: this.ui.useruserid.val(),
+                userpassword: this.ui.userpassword.val(),
+                userconfirmpassword: this.ui.userconfirmpassword.val()
+            });
+            App.vent.trigger("buyers:savenewbuyer", this.model);
+        },
+
+        cancelSavingBuyerInfo: function () {
+            App.vent.trigger("buyers:cancelsavingnewbuyer");
         }
+
     });
 
 });
