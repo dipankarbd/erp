@@ -57,25 +57,24 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         deleteBuyer: function () {
-            /* var self = this;
-            if (this.selectedUser) {
-            bootbox.confirm("Are you sure, you want to delete this user?", function (result) {
-            if (result === true) {
-            self.selectedUser.destroy({ wait: true,
-            success: function (model, response) {
-            App.vent.trigger("users:deleted", alertModel);
-            var alertModel = new App.Alert.Models.Alert({ body: 'User Deleted Successfully!' });
-            App.vent.trigger("alert:showsuccess", alertModel);
-            },
-            error: function (model, err) {
-            var alertModel = new App.Alert.Models.Alert({ heading: 'Error in deleting user!', body: err.responseText });
-            App.vent.trigger("alert:showerror", alertModel);
+            var self = this;
+            if (this.selectedBuyer) {
+                bootbox.confirm("Are you sure, you want to delete this buyer?", function (result) {
+                    if (result === true) {
+                        self.selectedBuyer.destroy({ wait: true,
+                            success: function (model, response) {
+                                App.vent.trigger("buyers:deleted", alertModel);
+                                var alertModel = new App.Alert.Models.Alert({ body: 'Buyer Deleted Successfully!' });
+                                App.vent.trigger("alert:showsuccess", alertModel);
+                            },
+                            error: function (model, err) {
+                                var alertModel = new App.Alert.Models.Alert({ heading: 'Error in deleting buyer!', body: err.responseText });
+                                App.vent.trigger("alert:showerror", alertModel);
+                            }
+                        });
+                    }
+                });
             }
-            });
-            }
-            });
-            }
-            */
         },
 
         saveNewBuyer: function (model) {
@@ -217,7 +216,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         showEditBuyerView: function () {
-            this.selectedBuyer.set({ countries: this.countries }); 
+            this.selectedBuyer.set({ countries: this.countries });
             this.editSelectedBuyerView = new App.Buyers.Views.EditBuyerView({ model: this.selectedBuyer });
             this.containerLayout.mainpanel.show(this.editSelectedBuyerView);
             this.closeAlert();

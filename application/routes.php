@@ -1012,9 +1012,9 @@
             if($isAdmin){
                 $input = Input::json();
                 $rules = array(
-                    'companyname'  => 'required|min:3|max:32|alpha',  
+                    'companyname'  => 'required',  
                     'email'  => 'required|min:3|max:64|email',
-                    'phone'  => 'required|min:3|max:32|alpha',
+                    'phone'  => 'required|min:3|max:32',
 
                     'user_firstname'  => 'required|min:3|max:32|alpha',
                     'user_lastname'  => 'required|min:3|max:32|alpha' ,
@@ -1131,9 +1131,9 @@
             if($isAdmin){
                 $input = Input::json();
                 $rules = array(
-                    'companyname'  => 'required|min:3|max:32|alpha',  
+                    'companyname'  => 'required',  
                     'email'  => 'required|min:3|max:64|email',
-                    'phone'  => 'required|min:3|max:32|alpha' 
+                    'phone'  => 'required|min:3|max:32' 
                 );
                 $v = Validator::make($input, $rules);
                 if( $v->fails() ){ 
@@ -1154,6 +1154,57 @@
                              ->where('buyers.id', '=', $buyer->id)  
                              ->first(array('buyers.id','buyers.company','buyers.address','buyers.email','buyers.phone','buyers.website','buyers.countryid','countries.code as countrycode','countries.name as countryname'));
                     return Response::eloquent( $buyer_for_return); 
+                }
+                
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    }); 
+    Route::delete('api/prodmonitor/buyers/(:num)',function($id){
+        $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){ 
+                $buyer = Buyer::where('id','=',$id)->first();
+                if($buyer){
+                    $res = $buyer->delete();
+                    if($res){
+                        return Response::json($res ,204); 
+                    }
+                    else
+                    {
+                        return Response::json('Error occured',500);  
+                    }   
                 }
                 
             }
