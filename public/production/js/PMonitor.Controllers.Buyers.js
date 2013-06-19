@@ -77,7 +77,45 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         saveNewBuyer: function (model) {
-            console.log(model);
+            var self = this;
+            this.buyers.create({
+                companyname: model.get('companyname'),
+                country: model.get('country'),
+                address: model.get('address'),
+                email: model.get('email'),
+                phone: model.get('phone'),
+                website: model.get('website'),
+                user_firstname: model.get('userfirstname'),
+                user_lastname: model.get('userlastname'),
+                user_email: model.get('useremail'),
+                user_username: model.get('useruserid'),
+                user_password: model.get('userpassword'),
+                user_password_confirmation: model.get('userconfirmpassword')
+            }, {
+                wait: true,
+                success: function (model, response) { 
+                    self.showBuyersView();
+                    self.showFilterView();
+                    self.showCommandViewForBuyerNotSelected();
+
+                    var alertModel = new App.Alert.Models.Alert({ body: 'Buyer Created Successfully!' });
+                    App.vent.trigger("alert:showsuccess", alertModel);
+                },
+                error: function (model, err) {
+                    var response = $.parseJSON(err.responseText);
+                    var msg = '';
+
+                    if (response instanceof Array) {
+                        for (var i = 0; i < response.length; i++) {
+                            msg += '<p>' + response[i] + '</p>';
+                        }
+                    } else {
+                        msg = response;
+                    }
+                    var alertModel = new App.Alert.Models.Alert({ heading: 'Error in creating new buyer!', body: msg });
+                    App.vent.trigger("alert:showerror", alertModel);
+                }
+            });
         },
 
         cancelSavingNewBuyer: function () {

@@ -981,7 +981,125 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    Route::post('api/prodmonitor/buyers',function(){
+        $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
     
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){
+                $input = Input::json();
+                $rules = array(
+                    'companyname'  => 'required|min:3|max:32|alpha',  
+                    'email'  => 'required|min:3|max:64|email',
+                    'phone'  => 'required|min:3|max:32|alpha',
+
+                    'user_firstname'  => 'required|min:3|max:32|alpha',
+                    'user_lastname'  => 'required|min:3|max:32|alpha' ,
+                    'user_email' => 'required|min:3|max:64|email',
+                    'user_username' => 'required|min:3|max:32|alpha_num', 
+                    'user_password'  =>'required|min:4|max:32|alpha_num|confirmed',
+                    'user_password_confirmation'=>'required|alpha_num|between:4,32'
+                );
+                $v = Validator::make($input, $rules);
+                if( $v->fails() ){ 
+                    return Response::json($v->errors->all(),500);
+                }
+
+
+                $user =  User::where('username','=',$input->user_username)->first();
+                if($user){
+                    return Response::json('Username already exists',500);
+                }
+                else{
+                    $user = User::create(array(
+                        'username' => $input->user_username,
+                        'password' => Hash::make($input->user_password),
+                        'firstname' => $input->user_firstname,
+                        'lastname' => $input->user_lastname,
+                        'email' => $input->user_email,
+                    ));
+    
+                    if($user){ 
+                        $roleName = 'Buyer'; 
+    
+                        $role = App::join('approles', 'approles.appid', '=', 'apps.id') 
+                                    ->where('apps.appname', '=', 'Production Monitor')
+                                    ->where('approles.rolename', '=', $roleName)
+                                    ->distinct()
+                                    ->first(array('approles.id'));
+                        $app = App::where('appname', '=', 'Production Monitor') 
+                                    ->distinct()
+                                    ->first(array('id'));
+    
+                        if($role && $app){  
+                                $newuserapp = UserApp::create(array(
+                                    'userid' => $user->id,
+                                    'appid' =>  $app->id,
+                                    'roleid' => $role->id,
+                                    'clientid' => Session::get('clientid')
+                                ));   
+                        }
+
+                        //will create buyer now
+                        $new_buyer = Buyer::create(array(
+                             'clientid' => Session::get('clientid'),
+                             'userid' =>  $user->id,
+                             'countryid' => $input->country,
+                             'company' => $input->companyname,
+                             'address' => $input->address,
+                             'email' => $input->email,
+                             'phone' => $input->phone,
+                             'website' => $input->website
+                        ));
+                        
+                        if( $new_buyer ){
+                             $buyer = Buyer::join('countries', 'countries.id', '=', 'buyers.countryid') 
+                             ->where('buyers.id', '=', $new_buyer->id)  
+                             ->first(array('buyers.id','buyers.company','buyers.address','buyers.email','buyers.phone','buyers.website','buyers.countryid','countries.code as countrycode','countries.name as countryname'));
+                             return Response::eloquent( $buyer);
+                        }
+                        else{
+                            $user->delete();
+                            return Response::json( "Can't create buyer"  ,500);
+                        }
+                    } 
+                    else{
+                         return Response::json( "Can't create user"  ,500);
+                    }
+                }
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers
