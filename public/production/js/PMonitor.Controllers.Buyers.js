@@ -30,6 +30,8 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.listenTo(App.vent, "buyers:deleteselectedbuyer", this.deleteBuyer, this);
             this.listenTo(App.vent, "buyers:savenewbuyer", this.saveNewBuyer, this);
             this.listenTo(App.vent, "buyers:cancelsavingnewbuyer", this.cancelSavingNewBuyer, this);
+            this.listenTo(App.vent, "buyers:savebuyer", this.saveBuyer, this);
+            this.listenTo(App.vent, "buyers:cancelsavingbuyer", this.cancelSavingBuyer, this);
         },
 
         onClose: function () {
@@ -49,9 +51,9 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         editBuyer: function (user) {
-            //this.closeFilterView();
-            //this.showCommandViewForCreateEditUser();
-            //this.showEditUserView();
+            this.closeFilterView();
+            this.closeCommandView();
+            this.showEditBuyerView();
         },
 
         deleteBuyer: function () {
@@ -93,7 +95,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
                 user_password_confirmation: model.get('userconfirmpassword')
             }, {
                 wait: true,
-                success: function (model, response) { 
+                success: function (model, response) {
                     self.showBuyersView();
                     self.showFilterView();
                     self.showCommandViewForBuyerNotSelected();
@@ -119,6 +121,49 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         cancelSavingNewBuyer: function () {
+            this.showBuyersView();
+            this.showFilterView();
+            this.showCommandViewForBuyerNotSelected();
+            App.vent.trigger('alert:close');
+        },
+
+        saveBuyer: function (model) {
+            var self = this;
+            this.selectedBuyer.save({
+                companyname: model.get('companyname'),
+                country: model.get('country'),
+                address: model.get('address'),
+                email: model.get('email'),
+                phone: model.get('phone'),
+                website: model.get('website')
+            }, {
+                wait: true,
+                success: function (model, response) {
+                    self.showBuyersView();
+                    self.showFilterView();
+                    self.showCommandViewForBuyerNotSelected();
+
+                    var alertModel = new App.Alert.Models.Alert({ body: 'Buyer Saved Successfully!' });
+                    App.vent.trigger("alert:showsuccess", alertModel);
+                },
+                error: function (model, err) {
+                    var response = $.parseJSON(err.responseText);
+                    var msg = '';
+
+                    if (response instanceof Array) {
+                        for (var i = 0; i < response.length; i++) {
+                            msg += '<p>' + response[i] + '</p>';
+                        }
+                    } else {
+                        msg = response;
+                    }
+                    var alertModel = new App.Alert.Models.Alert({ heading: 'Error in saving buyer!', body: msg });
+                    App.vent.trigger("alert:showerror", alertModel);
+                }
+            });
+        },
+
+        cancelSavingBuyer: function () {
             this.showBuyersView();
             this.showFilterView();
             this.showCommandViewForBuyerNotSelected();
@@ -167,6 +212,18 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         closeCreateNewBuyerView: function () {
+            this.containerLayout.mainpanel.close();
+            this.closeAlert();
+        },
+
+        showEditBuyerView: function () {
+            this.selectedBuyer.set({ countries: this.countries }); 
+            this.editSelectedBuyerView = new App.Buyers.Views.EditBuyerView({ model: this.selectedBuyer });
+            this.containerLayout.mainpanel.show(this.editSelectedBuyerView);
+            this.closeAlert();
+        },
+
+        closeEditBuyerView: function () {
             this.containerLayout.mainpanel.close();
             this.closeAlert();
         },

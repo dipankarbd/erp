@@ -1100,6 +1100,72 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    Route::put('api/prodmonitor/buyers/(:num)',function($id){
+        $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){
+                $input = Input::json();
+                $rules = array(
+                    'companyname'  => 'required|min:3|max:32|alpha',  
+                    'email'  => 'required|min:3|max:64|email',
+                    'phone'  => 'required|min:3|max:32|alpha' 
+                );
+                $v = Validator::make($input, $rules);
+                if( $v->fails() ){ 
+                    return Response::json($v->errors->all(),500);
+                }
+                 
+                $buyer = Buyer::where('id','=',$id)->first();
+                if($buyer){
+                    $buyer->company = $input->companyname;
+                    $buyer->countryid  = $input->country;
+                    $buyer->address  = $input->address;
+                    $buyer->email  = $input->email;
+                    $buyer->phone = $input->phone;
+                    $buyer->website  =$input->website;
+                    $buyer->save();
+
+                    $buyer_for_return = Buyer::join('countries', 'countries.id', '=', 'buyers.countryid') 
+                             ->where('buyers.id', '=', $buyer->id)  
+                             ->first(array('buyers.id','buyers.company','buyers.address','buyers.email','buyers.phone','buyers.website','buyers.countryid','countries.code as countrycode','countries.name as countryname'));
+                    return Response::eloquent( $buyer_for_return); 
+                }
+                
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers

@@ -181,4 +181,38 @@ PMonitor.module('Buyers.Views', function (Views, App, Backbone, Marionette, $, _
 
     });
 
+    Views.EditBuyerView = Backbone.Marionette.ItemView.extend({
+        template: '#buyers-editbuyer-template',
+        className: 'roundborder padding-10px',
+        
+        ui: {
+            companyname: '#companyname',
+            country: '#country',
+            address: '#address',
+            email: '#email',
+            phone: '#phone',
+            website: '#website' 
+        },
+
+        events: {
+            'click #savebuyerdetails': 'saveBuyerInfo',
+            'click #cancelsavingbuyerdetails': 'cancelSavingBuyerInfo'
+        },
+
+        saveBuyerInfo: function () {
+            this.model.set({
+                companyname: this.ui.companyname.val(),
+                country: this.ui.country.val(),
+                address: this.ui.address.val(),
+                email: this.ui.email.val(),
+                phone: this.ui.phone.val(),
+                website: this.ui.website.val() 
+            });
+            App.vent.trigger("buyers:savebuyer", this.model);
+        },
+
+        cancelSavingBuyerInfo: function () {
+            App.vent.trigger("buyers:cancelsavingbuyer");
+        }
+    });
 });
