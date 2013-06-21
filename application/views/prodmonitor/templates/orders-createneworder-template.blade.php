@@ -19,7 +19,7 @@
             <input id="quantity" type="text" required/>
             <label>No. of Machine</label>  
             <input id="machinecount" type="text" required/>
-            <label>Time per Pcs</label>  
+            <label>Time per Pcs <span class="text-info">(in minutes)</span></label>  
             <input id="timeperpcs" type="text" required/> 
         </fieldset> 
         <hr/>

@@ -15,10 +15,14 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.buyers = new App.Common.Models.Buyers();
             this.buyers.fetch();
 
+            this.orders = new App.Orders.Models.Orders();
+            //this.orders.fetch();
+
             this.showCommandViewForOrderrNotSelected();
 
             this.listenTo(App.vent, "orders:createneworder", this.createNewOrder, this);
-
+            this.listenTo(App.vent, "orders:saveneworder", this.saveNewOrder, this);
+            this.listenTo(App.vent, "orders:cancelsavingneworder", this.cancelSavingNewOrder, this);
         },
 
         onClose: function () {
@@ -30,6 +34,49 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.closeFilterView();
             this.closeCommandView();
             this.showCreateNewOrderView();
+        },
+
+        saveNewOrder: function (model) {
+            var self = this;
+            this.orders.create({
+                buyer: model.get('buyer'),
+                style: model.get('style'),
+                gg: model.get('gg'),
+                quantity: model.get('quantity'),
+                machinecount: model.get('machinecount'),
+                timeperpcs: model.get('timeperpcs')
+            }, {
+                wait: true,
+                success: function (model, response) {
+                    //self.showOrdersView();
+                    //self.showFilterView();
+                    //self.showCommandViewForOrderNotSelected();
+
+                    var alertModel = new App.Alert.Models.Alert({ body: 'Order Created Successfully!' });
+                    App.vent.trigger("alert:showsuccess", alertModel);
+                },
+                error: function (model, err) {
+                    var response = $.parseJSON(err.responseText);
+                    var msg = '';
+
+                    if (response instanceof Array) {
+                        for (var i = 0; i < response.length; i++) {
+                            msg += '<p>' + response[i] + '</p>';
+                        }
+                    } else {
+                        msg = response;
+                    }
+                    var alertModel = new App.Alert.Models.Alert({ heading: 'Error in creating new order!', body: msg });
+                    App.vent.trigger("alert:showerror", alertModel);
+                }
+            });
+        },
+
+        cancelSavingNewOrder: function () {
+            //self.showOrdersView();
+            //self.showFilterView();
+            //self.showCommandViewForOrderNotSelected();
+            this.closeAlert();
         },
 
         showCommandViewForOrderrNotSelected: function () {

@@ -1221,6 +1221,75 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    
+    
+    
+    Route::get('api/prodmonitor/orders',function(){
+        
+    });
+    Route::post('api/prodmonitor/orders',function(){
+        $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){
+                $input = Input::json();
+                $rules = array(
+                    'buyer'  => 'required',  
+                    'style'  => 'required|min:1|max:200',
+                    'gg'  => 'required|numeric', 
+                    'quantity'  => 'required|numeric',
+                    'machinecount'  => 'required|numeric', 
+                    'timeperpcs'  => 'required|numeric' 
+                );
+                $v = Validator::make($input, $rules);
+                if( $v->fails() ){ 
+                    return Response::json($v->errors->all(),500);
+                }  
+				
+                $newOrder = Order::create(array(
+                             'clientid' => Session::get('clientid'),
+                             'buyerid' =>  $input->buyer,
+                             'style' => $input->style,
+                             'gg' => $input->gg,
+                             'quantity' => $input->quantity,
+                             'machinecount' => $input->machinecount,
+                             'timeperpcs' => $input->timeperpcs
+                            ));
+                return Response::eloquent( $newOrder );
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers

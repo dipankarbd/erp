@@ -40,6 +40,7 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
                 style: this.ui.style.val(),
                 gg: this.ui.gg.val(),
                 quantity: this.ui.quantity.val(),
+                machinecount: this.ui.machinecount.val(),
                 timeperpcs: this.ui.timeperpcs.val()
             });
             App.vent.trigger("orders:saveneworder", this.model);
