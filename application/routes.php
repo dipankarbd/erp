@@ -174,6 +174,10 @@
     
         return Response::eloquent($country); 
     });
+    Route::get('api/common/buyers',function(){ 
+        $buyers = Buyer::where('clientid','=',Session::get('clientid'))->get(array('id','company'));
+        return Response::eloquent($buyers);
+    });
     // Users
     Route::get('api/users',function(){
         return Response::eloquent(User::get(array('id', 'username','firstname','lastname','email')));
