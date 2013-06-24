@@ -6,7 +6,7 @@
             <th>Style</th>
             <th>GG</th>
             <th>No. of Machine</th>
-            <th>Time</th>
+            <th>Time/pcs(minute)</th>
             <th>Order Qty.</th>
             <th>Total Production</th>
         </tr>
