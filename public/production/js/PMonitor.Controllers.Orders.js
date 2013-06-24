@@ -16,9 +16,10 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.buyers.fetch();
 
             this.orders = new App.Orders.Models.Orders();
-            //this.orders.fetch();
+            this.orders.fetch();
 
-            this.showCommandViewForOrderrNotSelected();
+            this.showOrdersView();
+            this.showCommandViewForOrderNotSelected();
 
             this.listenTo(App.vent, "orders:createneworder", this.createNewOrder, this);
             this.listenTo(App.vent, "orders:saveneworder", this.saveNewOrder, this);
@@ -48,9 +49,9 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             }, {
                 wait: true,
                 success: function (model, response) {
-                    //self.showOrdersView();
+                    self.showOrdersView();
                     //self.showFilterView();
-                    //self.showCommandViewForOrderNotSelected();
+                    self.showCommandViewForOrderNotSelected();
 
                     var alertModel = new App.Alert.Models.Alert({ body: 'Order Created Successfully!' });
                     App.vent.trigger("alert:showsuccess", alertModel);
@@ -73,13 +74,23 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         cancelSavingNewOrder: function () {
-            //self.showOrdersView();
+            self.showOrdersView();
             //self.showFilterView();
-            //self.showCommandViewForOrderNotSelected();
+            self.showCommandViewForOrderNotSelected();
             this.closeAlert();
         },
 
-        showCommandViewForOrderrNotSelected: function () {
+        showOrdersView: function () {
+            this.selectedOrder = null; 
+            this.ordersView = new App.Orders.Views.OrdersView({ collection: this.orders });
+            this.containerLayout.mainpanel.show(this.ordersView);
+        },
+
+        closeOrdersView: function () {
+            this.containerLayout.mainpanel.close();
+        },
+
+        showCommandViewForOrderNotSelected: function () {
             this.commandView = new App.Orders.Views.CommandViewOrderNotSelected();
             this.containerLayout.commandpanel.show(this.commandView);
         },

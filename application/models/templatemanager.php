@@ -24,7 +24,9 @@
                                         'prodmonitor.templates.buyers-commandview-buyerselected-template',
                                         'prodmonitor.templates.buyers-filterview-template',
                                         'prodmonitor.templates.buyers-createnewbuyer-template',
-                                        'prodmonitor.templates.buyers-editbuyer-template',
+                                        'prodmonitor.templates.buyers-editbuyer-template', 
+                                        'prodmonitor.templates.orders-orderitemview-template',
+                                        'prodmonitor.templates.orders-ordersview-template', 
                                         'prodmonitor.templates.orders-commandview-ordernotselected-template',
                                         'prodmonitor.templates.orders-createneworder-template'
                                       );
