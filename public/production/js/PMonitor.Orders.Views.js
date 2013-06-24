@@ -84,6 +84,42 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
 
     });
 
+    Views.EditOrderView = Backbone.Marionette.ItemView.extend({
+        template: '#orders-editorder-template',
+        className: 'roundborder padding-10px',
+
+        ui: {
+            buyer: '#buyer',
+            style: '#style',
+            gg: '#gg',
+            quantity: '#quantity',
+            machinecount: '#machinecount',
+            timeperpcs: '#timeperpcs'
+        },
+
+        events: {
+            'click #saveorder': 'saveOrder',
+            'click #cancelsavingorder': 'cancelSaving'
+        },
+
+        saveOrder: function () {
+            this.model.set({
+                buyer: this.ui.buyer.val(),
+                style: this.ui.style.val(),
+                gg: this.ui.gg.val(),
+                quantity: this.ui.quantity.val(),
+                machinecount: this.ui.machinecount.val(),
+                timeperpcs: this.ui.timeperpcs.val()
+            });
+            App.vent.trigger("orders:saveorder", this.model);
+        },
+
+        cancelSaving: function () {
+            App.vent.trigger("orders:cancelsavingorder", this.model);
+        }
+
+    });
+
     //Order Item View
     Views.OrderItemView = Backbone.Marionette.ItemView.extend({
         template: '#orders-orderitemview-template',
