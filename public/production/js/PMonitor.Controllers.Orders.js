@@ -24,10 +24,11 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.listenTo(App.vent, "orders:selected", this.orderSelected, this);
             this.listenTo(App.vent, "orders:createneworder", this.createNewOrder, this);
             this.listenTo(App.vent, "orders:editselectedorder", this.editOrder, this);
+            this.listenTo(App.vent, "orders:deleteselectedorder", this.deleteOrder, this);
             this.listenTo(App.vent, "orders:saveneworder", this.saveNewOrder, this);
-            this.listenTo(App.vent, "orders:cancelsavingneworder", this.cancelSavingNewOrder, this);  
+            this.listenTo(App.vent, "orders:cancelsavingneworder", this.cancelSavingNewOrder, this);
             this.listenTo(App.vent, "orders:saveorder", this.saveOrder, this);
-            this.listenTo(App.vent, "orders:cancelsavingorder", this.cancelSavingOrder, this); 
+            this.listenTo(App.vent, "orders:cancelsavingorder", this.cancelSavingOrder, this);
         },
 
         onClose: function () {
@@ -35,8 +36,9 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             App.container.close();
         },
 
-        orderSelected : function(order){
+        orderSelected: function (order) {
             this.selectedOrder = order;
+            this.closeAlert();
             this.showCommandViewForOrderSelected();
         },
 
@@ -138,8 +140,29 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             App.vent.trigger('alert:close');
         },
 
+        deleteOrder: function () {
+            var self = this;
+            if (this.selectedOrder) {
+                bootbox.confirm("Are you sure, you want to delete this order?", function (result) {
+                    if (result === true) {
+                        self.selectedOrder.destroy({ wait: true,
+                            success: function (model, response) {
+                                App.vent.trigger("orders:deleted", alertModel);
+                                var alertModel = new App.Alert.Models.Alert({ body: 'Order Deleted Successfully!' });
+                                App.vent.trigger("alert:showsuccess", alertModel);
+                            },
+                            error: function (model, err) {
+                                var alertModel = new App.Alert.Models.Alert({ heading: 'Error in deleting order!', body: err.responseText });
+                                App.vent.trigger("alert:showerror", alertModel);
+                            }
+                        });
+                    }
+                });
+            }
+        },
+
         showOrdersView: function () {
-            this.selectedOrder = null; 
+            this.selectedOrder = null;
             this.ordersView = new App.Orders.Views.OrdersView({ collection: this.orders });
             this.containerLayout.mainpanel.show(this.ordersView);
         },

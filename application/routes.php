@@ -1320,7 +1320,11 @@
                              'machinecount' => $input->machinecount,
                              'timeperpcs' => $input->timeperpcs
                             ));
-                return Response::eloquent( $newOrder );
+                $order_for_return = Order::with('productions')
+                                ->join('buyers', 'orders.buyerid', '=', 'buyers.id')
+                                ->where('orders.id', '=', $newOrder->id)  
+                                ->first(array('orders.id','orders.buyerid','buyers.company as buyername','orders.style','orders.gg','orders.quantity','orders.machinecount','orders.timeperpcs','orders.delivered','orders.deliverydate'));
+                return Response::eloquent(  $order_for_return );
             }
             else{
                 return Response::json( 'access denied'  ,401);
@@ -1400,6 +1404,62 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    Route::delete('api/prodmonitor/orders/(:num)',function($id){
+        $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){ 
+				
+                $order = Order::where('id','=',$id)->first();
+                if($order){ 
+                    $res = $order->delete(); 
+                    if($res){
+                        $productions = Production::where('order_id','=',$id)->get();
+                        foreach( $productions as $p){
+                            $p->delete();
+                        }
+                        return Response::json($res ,204); 
+                    }
+                    else
+                    {
+                        return Response::json('Error occured',500);  
+                    }   
+                } 
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
+
     /*
     |--------------------------------------------------------------------------
     | Application 404 & 500 Error Handlers
