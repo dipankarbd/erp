@@ -14,8 +14,40 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
         }
 
     });
+     
+    Views.CommandViewOrderSelected = Backbone.Marionette.ItemView.extend({
+        template: '#orders-commandview-orderselected-template',
+        className: 'roundborder padding-10px margin-bottom-10px',
 
+        events: {
+            'click #createneworder': 'createNewOrder',
+            'click #editselectedorder': 'editwOrder',
+            'click #vieworderdetails': 'viewOrder',
+            'click #deleteselectedorder': 'deleteOrder'
+        },
 
+        createNewOrder: function (e) {
+            e.preventDefault();
+            App.vent.trigger("orders:createneworder");
+        },
+
+        editwOrder: function (e) {
+            e.preventDefault();
+            App.vent.trigger("orders:editselectedorder");
+        },
+
+        viewOrder: function (e) {
+            e.preventDefault();
+            App.vent.trigger("orders:viewselectedorder");
+        },
+
+        deleteOrder: function (e) {
+            e.preventDefault();
+            App.vent.trigger("orders:deleteselectedorder");
+        }
+
+    });
+    
     Views.CreateNewOrderView = Backbone.Marionette.ItemView.extend({
         template: '#orders-createneworder-template',
         className: 'roundborder padding-10px',

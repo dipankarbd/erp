@@ -21,6 +21,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.showOrdersView();
             this.showCommandViewForOrderNotSelected();
 
+            this.listenTo(App.vent, "orders:selected", this.orderSelected, this);
             this.listenTo(App.vent, "orders:createneworder", this.createNewOrder, this);
             this.listenTo(App.vent, "orders:saveneworder", this.saveNewOrder, this);
             this.listenTo(App.vent, "orders:cancelsavingneworder", this.cancelSavingNewOrder, this);
@@ -29,6 +30,11 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         onClose: function () {
             console.log('closing orders controller');
             App.container.close();
+        },
+
+        orderSelected : function(order){
+            this.selectedOrder = order;
+            this.showCommandViewForOrderSelected();
         },
 
         createNewOrder: function (user) {
@@ -74,9 +80,9 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         },
 
         cancelSavingNewOrder: function () {
-            self.showOrdersView();
+            this.showOrdersView();
             //self.showFilterView();
-            self.showCommandViewForOrderNotSelected();
+            this.showCommandViewForOrderNotSelected();
             this.closeAlert();
         },
 
@@ -92,6 +98,11 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
         showCommandViewForOrderNotSelected: function () {
             this.commandView = new App.Orders.Views.CommandViewOrderNotSelected();
+            this.containerLayout.commandpanel.show(this.commandView);
+        },
+
+        showCommandViewForOrderSelected: function () {
+            this.commandView = new App.Orders.Views.CommandViewOrderSelected();
             this.containerLayout.commandpanel.show(this.commandView);
         },
 

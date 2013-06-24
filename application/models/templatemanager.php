@@ -28,7 +28,8 @@
                                         'prodmonitor.templates.orders-orderitemview-template',
                                         'prodmonitor.templates.orders-ordersview-template', 
                                         'prodmonitor.templates.orders-commandview-ordernotselected-template',
-                                        'prodmonitor.templates.orders-createneworder-template'
+                                        'prodmonitor.templates.orders-createneworder-template',
+                                        'prodmonitor.templates.orders-commandview-orderselected-template'
                                       );
     
             $templatesForUser = array();
