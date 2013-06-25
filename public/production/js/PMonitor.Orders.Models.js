@@ -14,6 +14,7 @@ PMonitor.module('Orders.Models', function (Models, App, Backbone, Marionette, $,
 
         updateComputedAttributes: function () {
             var totalProduction = 0;
+            var previousDayTotal = 0;
 
             _.each(this.get('productions'), function (p) {
                 totalProduction += parseInt(p.quantity4amto8am);
@@ -21,10 +22,11 @@ PMonitor.module('Orders.Models', function (Models, App, Backbone, Marionette, $,
                 totalProduction += parseInt(p.quantity8pmto12am);
                 totalProduction += parseInt(p.quantity4pmto8pm);
                 totalProduction += parseInt(p.quantity12pmto4pm);
-                totalProduction += parseInt(p.quantity8amto12pm); 
+                totalProduction += parseInt(p.quantity8amto12pm);
             });
 
-            this.set({ 'totalproduction': totalProduction });
+
+            this.set({ 'previousdaytotal': previousDayTotal, 'totalproduction': totalProduction });
         }
 
     });

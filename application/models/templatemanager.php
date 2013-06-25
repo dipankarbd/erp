@@ -8,6 +8,7 @@
     
             $templatesForAdmin = array( 'prodmonitor.templates.navbar-template',
                                         'prodmonitor.templates.container-layout', 
+                                        'prodmonitor.templates.order-details-layout', 
                                         'prodmonitor.templates.alert-template',
                                         'prodmonitor.templates.users-commandview-createnewuser-template',
                                         'prodmonitor.templates.users-commandview-edituser-template',
@@ -30,7 +31,9 @@
                                         'prodmonitor.templates.orders-commandview-ordernotselected-template',
                                         'prodmonitor.templates.orders-createneworder-template',
                                         'prodmonitor.templates.orders-commandview-orderselected-template',
-                                        'prodmonitor.templates.orders-editorder-template'
+                                        'prodmonitor.templates.orders-editorder-template',
+                                        'prodmonitor.templates.orders-orderdetailsview-template',
+                                        'prodmonitor.templates.orders-orderproductionsview-template'
                                       );
     
             $templatesForUser = array();

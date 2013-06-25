@@ -9,8 +9,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         start: function () {
             console.log('starting orders controller');
 
-            this.containerLayout = new App.Layout.ContainerLayout();
-            App.container.show(this.containerLayout);
+            this.showContainerTemplate();
 
             this.buyers = new App.Common.Models.Buyers();
             this.buyers.fetch();
@@ -29,11 +28,22 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.listenTo(App.vent, "orders:cancelsavingneworder", this.cancelSavingNewOrder, this);
             this.listenTo(App.vent, "orders:saveorder", this.saveOrder, this);
             this.listenTo(App.vent, "orders:cancelsavingorder", this.cancelSavingOrder, this);
+            this.listenTo(App.vent, "orders:viewselectedorder", this.viewOrderDetails, this);
         },
 
         onClose: function () {
             console.log('closing orders controller');
             App.container.close();
+        },
+
+        showContainerTemplate: function () {
+            this.containerLayout = new App.Layout.ContainerLayout();
+            App.container.show(this.containerLayout);
+        },
+
+        showOrderDetailsTemplate: function () {
+            this.orderDetailsLayout = new App.Layout.OrderDetailsLayout();
+            App.container.show(this.orderDetailsLayout);
         },
 
         orderSelected: function (order) {
@@ -140,6 +150,12 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             App.vent.trigger('alert:close');
         },
 
+        viewOrderDetails: function () {
+            this.showOrderDetailsTemplate();
+            this.showOrderDetailsView();
+            this.showOrderProductionsView();
+        },
+
         deleteOrder: function () {
             var self = this;
             if (this.selectedOrder) {
@@ -208,6 +224,16 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
         closeEditOrderView: function () {
             this.containerLayout.mainpanel.close();
             this.closeAlert();
+        },
+
+        showOrderDetailsView: function () { 
+            this.orderDetailsView = new App.Orders.Views.OrderDetailsView({ model: this.selectedOrder });
+            this.orderDetailsLayout.firstpanel.show(this.orderDetailsView);
+            this.closeAlert();
+        },
+
+        showOrderProductionsView: function () {
+
         },
 
         closeFilterView: function () {

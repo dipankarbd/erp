@@ -173,4 +173,11 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
         }
     });
 
+    //Order Details View
+    Views.OrderDetailsView = Backbone.Marionette.ItemView.extend({
+        template: '#orders-orderdetailsview-template',
+        tagName: 'table',
+        className: "table table-bordered" 
+    });
+
 });

@@ -11,5 +11,17 @@ PMonitor.module('Layout', function (Layout, App, Backbone, Marionette, $, _) {
             commandpanel: "#commandpanel" 
         }
     }); 
+
+    
+    // Container Layout
+    // ------------------
+    Layout.OrderDetailsLayout  = Backbone.Marionette.Layout.extend({
+        template: "#order-details-layout",
+
+        regions: {
+            firstpanel: "#firstpanel",
+            secondpanel: "#secondpanel" 
+        }
+    }); 
    
 });
