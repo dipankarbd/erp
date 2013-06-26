@@ -14,7 +14,7 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
         }
 
     });
-     
+
     Views.CommandViewOrderSelected = Backbone.Marionette.ItemView.extend({
         template: '#orders-commandview-orderselected-template',
         className: 'roundborder padding-10px margin-bottom-10px',
@@ -47,7 +47,7 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
         }
 
     });
-    
+
     Views.CreateNewOrderView = Backbone.Marionette.ItemView.extend({
         template: '#orders-createneworder-template',
         className: 'roundborder padding-10px',
@@ -177,7 +177,37 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
     Views.OrderDetailsView = Backbone.Marionette.ItemView.extend({
         template: '#orders-orderdetailsview-template',
         tagName: 'table',
-        className: "table table-bordered" 
+        className: "table table-bordered"
     });
+
+    //Order production item View
+    Views.OrderProductionItemView = Backbone.Marionette.ItemView.extend({
+        template: '#orders-orderproductionitemview-template',
+        tagName: 'tr'
+    });
+
+    //Order productions View
+    Views.OrderProductionsView = Backbone.Marionette.CompositeView.extend({
+        template: '#orders-orderproductionsview-template',
+        tagName: 'table',
+        className: "table table-bordered",
+        itemView: Views.OrderProductionItemView,
+
+        appendHtml: function (collectionView, itemView) {
+            collectionView.$("tbody").append(itemView.el);
+        },
+
+        events: {
+            'click #goBack': 'goBackToOrderList'
+        },
+
+        goBackToOrderList: function(e){
+             e.preventDefault();
+             App.vent.trigger("orders:backtoorderlist");
+        }
+
+    });
+
+
 
 });

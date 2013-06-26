@@ -67,4 +67,18 @@ PMonitor.module('Orders.Models', function (Models, App, Backbone, Marionette, $,
         model: Models.Order
     });
 
+    Models.Production = Backbone.Model.extend({
+        
+    });
+
+    Models.Productions = Backbone.Collection.extend({
+         model: Models.Production ,
+         initialize: function (models, options) {
+            this.orderid = options.orderid;
+        },
+
+        url: function () {
+            return 'prodmonitor/orders/'+this.orderid+'/productions';
+        }
+    });
 });

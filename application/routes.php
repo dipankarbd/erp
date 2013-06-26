@@ -1268,6 +1268,50 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    Route::get('api/prodmonitor/orders/(:num)',function($id){
+         $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){ 
+                $order = Order::with('productions')
+                                ->join('buyers', 'orders.buyerid', '=', 'buyers.id')
+                                ->where('orders.id', '=',  $id)
+                                ->first(array('orders.id','orders.buyerid','buyers.company as buyername','orders.style','orders.gg','orders.quantity','orders.machinecount','orders.timeperpcs','orders.delivered','orders.deliverydate'));
+                return Response::eloquent(  $order );
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
     Route::post('api/prodmonitor/orders',function(){
         $user = Auth::user();
         if($user)
@@ -1449,6 +1493,49 @@
                         return Response::json('Error occured',500);  
                     }   
                 } 
+            }
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
+
+    //productions
+    Route::get('api/prodmonitor/orders/(:num)/productions',function($id){
+         $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){ 
+                $productions = Production::where('order_id', '=',  $id)->order_by('date', 'desc')->get();
+                return Response::eloquent(  $productions );
             }
             else{
                 return Response::json( 'access denied'  ,401);

@@ -33,7 +33,8 @@
                                         'prodmonitor.templates.orders-commandview-orderselected-template',
                                         'prodmonitor.templates.orders-editorder-template',
                                         'prodmonitor.templates.orders-orderdetailsview-template',
-                                        'prodmonitor.templates.orders-orderproductionsview-template'
+                                        'prodmonitor.templates.orders-orderproductionsview-template',
+                                        'prodmonitor.templates.orders-orderproductionitemview-template'
                                       );
     
             $templatesForUser = array();

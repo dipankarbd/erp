@@ -8,6 +8,7 @@
             <th>No. of Machine</th>
             <th>Time/pcs(minute)</th>
             <th>Order Qty.</th>
+            <th>Previous Day Total</th>
             <th>Total Production</th>
         </tr>
     </thead>

@@ -29,6 +29,7 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.listenTo(App.vent, "orders:saveorder", this.saveOrder, this);
             this.listenTo(App.vent, "orders:cancelsavingorder", this.cancelSavingOrder, this);
             this.listenTo(App.vent, "orders:viewselectedorder", this.viewOrderDetails, this);
+            this.listenTo(App.vent, "orders:backtoorderlist", this.backToOrderlist, this);
         },
 
         onClose: function () {
@@ -154,6 +155,14 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.showOrderDetailsTemplate();
             this.showOrderDetailsView();
             this.showOrderProductionsView();
+            this.closeAlert();
+        },
+
+        backToOrderlist: function () {
+            this.showContainerTemplate();
+            this.clearSelection();
+            this.showOrdersView();
+            this.showCommandViewForOrderNotSelected(); 
         },
 
         deleteOrder: function () {
@@ -226,14 +235,17 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.closeAlert();
         },
 
-        showOrderDetailsView: function () { 
+        showOrderDetailsView: function () {
             this.orderDetailsView = new App.Orders.Views.OrderDetailsView({ model: this.selectedOrder });
             this.orderDetailsLayout.firstpanel.show(this.orderDetailsView);
-            this.closeAlert();
         },
 
         showOrderProductionsView: function () {
+            this.orderProductions = new App.Orders.Models.Productions([], { orderid: this.selectedOrder.get('id') });
+            this.orderProductions.fetch();
 
+            this.orderProductionsView = new App.Orders.Views.OrderProductionsView({ collection: this.orderProductions });
+            this.orderDetailsLayout.secondpanel.show(this.orderProductionsView);
         },
 
         closeFilterView: function () {

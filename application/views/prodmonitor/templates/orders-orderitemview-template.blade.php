@@ -6,5 +6,6 @@
     <td><%= machinecount %></td>
     <td><%= timeperpcs %></td>
     <td><%= quantity %></td>
+    <td><%= previousdaytotal %></td>
     <td><%= totalproduction %></td> 
 </script>
