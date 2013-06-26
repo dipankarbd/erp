@@ -42,11 +42,11 @@
         </tr>
         <tr> 
            <th>Grand Total</th>
-           <td><%= (previousdaytotal + totalproduction) %></td>
+           <td><%= grandtotal %></td>
         </tr>
         <tr> 
            <th>Balance</th>
-           <td><%= (quantity - (previousdaytotal + totalproduction)) %></td>
+           <td><%= balance %></td>
         </tr>
     </tbody>
 </script>
