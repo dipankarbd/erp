@@ -1275,6 +1275,61 @@
             return Response::json( 'user is not authenticated'  ,401);
         }
     });
+    Route::get('api/prodmonitor/orders/dashboard',function(){
+        $user = Auth::user();
+        if($user)
+        {
+            $roles = UserApp::join('apps', 'apps.id', '=', 'userapps.appid')
+                 ->join('approles', 'approles.id', '=', 'userapps.roleid')
+                 ->where('userapps.userid', '=', $user->id)
+                 ->where('userapps.clientid', '=', Session::get('clientid'))
+                 ->where('apps.appname', '=', 'Production Monitor')
+                 ->get(array('userapps.roleid','approles.rolename'));
+    
+            $isAdmin = false;
+            $isUser = false;
+            $isBuyer = false; 
+    
+            foreach ($roles as $role)
+            {
+                if($role->rolename === 'Admin'){
+                    $isAdmin = true;
+                }
+                else if ($role->rolename === 'User'){
+                    $isUser = true;
+                }
+                else if($role->rolename === 'Buyer'){
+                    $isBuyer = true;
+                }
+            }
+    
+            if($isAdmin){ 
+                $orders = Order::with('productions')
+                                ->join('buyers', 'orders.buyerid', '=', 'buyers.id')
+                                ->where('orders.clientid', '=',  Session::get('clientid'))
+                                ->where('orders.delivered', '=',  false)
+                                ->get(array('orders.id','orders.buyerid','buyers.company as buyername','orders.style','orders.gg','orders.quantity','orders.machinecount','orders.timeperpcs','orders.delivered','orders.deliverydate'));
+                return Response::eloquent(  $orders );
+            }
+            else if ($isBuyer){ 
+                $orders = Order::with('productions')
+                                ->join('buyers', 'orders.buyerid', '=', 'buyers.id')
+                                ->join('users', 'users.id', '=', 'buyers.userid')
+                                ->where('orders.clientid', '=',  Session::get('clientid'))
+                                ->where('orders.delivered', '=',  false)
+                                ->where('users.id', '=',  $user->id)
+                                ->get(array('orders.id','orders.buyerid','buyers.company as buyername','orders.style','orders.gg','orders.quantity','orders.machinecount','orders.timeperpcs','orders.delivered','orders.deliverydate'));
+                return Response::eloquent(  $orders );
+            }  
+            else{
+                return Response::json( 'access denied'  ,401);
+            }
+        }
+        else
+        {
+            return Response::json( 'user is not authenticated'  ,401);
+        }
+    });
     Route::get('api/prodmonitor/orders/(:num)',function($id){
          $user = Auth::user();
         if($user)

@@ -35,7 +35,9 @@
                                         'prodmonitor.templates.orders-editorder-template',
                                         'prodmonitor.templates.orders-orderdetailsview-template',
                                         'prodmonitor.templates.orders-orderproductionsview-template',
-                                        'prodmonitor.templates.orders-orderproductionitemview-template'
+                                        'prodmonitor.templates.orders-orderproductionitemview-template', 
+                                        'prodmonitor.templates.admin-dashboarditemview-template',
+                                        'prodmonitor.templates.admin-dashboardview-template'
                                       );
     
             $templatesForUser = array( 'prodmonitor.templates.navbar-template',
@@ -47,7 +49,12 @@
                                        'prodmonitor.templates.orders-productionview-template'
                                       );
 
-            $templatesForBuyer = array();
+            $templatesForBuyer = array( 'prodmonitor.templates.navbar-template',
+                                        'prodmonitor.templates.container-layout', 
+                                        'prodmonitor.templates.container-2column-layout', 
+                                        'prodmonitor.templates.alert-template',
+                                        'prodmonitor.templates.admin-dashboarditemview-template',
+                                        'prodmonitor.templates.admin-dashboardview-template');
     
     
             $user = Auth::user();

@@ -12,12 +12,14 @@
                                       'production/js/PMonitor.Common.Models.js',
                                       'production/js/PMonitor.Buyers.Models.js',
                                       'production/js/PMonitor.Orders.Models.js',
+                                      'production/js/PMonitor.Dashboard.Models.js',
                                       'production/js/PMonitor.Layout.js',
                                       'production/js/PMonitor.Navbar.Views.js',
                                       'production/js/PMonitor.Alert.Views.js',
                                       'production/js/PMonitor.Users.Views.js',
                                       'production/js/PMonitor.Buyers.Views.js',
                                       'production/js/PMonitor.Orders.Views.js',
+                                      'production/js/PMonitor.Dashboard.Views.js',
                                       'production/js/PMonitor.Controllers.Alert.js',
                                       'production/js/PMonitor.Controllers.Dashboard.js',
                                       'production/js/PMonitor.Controllers.Orders.js',
@@ -42,7 +44,19 @@
                                      'production/js/PMonitor.Controllers.Navbar.js',
                                      'production/js/PMonitor.Main.js'
                                    );
-            $scriptsForBuyer = array();
+            $scriptsForBuyer = array('production/js/PMonitor.js',
+                                      'production/js/PMonitor.Navbar.Models.js', 
+                                      'production/js/PMonitor.Alert.Models.js',
+                                      'production/js/PMonitor.Common.Models.js', 
+                                      'production/js/PMonitor.Dashboard.Models.js',
+                                      'production/js/PMonitor.Layout.js',
+                                      'production/js/PMonitor.Navbar.Views.js', 
+                                      'production/js/PMonitor.Dashboard.Views.js',
+                                      'production/js/PMonitor.Alert.Views.js',
+                                      'production/js/PMonitor.Controllers.Dashboard.js',
+                                      'production/js/PMonitor.Controllers.Alert.js', 
+                                      'production/js/PMonitor.Controllers.Navbar.js',
+                                      'production/js/PMonitor.Main.js');
  
  
             $user = Auth::user();
