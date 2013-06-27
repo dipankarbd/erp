@@ -66,7 +66,7 @@ CREATE TABLE `buyers` (
   `phone` varchar(45) DEFAULT NULL,
   `website` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,10 +116,11 @@ CREATE TABLE `orders` (
   `quantity` int(11) NOT NULL DEFAULT '0',
   `machinecount` int(11) NOT NULL DEFAULT '0',
   `timeperpcs` int(11) NOT NULL DEFAULT '0',
-  `delivered` bit(1) NOT NULL DEFAULT b'0',
+  `delivered` int(11) NOT NULL DEFAULT '0',
   `deliverydate` datetime DEFAULT NULL,
+  `clientid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +132,7 @@ DROP TABLE IF EXISTS `productions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `productions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `orderid` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `quantity4amto8am` int(11) NOT NULL DEFAULT '0',
   `quantity12amto4am` int(11) NOT NULL DEFAULT '0',
@@ -140,7 +141,7 @@ CREATE TABLE `productions` (
   `quantity12pmto4pm` int(11) NOT NULL DEFAULT '0',
   `quantity8amto12pm` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +158,7 @@ CREATE TABLE `userapps` (
   `roleid` int(11) NOT NULL,
   `clientid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,7 +177,7 @@ CREATE TABLE `users` (
   `email` varchar(45) NOT NULL,
   `superadmin` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,4 +193,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-06-20 13:55:33
+-- Dump completed on 2013-06-27 20:09:39
