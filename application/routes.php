@@ -583,12 +583,12 @@
               $data['navitems'] = array('Dashboard','Orders','Buyers','Users');
           }
           else if ( $isUser ){
-              $data['navselected'] = 'Dashboard';
-              $data['navitems'] = array('Dashboard','Orders');
-          }
-          else if ( $isBuyer ){
               $data['navselected'] = 'Orders';
               $data['navitems'] = array('Orders');
+          }
+          else if ( $isBuyer ){
+              $data['navselected'] = 'Dashboard';
+              $data['navitems'] = array('Dashboard');
           }
           return Response::json( $data  ,200);   
        } 

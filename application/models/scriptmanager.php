@@ -28,7 +28,17 @@
                                 );
  
  
-            $scriptsForUser = array();
+            $scriptsForUser = array( 'production/js/PMonitor.js',
+                                     'production/js/PMonitor.Navbar.Models.js',
+                                     'production/js/PMonitor.Alert.Models.js',
+                                     'production/js/PMonitor.Layout.js',
+                                     'production/js/PMonitor.Navbar.Views.js',
+                                     'production/js/PMonitor.Alert.Views.js',
+                                     'production/js/PMonitor.Controllers.Alert.js',
+                                     'production/js/PMonitor.Controllers.Orders-user.js',
+                                     'production/js/PMonitor.Controllers.Navbar.js',
+                                     'production/js/PMonitor.Main.js'
+                                   );
             $scriptsForBuyer = array();
  
  

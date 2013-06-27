@@ -11,9 +11,14 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
 
             this.navbarView = new App.Navbar.Views.NavbarView({ model: this.navBarModel });
             App.navbar.show(this.navbarView);
-
-            //deafult show dashbard controller
-            this.startDashboardController();
+ 
+            if(this.navBarModel.get('navselected')==='Dashboard'){
+                this.startDashboardController();
+            }
+            else if(this.navBarModel.get('navselected')==='Orders'){
+                this.startOrdersController();
+            }
+             
 
             var self = this;
             App.vent.on("navbar:selected", function (nav) {

@@ -37,7 +37,11 @@
                                         'prodmonitor.templates.orders-orderproductionitemview-template'
                                       );
     
-            $templatesForUser = array();
+            $templatesForUser = array( 'prodmonitor.templates.navbar-template',
+                                       'prodmonitor.templates.container-layout',
+                                       'prodmonitor.templates.alert-template',
+                                      );
+
             $templatesForBuyer = array();
     
     
