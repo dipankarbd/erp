@@ -971,9 +971,10 @@
     
             if($isAdmin){
                 $buyers = Buyer::join('countries', 'countries.id', '=', 'buyers.countryid') 
+                             ->join('users', 'users.id', '=', 'buyers.userid') 
                              ->where('buyers.clientid', '=', Session::get('clientid')) 
                              ->distinct()
-                             ->get(array('buyers.id','buyers.company','buyers.address','buyers.email','buyers.phone','buyers.website','buyers.countryid','countries.code as countrycode','countries.name as countryname'));
+                             ->get(array('buyers.id','buyers.company','buyers.address','buyers.email','buyers.phone','buyers.website','buyers.countryid','countries.code as countrycode','countries.name as countryname','users.username'));
                  return Response::eloquent( $buyers);
             }
             else{

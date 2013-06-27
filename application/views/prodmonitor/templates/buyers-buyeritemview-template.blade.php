@@ -4,4 +4,5 @@
     <td><%= email %></td>
     <td><%= phone %></td>
     <td><%= website %></td>
+    <td><%= username %></td>
 </script>

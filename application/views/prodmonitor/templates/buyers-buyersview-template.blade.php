@@ -6,6 +6,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Website</th>
+            <th>Userid</th>
         </tr>
     </thead>
     <tbody>
