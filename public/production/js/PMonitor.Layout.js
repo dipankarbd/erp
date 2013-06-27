@@ -13,7 +13,7 @@ PMonitor.module('Layout', function (Layout, App, Backbone, Marionette, $, _) {
     }); 
 
     
-    // Container Layout
+    // OrderDetails  Layout
     // ------------------
     Layout.OrderDetailsLayout  = Backbone.Marionette.Layout.extend({
         template: "#order-details-layout",
@@ -24,4 +24,14 @@ PMonitor.module('Layout', function (Layout, App, Backbone, Marionette, $, _) {
         }
     }); 
    
+     // Container 2 column Layout
+    // ------------------
+    Layout.Container2ColumnLayout  = Backbone.Marionette.Layout.extend({
+        template: "#container-2column-layout",
+
+        regions: {
+            mainpanel: "#leftpanel",
+            filterpanel: "#rightpanel"   
+        }
+    }); 
 });
