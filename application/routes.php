@@ -1623,7 +1623,31 @@
             }
     
             if($isAdmin || $isUser){ 
-                
+                $input = Input::json();
+                $rules = array(
+                    'quantity8amto12pm'  => 'required|numeric',  
+                    'quantity12pmto4pm'  => 'required|numeric',
+                    'quantity4pmto8pm'  => 'required|numeric', 
+                    'quantity8pmto12am'  => 'required|numeric',
+                    'quantity12amto4am'  => 'required|numeric', 
+                    'quantity4amto8am'  => 'required|numeric' 
+                );
+                $v = Validator::make($input, $rules);
+                if( $v->fails() ){ 
+                    return Response::json($v->errors->all(),500);
+                }  
+				
+                $newProduction = Production::create(array(
+                             'order_id' => $input->order_id,
+                             'date' =>  $input->date,
+                             'quantity8amto12pm' => $input->quantity8amto12pm,
+                             'quantity12pmto4pm' => $input->quantity12pmto4pm,
+                             'quantity4pmto8pm' => $input->quantity4pmto8pm,
+                             'quantity8pmto12am' => $input->quantity8pmto12am,
+                             'quantity12amto4am' => $input->quantity12amto4am,
+                             'quantity4amto8am' => $input->quantity4amto8am
+                            )); 
+                return Response::eloquent( $newProduction );
             }
             else{
                 return Response::json( 'access denied'  ,401);
@@ -1663,7 +1687,36 @@
             }
     
             if($isAdmin || $isUser){ 
-                
+                $input = Input::json();
+                $rules = array(
+                    'quantity8amto12pm'  => 'required|numeric',  
+                    'quantity12pmto4pm'  => 'required|numeric',
+                    'quantity4pmto8pm'  => 'required|numeric', 
+                    'quantity8pmto12am'  => 'required|numeric',
+                    'quantity12amto4am'  => 'required|numeric', 
+                    'quantity4amto8am'  => 'required|numeric' 
+                );
+                $v = Validator::make($input, $rules);
+                if( $v->fails() ){ 
+                    return Response::json($v->errors->all(),500);
+                }  
+				
+                $oldProduction = Production::where('id','=',$productionId)->first();
+                if($oldProduction){
+                    $oldProduction->quantity8amto12pm = $input->quantity8amto12pm;
+                    $oldProduction->quantity12pmto4pm = $input->quantity12pmto4pm;
+                    $oldProduction->quantity4pmto8pm = $input->quantity4pmto8pm;
+                    $oldProduction->quantity8pmto12am = $input->quantity8pmto12am;
+                    $oldProduction->quantity12amto4am = $input->quantity12amto4am;
+                    $oldProduction->quantity4amto8am = $input->quantity4amto8am;
+
+                    $oldProduction->save();
+
+                    return Response::eloquent( $oldProduction );
+                }
+                else{
+                     return Response::json('Production not exists',500);  
+                } 
             }
             else{
                 return Response::json( 'access denied'  ,401);

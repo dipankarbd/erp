@@ -43,7 +43,8 @@
                                        'prodmonitor.templates.container-2column-layout',
                                        'prodmonitor.templates.alert-template',
                                        'prodmonitor.templates.orders-orderitemview-template-user',
-                                       'prodmonitor.templates.orders-ordersview-template-user' 
+                                       'prodmonitor.templates.orders-ordersview-template-user' ,
+                                       'prodmonitor.templates.orders-productionview-template'
                                       );
 
             $templatesForBuyer = array();

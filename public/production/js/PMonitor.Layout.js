@@ -30,8 +30,8 @@ PMonitor.module('Layout', function (Layout, App, Backbone, Marionette, $, _) {
         template: "#container-2column-layout",
 
         regions: {
-            mainpanel: "#leftpanel",
-            filterpanel: "#rightpanel"   
+            leftpanel : "#leftpanel",
+            rightpanel: "#rightpanel"   
         }
     }); 
 });
