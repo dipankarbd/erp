@@ -94,7 +94,8 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
             gg: '#gg',
             quantity: '#quantity',
             machinecount: '#machinecount',
-            timeperpcs: '#timeperpcs'
+            timeperpcs: '#timeperpcs',
+            delivered: '#delivered'
         },
 
         events: {
@@ -109,7 +110,8 @@ PMonitor.module('Orders.Views', function (Views, App, Backbone, Marionette, $, _
                 gg: this.ui.gg.val(),
                 quantity: this.ui.quantity.val(),
                 machinecount: this.ui.machinecount.val(),
-                timeperpcs: this.ui.timeperpcs.val()
+                timeperpcs: this.ui.timeperpcs.val(),
+                delivered: this.ui.delivered.val()
             });
             App.vent.trigger("orders:saveorder", this.model);
         },

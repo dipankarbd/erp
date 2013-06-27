@@ -1487,12 +1487,21 @@
 				
                 $order = Order::where('id','=',$id)->first();
                 if($order){ 
+                    $date = new \DateTime;
+
                     $order->buyerid =  $input->buyer;
                     $order->style = $input->style;
                     $order->gg = $input->gg;
                     $order->quantity = $input->quantity;
                     $order->machinecount = $input->machinecount;
                     $order->timeperpcs = $input->timeperpcs; 
+                    if($input->delivered === '1'){
+                         $order->delivered = 1;
+                         $order->deliverydate = $date->format('Y-m-d H:i:s');
+                    } 
+                    else{
+                        $order->delivered = 0;
+                    }
                     $order->save();
   
                     $order_for_return = Order::with('productions')

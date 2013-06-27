@@ -10,6 +10,7 @@
             <th>Order Qty.</th>
             <th>Previous Day Total</th>
             <th>Total Production</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>

@@ -116,7 +116,8 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
                 gg: model.get('gg'),
                 quantity: model.get('quantity'),
                 machinecount: model.get('machinecount'),
-                timeperpcs: model.get('timeperpcs')
+                timeperpcs: model.get('timeperpcs'),
+                delivered: model.get('delivered')
             }, {
                 wait: true,
                 success: function (model, response) {

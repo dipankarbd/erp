@@ -7,5 +7,12 @@
     <td><%= timeperpcs %></td>
     <td><%= quantity %></td>
     <td><%= previousdaytotal %></td>
-    <td><%= totalproduction %></td> 
+    <td><%= totalproduction %></td>  
+    <td>
+     <% if(delivered === 1){ %> 
+          Delivered
+     <% } else{%> 
+        In Production
+     <%}%> 
+    </td> 
 </script>

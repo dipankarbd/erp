@@ -27,6 +27,18 @@
             <input id="machinecount" type="text" value="<%= machinecount %>" required/>
             <label>Time per Pcs <span class="text-info">(in minutes)</span></label>  
             <input id="timeperpcs" type="text"value="<%= timeperpcs %>" required/> 
+            <label>Status</span></label>  
+            <select id="delivered">
+                    <%if(delivered === 1){ %> 
+                        <option value="0">In Production</option>
+                        <option value="1" selected="selected">Delevered</option>
+                    <%
+                    }
+                    else{%> 
+                        <option value="0"  selected="selected">In Production</option>
+                        <option value="1">Delevered</option>
+                    <%}%> 
+            </select>
         </fieldset> 
         <hr/>
         <div>
