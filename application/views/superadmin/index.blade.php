@@ -319,7 +319,7 @@
         <script>
             $(function(){ 
                 $.ajaxPrefilter(function (options) {
-                    options.url = "http://localhost:41756/public/index.php/api/" +  options.url;
+                    options.url = "{{ URL::to('api') }}/" +  options.url;
                 }); 
                 SAdmin.start();
 
