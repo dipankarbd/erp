@@ -322,6 +322,10 @@
                     options.url = "http://localhost:41756/public/index.php/api/" +  options.url;
                 }); 
                 SAdmin.start();
+
+                String.prototype.startsWith = function (string) {
+                    return(this.indexOf(string) === 0);
+                };
             });
         </script> 
     </body>

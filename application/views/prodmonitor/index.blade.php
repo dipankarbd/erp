@@ -28,6 +28,10 @@
         {{ ScriptManager::getScriptsForProductionManagerApp() }}
         <script type="text/javascript">
             $(function(){ 
+                String.prototype.startsWith = function (string) {
+                    return(this.indexOf(string) === 0);
+                };
+
                 $.ajaxPrefilter(function (options) {
                     options.url = "{{ URL::to('api') }}/" +  options.url;
                 }); 
