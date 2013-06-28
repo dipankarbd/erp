@@ -32,8 +32,8 @@
     */
     Route::get('/', array('before' => 'auth', 'do' => function() 
     { 
-        $user = Auth::user();
-        if($user->superadmin){
+        $user = Auth::user(); 
+        if($user->superadmin === '1'){
             return Redirect::to('sadmin');
         }
         else{
@@ -44,7 +44,7 @@
     {   
         $user = Auth::user();
         $userapps = null;
-        if( $user && !$user->superadmin){
+        if( $user && $user->superadmin  === '0'){
             $clients = Client::join('userapps','clients.id','=','userapps.clientid')
                        ->where('userapps.userid', '=',  $user->id)
                        ->distinct()
@@ -102,7 +102,7 @@
     Route::get('sadmin',array('before' => 'auth', 'do' => function() 
     {   
         $user = Auth::user();
-        if( $user && $user->superadmin){
+        if( $user && $user->superadmin === '1'){
             return View::make('superadmin.index');
         }
         else{
@@ -113,7 +113,7 @@
     Route::get('prodmonitor',array('before' => 'auth', 'do' => function() 
     {   
          $user = Auth::user();
-         if( $user && !$user->superadmin){
+         if( $user &&  $user->superadmin==='0'){
             return View::make('prodmonitor.index');
          }
          else{
@@ -630,7 +630,7 @@
                              ->join('apps', 'apps.id', '=', 'userapps.appid')
                              ->where('userapps.clientid', '=', Session::get('clientid'))
                              ->where('apps.appname', '=', 'Production Monitor')
-                             ->where('users.superadmin', '=', false)
+                             ->where('users.superadmin', '=', '0')
                              ->where(function($query){
                                   $query->where('approles.rolename', '=', 'Admin');
                                   $query->or_where('approles.rolename', '=', 'User');
