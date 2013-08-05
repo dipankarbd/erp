@@ -9,31 +9,31 @@
                 </div>  
               </div>  
                <div class="control-group">  
-                <label class="control-label" for="quantity12pmto4pm">08 AM - 12 PM</label>  
+                <label class="control-label" for="quantity12pmto4pm">12 PM - 04 PM</label>  
                 <div class="controls">  
                   <input type="text" class="input-small" id="quantity12pmto4pm" value="<%= quantity12pmto4pm %>">   
                 </div>  
               </div> 
               <div class="control-group">  
-                <label class="control-label" for="quantity4pmto8pm">08 AM - 12 PM</label>  
+                <label class="control-label" for="quantity4pmto8pm">04 PM - 08 PM</label>  
                 <div class="controls">  
                   <input type="text" class="input-small" id="quantity4pmto8pm" value="<%= quantity4pmto8pm %>">   
                 </div>  
               </div> 
               <div class="control-group">  
-                <label class="control-label" for="quantity8pmto12am">08 AM - 12 PM</label>  
+                <label class="control-label" for="quantity8pmto12am">08 PM - 12 AM</label>  
                 <div class="controls">  
                   <input type="text" class="input-small" id="quantity8pmto12am" value="<%= quantity8pmto12am %>">   
                 </div>  
               </div> 
               <div class="control-group">  
-                <label class="control-label" for="quantity12amto4am">08 AM - 12 PM</label>  
+                <label class="control-label" for="quantity12amto4am">12 AM - 04 AM</label>  
                 <div class="controls">  
                   <input type="text" class="input-small" id="quantity12amto4am" value="<%= quantity12amto4am %>">   
                 </div>  
               </div> 
              <div class="control-group">  
-                <label class="control-label" for="quantity4amto8am">08 AM - 12 PM</label>  
+                <label class="control-label" for="quantity4amto8am">04 AM - 08 PM</label>  
                 <div class="controls">  
                   <input type="text" class="input-small" id="quantity4amto8am" value="<%= quantity4amto8am %>">   
                 </div>  
