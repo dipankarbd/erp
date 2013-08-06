@@ -6,6 +6,7 @@
         <% } %> 
     </ul>
     <ul class="nav pull-right">
+        <li><a><span class="text-success"><%= today %></span></a></li>
         <li><a><span class="text-info"><%= firstname %> <%= lastname %></span></a></li>
         <li><a href="{{ URL::to('logout') }}">Logout</a></li>
     </ul>

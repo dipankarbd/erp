@@ -24,6 +24,7 @@
         {{ HTML::script('js/backbone.marionette/underscore.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.js') }}
         {{ HTML::script('js/backbone.marionette/backbone.marionette.js') }}
+        {{ HTML::script('js/moment.min.js') }}
         <!-- application -->
         {{ ScriptManager::getScriptsForProductionManagerApp() }}
         <script type="text/javascript">

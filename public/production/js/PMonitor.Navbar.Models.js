@@ -7,7 +7,8 @@ PMonitor.module('Navbar.Models', function (Models, App, Backbone, Marionette, $,
         },
 
         defaults: {
-            brand: 'dipankar.com'
+            brand: 'dipankar.com',
+            today:'1 March 1984'
         }
     });
 

@@ -9,16 +9,18 @@ PMonitor.module('Controllers', function (Controllers, App, Backbone, Marionette,
             this.navBarModel = new App.Navbar.Models.NavbarDataModel();
             this.navBarModel.fetch({ async: false });
 
+            this.navBarModel.set({today:moment().format('Do MMMM YYYY') });
+
             this.navbarView = new App.Navbar.Views.NavbarView({ model: this.navBarModel });
             App.navbar.show(this.navbarView);
- 
-            if(this.navBarModel.get('navselected')==='Dashboard'){
+
+            if (this.navBarModel.get('navselected') === 'Dashboard') {
                 this.startDashboardController();
             }
-            else if(this.navBarModel.get('navselected')==='Orders'){
+            else if (this.navBarModel.get('navselected') === 'Orders') {
                 this.startOrdersController();
             }
-             
+
 
             var self = this;
             App.vent.on("navbar:selected", function (nav) {
